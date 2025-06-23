@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="/static/css/app.css" rel="stylesheet">
+    <style>
+        .fancy{
+            display: inline-block;
+            position: relative;
+            border-radius: 20px;
+            font-size: 18px;
+            margin: 20px 0 0 20px;
+            padding: 8px 20px;
+            color: #fff;
+            border: 2px solid #000;
+            background-color: #F0F0F0;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .fancy .text{
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            padding-left: 2em;
+            text-align: left;
+            transition: all 0.3s ease-in-out;
+            color: black;
+        }
+        .img{
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-left: -1.5em;
+        }
+        .fancy .top-key, .fancy .bottom-key-1, .fancy .bottom-key-2{
+            height: 2px;
+            position: absolute;
+            background: #e8e8e8;
+            transition: width 0.5s ease-out, left 0.3s ease-out, right 0.3s ease-out;
+        }
+        .fancy .top-key{
+            width: 1.5625rem;
+            top: -2px;
+            left: 0.625rem;
+        }
+        .fancy .bottom-key-1{
+            width: 1.5625rem;
+            right: 1.875rem;
+            bottom: -2px;
+        }
+        .fancy .bottom-key-2{
+            width: 0.625rem;
+            right: 0.625rem;
+            bottom: -2px;
+        }
+        .fancy:hover{
+            background: white;
+            border-color: transparent;
+            box-shadow: 1px 2px 5px 2px #BBBCBF;
+        }
+        .fancy:hover .text {
+            padding-left: 1.5em;
+        }
+        .fancy:hover .top-key{
+            left: -2px;
+            width: 0px;
+        }
+        .fancy:hover .bottom-key-1, .fancy:hover .bottom-key-2{
+            right: 0;
+            width: 0;
+        }
+    </style>
+</head>
+<body class="m-0 font-[Kanit]">
+    <div class="bg-[#0E0E5D] flex justify-between h-[13vh]">
+        <div class="flex justify-center items-center text-white ml-[4%]"><h1 class="text-[40px]">MEMLODY</h1></div>
+        <div class="flex justify-end items-center w-[20%] gap-[10px]">
+            <img src="/static/img/person_5.png" class="w-[50px] h-[50px] mr-[20%]">
+        </div>
+    </div>
+    <a class="fancy" href="./index2.html">
+        <span class="top-key"></span>
+        <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
+        <span class="bottom-key-1"></span>
+        <span class="bottom-key-2"></span>
+    </a>
+    <div>
+        <div>
+            <h1 class="flex justify-center text-6xl py-6">เกมนี่เสียงอะไร??</h1>
+            <p class="flex justify-center text-3xl pb-6">เลือกโหมด</p>
+        </div>
+        <div class="flex justify-center items-center">
+            <ul class="grid grid-cols-3 gap-3 px-10 py-4 bg-white text-2xl border-2 rounded-full">
+                <a href="./main_sound1.html" class="flex justify-center items-center px-6 py-3 rounded-full text-center hover:bg-sky-100">โหมดจับคู่</a>
+                <a href="" class="flex justify-center items-center px-6 py-3 rounded-full text-center bg-sky-100">โหมดออกเสียง</a>
+                <a href="./main_sound3.html" class="flex justify-center items-center px-6 py-3 rounded-full text-center hover:bg-sky-100">โหมดเสียงของฉัน</a>
+            </ul>
+        </div>
+        <div class="flex justify-center">
+            <div class="mt-10 w-full max-w-5xl px-10">
+                <p class="flex justify-center text-2xl mb-5">เลือกด่าน</p>
+                <div class="grid grid-cols-3 gap-10 bg-white text-2xl px-10 py-6">
+                    <a href="./game_voice.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
+                        <h4 class="text-3xl font-bold">ด่าน 1</h4>
+                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                    </a>
+                    <a href="./game_voice.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
+                        <h4 class="text-3xl font-bold">ด่าน 2</h4>
+                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                    </a>
+                    <a href="./game_voice.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
+                        <h4 class="text-3xl font-bold">ด่าน 3</h4>
+                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                    </a>
+                    <a href="./game_voice.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
+                        <h4 class="text-3xl font-bold">ด่าน 4</h4>
+                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                    </a>
+                    <a href="./game_voice.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
+                        <h4 class="text-3xl font-bold">ด่าน 5</h4>
+                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

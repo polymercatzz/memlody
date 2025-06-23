@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="/static/css/app.css" rel="stylesheet">
+    <style>
+        .fancy{
+            display: inline-block;
+            position: relative;
+            border-radius: 20px;
+            font-size: 18px;
+            margin: 20px 0 0 20px;
+            padding: 8px 20px;
+            color: #fff;
+            border: 2px solid #000;
+            background-color: #F0F0F0;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .fancy .text{
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            padding-left: 2em;
+            text-align: left;
+            transition: all 0.3s ease-in-out;
+            color: black;
+        }
+        .img{
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-left: -1.5em;
+        }
+        .fancy .top-key, .fancy .bottom-key-1, .fancy .bottom-key-2{
+            height: 2px;
+            position: absolute;
+            background: #e8e8e8;
+            transition: width 0.5s ease-out, left 0.3s ease-out, right 0.3s ease-out;
+        }
+        .fancy .top-key{
+            width: 1.5625rem;
+            top: -2px;
+            left: 0.625rem;
+        }
+        .fancy .bottom-key-1{
+            width: 1.5625rem;
+            right: 1.875rem;
+            bottom: -2px;
+        }
+        .fancy .bottom-key-2{
+            width: 0.625rem;
+            right: 0.625rem;
+            bottom: -2px;
+        }
+        .fancy:hover{
+            background: white;
+            border-color: transparent;
+            box-shadow: 1px 2px 5px 2px #BBBCBF;
+        }
+        .fancy:hover .text {
+            padding-left: 1.5em;
+        }
+        .fancy:hover .top-key{
+            left: -2px;
+            width: 0px;
+        }
+        .fancy:hover .bottom-key-1, .fancy:hover .bottom-key-2{
+            right: 0;
+            width: 0;
+        }
+    </style>
+</head>
+<body class="m-0 font-[Kanit]">
+    <div class="bg-[#0E0E5D] flex justify-between h-[13vh]">
+        <div class="flex justify-center items-center text-white ml-[4%]"><h1 class="text-[40px]">MEMLODY</h1></div>
+        <div class="flex justify-end items-center w-[20%] gap-[10px]">
+            <img src="/static/img/person_5.png" class="w-[50px] h-[50px] mr-[20%]">
+        </div>
+    </div>
+    <div class="flex justify-between">
+        <a class="fancy" href="./main_guess2.html">
+            <span class="top-key"></span>
+            <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
+            <span class="bottom-key-1"></span>
+            <span class="bottom-key-2"></span>
+        </a>
+        <div class="flex justify-center items-center mx-10 my-5 gap-2">
+            <img src="/static/img/clock.png" class="w-10 h-10">
+            <p class="text-2xl">เวลาที่ใช้ไป:</p>
+            <p class="text-2xl" id="timer">00:00</p>
+        </div>
+    </div>
+    <label class=" flex justify-center w-fit mx-auto px-10 py-4 bg-white text-2xl rounded-3xl border-blue-700 border-2 shadow">โปรดพูดชื่อสิ่งที่เห็นในภาพ</label>
+    <div class=" flex flex-col justify-center px-5 py-10 mx-auto my-10 w-[70%] border-none rounded-4xl" style="box-shadow: 4px 4px 2px 5px #C0C0C0;">
+        <img src="/static/img/cat.webp" class="w-56 h-56 mx-auto object-contain">
+        <div id="record_button" class="flex justify-center items-center px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer bg-blue-200 hover:bg-blue-400">
+            <img src="/static/img/mic.png" class="w-12 h-12 mr-3">
+            <p id="record" class="text-xl font-bold">กดเพื่อพูดตอบคำถาม</p>
+        </div>
+        <audio id="play_back" controls class="mx-auto mt-4 hidden"></audio>
+        <div class="flex justify-center mt-5">
+            <button class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
+                <p>ถัดไป</p>
+                <img src="/static/img/right-arrow.png" class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
+            </button>
+        </div>
+    </div>
+    <script>
+        let play = false;
+        function sound(){
+            const audio = document.getElementById("sound");
+            if (play){
+                audio.pause();
+            }else{
+                audio.time = 0;
+                audio.play();
+            }
+            play = !play;
+            audio.onended = function (){
+                play = false;
+            };
+        }
+
+        let second = 0;
+        let time = null;
+        function updateTimerDisplay(){
+            const min = String(Math.floor(second / 60)).padStart(2, '0');
+            const sec = String(second % 60).padStart(2, '0');
+            document.getElementById('timer').textContent = `${min}:${sec}`;
+        }
+        function start(){
+            time = setInterval(() => {
+                second++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+        function stop(){
+            clearInterval(time);
+            time = null;
+        }
+        window.onload = start;
+
+        let media_recorder;
+        let list_audio = [];
+        let is_recording = false;
+        const record_button = document.getElementById('record_button');
+        const record = document.getElementById('record');
+        const play_back = document.getElementById('play_back');
+        record_button.addEventListener('click', async () => {
+            if (!is_recording){
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                media_recorder = new MediaRecorder(stream);
+            
+                list_audio = [];
+            
+                media_recorder.ondataavailable = e => {
+                    list_audio.push(e.data);
+                };
+            
+                media_recorder.onstop = () => {
+                    const audioBlob = new Blob(list_audio, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    play_back.src = audioUrl;
+                    play_back.classList.remove('hidden');
+                };
+            
+                media_recorder.start();
+                is_recording = true;
+                record.textContent = 'กำลังบันทึก... (คลิกเพื่อหยุด)';
+                record_button.classList.remove('bg-blue-200', 'hover:bg-blue-400');
+                record_button.classList.add('bg-red-400', 'hover:bg-red-600');
+            }else{
+                media_recorder.stop();
+                is_recording = false;
+                record.textContent = 'กดเพื่อพูดตอบคำถาม';
+                record_button.classList.remove('bg-red-400', 'hover:bg-red-600');
+                record_button.classList.add('bg-blue-200', 'hover:bg-blue-400');
+            }
+        });
+    </script>
+</body>
+</html>
