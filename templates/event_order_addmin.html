@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>event order addmin</title>
+    <link rel="stylesheet" href="../static/css/app2.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+</head>
+<style>
+    .fancy {
+        display: inline-block;
+        position: relative;
+        border-radius: 20px;
+        font-size: 2vh;
+        /* margin: 20px 0 0 20px; */
+        padding-right: 2vh;
+        color: #fff;
+        border: 2px solid #BBBCBF;
+        background-color: #F0F0F0;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        white-space: nowrap;
+    }
+
+    .fancy .text {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        padding-left: 2em;
+        text-align: left;
+        transition: all 0.3s ease-in-out;
+        color: black;
+    }
+
+    .img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        margin-left: -1.5em;
+    }
+
+    .fancy .top-key,
+    .fancy .bottom-key-1,
+    .fancy .bottom-key-2 {
+        height: 2px;
+        position: absolute;
+        background: #e8e8e8;
+        transition: width 0.5s ease-out, left 0.3s ease-out, right 0.3s ease-out;
+    }
+
+    .fancy .top-key {
+        width: 1.5625rem;
+        top: -2px;
+        left: 0.625rem;
+    }
+
+    .fancy .bottom-key-1 {
+        width: 1.5625rem;
+        right: 1.875rem;
+        bottom: -2px;
+    }
+
+    .fancy .bottom-key-2 {
+        width: 0.625rem;
+        right: 0.625rem;
+        bottom: -2px;
+    }
+
+    .fancy:hover {
+        background: white;
+        border-color: transparent;
+        box-shadow: 1px 2px 5px 2px #BBBCBF;
+    }
+
+    .fancy:hover .text {
+        padding-left: 1.5em;
+    }
+
+    .fancy:hover .top-key {
+        left: -2px;
+        width: 0px;
+    }
+
+    .fancy:hover .bottom-key-1,
+    .fancy:hover .bottom-key-2 {
+        right: 0;
+        width: 0;
+    }
+</style>
+
+<body class="m-0 font-[Kanit]">
+    <div class="bg-[#0E0E5D] flex justify-between">
+        <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]">
+            <h1 class="text-[3.5vh]">MEMLODY</h1>
+        </div>
+        <div class="flex justify-center items-center text-white mr-[2%] m-[1.5vh] text-[2.5vh]">
+            <a href="">ออกจากระบบ</a>
+        </div>
+    </div>
+
+    <div class="flex flex-row items-center m-[2.5vh]">
+        <a class="fancy" href="#">
+            <span class="top-key"></span>
+            <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
+            <span class="bottom-key-1"></span>
+            <span class="bottom-key-2"></span>
+        </a>
+
+    </div>
+
+    <div class="flex justify-center  gap-3 " id="pagination">
+        <a onclick="selectPage(this, 1)"
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
+            1</a>
+        <a onclick="selectPage(this, 2)" href="#voicepic_addmin copy.html"
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            2</a>
+        <a onclick="selectPage(this, 3)"
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            3</a>
+        <a onclick="selectPage(this, 4)"
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            4</a>
+        <a onclick="selectPage(this, 5)"
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            5</a>
+
+    </div>
+
+    <div class="flex flex-row m-[2.5vh] ">
+        <p
+            class="text-[#0E0E5D] items-center justify-center p-[2.5vh] rounded-[16px] shadow-lg w-fit text-[2.7vh] outline-solid outline-2 outline-[#4A67BA] mx-auto whitespace-nowrap max-[480px]:text-[2.5vh]">
+            โปรดเรียงลำดับขั้นตอนให้ถูกต้อง ?</p>
+    </div>
+
+    <div id="quiz"
+        class="w-full flex justify-center gap-[10vh] flex-wrap mt-[7vh] mb-[2.5vh] max-[480px]:mt-[5vh] max-[480px]:gap-[5vh]">
+
+        <!-- ฝั่งเหตุการณ์ -->
+        <div
+            class="bg-[#FFFFFF] w-[60vh] max-[480px]:w-[40vh] p-[10px] flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8]">
+            <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] mt-[1.5vh]">เหตุการณ์</p>
+            <div class="flex flex-col gap-[2vh] mb-[1.7vh]">
+                <div class="flex gap-[1vh]">
+                    <p class="text-[2vh] text-[#0E0E5D] break-words whitespace-nowrap">เหตุการณ์ที่ 1 :</p>
+                    <div id="eventBox1" class="flex-1">
+                        <button onclick="showInput(1)"
+                            class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
+                            <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
+                        </button>
+                    </div>
+
+                </div>
+                <div class="flex gap-[1vh]">
+                    <p class="text-[2vh] text-[#0E0E5D] break-words whitespace-nowrap">เหตุการณ์ที่ 2 :</p>
+                    <div id="eventBox2" class="flex-1">
+                        <button onclick="showInput(2)"
+                            class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
+                            <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
+                        </button>
+                    </div>
+
+                </div>
+                <div class="flex gap-[1vh]">
+                    <p class="text-[2vh] text-[#0E0E5D] break-words whitespace-nowrap">เหตุการณ์ที่ 3 :</p>
+                    <div id="eventBox3" class="flex-1">
+                        <button onclick="showInput(3)"
+                            class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
+                            <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
+                        </button>
+                    </div>
+
+                </div>
+                <div class="flex gap-[1vh]">
+                    <p class="text-[2vh] text-[#0E0E5D] break-words whitespace-nowrap">เหตุการณ์ที่ 4 :</p>
+                    <div id="eventBox4" class="flex-1">
+                        <button onclick="showInput(4)"
+                            class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
+                            <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="flex justify-center items-center m-[7vh] max-[480px]:m-[5vh]">
+        <a href="index.html"
+            class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
+            <img src="/static/img/right-arrow.png" alt="" class="w-[5vh] object-contain mr-[1vh] ">
+            <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">ถัดไป</p>
+        </a>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+        function showInput(index) {
+            const container = document.getElementById(`eventBox${index}`);
+            container.innerHTML = `
+      <input type="text"
+        class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC]"
+        placeholder="พิมพ์เหตุการณ์ที่ ${index} ได้ที่นี่" />
+    `;
+        }
+    </script>
+
+</body>
+
+</html>
