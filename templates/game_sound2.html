@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
     <style>
-        .fancy{
+        .fancy {
             display: inline-block;
             position: relative;
             border-radius: 20px;
@@ -21,7 +24,8 @@
             cursor: pointer;
             transition: all 0.3s ease-in-out;
         }
-        .fancy .text{
+
+        .fancy .text {
             display: flex;
             align-items: center;
             gap: 0.5em;
@@ -30,60 +34,75 @@
             transition: all 0.3s ease-in-out;
             color: black;
         }
-        .img{
+
+        .img {
             width: 40px;
             height: 40px;
             object-fit: contain;
             margin-left: -1.5em;
         }
-        .fancy .top-key, .fancy .bottom-key-1, .fancy .bottom-key-2{
+
+        .fancy .top-key,
+        .fancy .bottom-key-1,
+        .fancy .bottom-key-2 {
             height: 2px;
             position: absolute;
             background: #e8e8e8;
             transition: width 0.5s ease-out, left 0.3s ease-out, right 0.3s ease-out;
         }
-        .fancy .top-key{
+
+        .fancy .top-key {
             width: 1.5625rem;
             top: -2px;
             left: 0.625rem;
         }
-        .fancy .bottom-key-1{
+
+        .fancy .bottom-key-1 {
             width: 1.5625rem;
             right: 1.875rem;
             bottom: -2px;
         }
-        .fancy .bottom-key-2{
+
+        .fancy .bottom-key-2 {
             width: 0.625rem;
             right: 0.625rem;
             bottom: -2px;
         }
-        .fancy:hover{
+
+        .fancy:hover {
             background: white;
             border-color: transparent;
             box-shadow: 1px 2px 5px 2px #BBBCBF;
         }
+
         .fancy:hover .text {
             padding-left: 1.5em;
         }
-        .fancy:hover .top-key{
+
+        .fancy:hover .top-key {
             left: -2px;
             width: 0px;
         }
-        .fancy:hover .bottom-key-1, .fancy:hover .bottom-key-2{
+
+        .fancy:hover .bottom-key-1,
+        .fancy:hover .bottom-key-2 {
             right: 0;
             width: 0;
         }
     </style>
 </head>
+
 <body class="m-0 font-[Kanit]">
     <div class="bg-[#0E0E5D] flex justify-between h-[13vh]">
-        <div class="flex justify-center items-center text-white ml-[4%]"><h1 class="text-[40px]">MEMLODY</h1></div>
+        <div class="flex justify-center items-center text-white ml-[4%]">
+            <h1 class="text-[40px]">MEMLODY</h1>
+        </div>
         <div class="flex justify-end items-center w-[20%] gap-[10px]">
             <img src="/static/img/person_5.png" class="w-[50px] h-[50px] mr-[20%]">
         </div>
     </div>
     <div class="flex justify-between">
-        <a class="fancy" href="./main_sound2.html">
+        <a class="fancy" href="/home/game_sound/speaking_mode">
             <span class="top-key"></span>
             <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
             <span class="bottom-key-1"></span>
@@ -95,55 +114,63 @@
             <p class="text-2xl" id="timer">00:00</p>
         </div>
     </div>
-    <label class=" flex justify-center w-fit mx-auto px-10 py-4 bg-white text-2xl rounded-3xl border-blue-700 border-2 shadow">โปรดออกเสียงให้ตรงกับเสียงที่ได้ยิน</label>
-    <div class=" flex flex-col justify-center px-5 py-10 mx-auto mt-10 w-[70%] border-none rounded-4xl" style="box-shadow: 4px 4px 2px 5px #C0C0C0;">
-        <div class="flex justify-center items-center bg-gray-300 px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 hover:bg-sky-200 hover:-translate-y-1 transform transition duration-300" onclick="sound()">
+    <label
+        class=" flex justify-center w-fit mx-auto px-10 py-4 bg-white text-2xl rounded-3xl border-blue-700 border-2 shadow">โปรดออกเสียงให้ตรงกับเสียงที่ได้ยิน</label>
+    <div class=" flex flex-col justify-center px-5 py-10 mx-auto mt-10 w-[70%] border-none rounded-4xl"
+        style="box-shadow: 4px 4px 2px 5px #C0C0C0;">
+        <div class="flex justify-center items-center bg-gray-300 px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 hover:bg-sky-200 hover:-translate-y-1 transform transition duration-300"
+            onclick="sound()">
             <img src="/static/img/volume-up-black.png" class="w-12 h-12">
             <p class="text-xl font-bold">กดเพื่อฟังเสียง</p>
             <audio id="sound" src="/static/img/sound-test.mp3"></audio>
         </div>
-        <div id="record_button" class="flex justify-center items-center px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer bg-blue-200 hover:bg-blue-400">
+        <div id="record_button"
+            class="flex justify-center items-center px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer bg-blue-200 hover:bg-blue-400">
             <img src="/static/img/mic.png" class="w-12 h-12 mr-3">
             <p id="record" class="text-xl font-bold">กดเพื่อพูดตอบคำถาม</p>
         </div>
         <audio id="play_back" controls class="mx-auto mt-4 hidden"></audio>
+        <p id="score"></p>
     </div>
     <div class="flex justify-center mt-5">
-        <button class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
+        <button
+            class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+            style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
             <p>ถัดไป</p>
-            <img src="/static/img/right-arrow.png" class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
+            <img src="/static/img/right-arrow.png"
+                class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
         </button>
     </div>
     <script>
         let play = false;
-        function sound(){
+        function sound() {
             const audio = document.getElementById("sound");
-            if (play){
+            if (play) {
                 audio.pause();
-            }else{
+            } else {
                 audio.time = 0;
                 audio.play();
             }
             play = !play;
-            audio.onended = function (){
+            audio.onended = function () {
                 play = false;
             };
         }
 
         let second = 0;
         let time = null;
-        function updateTimerDisplay(){
+        function updateTimerDisplay() {
             const min = String(Math.floor(second / 60)).padStart(2, '0');
             const sec = String(second % 60).padStart(2, '0');
             document.getElementById('timer').textContent = `${min}:${sec}`;
         }
-        function start(){
+        function start() {
             time = setInterval(() => {
                 second++;
                 updateTimerDisplay();
             }, 1000);
         }
-        function stop(){
+        function stop() {
             clearInterval(time);
             time = null;
         }
@@ -156,36 +183,98 @@
         const record = document.getElementById('record');
         const play_back = document.getElementById('play_back');
         record_button.addEventListener('click', async () => {
-            if (!is_recording){
+            if (!is_recording) {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 media_recorder = new MediaRecorder(stream);
-            
+
                 list_audio = [];
-            
+
                 media_recorder.ondataavailable = e => {
                     list_audio.push(e.data);
                 };
-            
-                media_recorder.onstop = () => {
+
+                media_recorder.onstop = async () => {
                     const audioBlob = new Blob(list_audio, { type: 'audio/webm' });
                     const audioUrl = URL.createObjectURL(audioBlob);
                     play_back.src = audioUrl;
                     play_back.classList.remove('hidden');
+
+                    const arrayBuffer = await audioBlob.arrayBuffer();
+                    const wavBlob = await convertWebmToWav(arrayBuffer);
+                    const wavFile = new File([wavBlob], "recorded.wav", { type: "audio/wav" });
+
+                    const formData = new FormData();
+                    formData.append("label", "recorded");
+                    formData.append("file", wavFile);
+
+                    const response = await fetch('/home/game_sound/speaking_mode/compare', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        const score = document.getElementById('score');
+                        score.textContent = `คะแนนความเหมือน: ${data.score}`;
+                    })
                 };
-            
+
                 media_recorder.start();
                 is_recording = true;
                 record.textContent = 'กำลังบันทึก... (คลิกเพื่อหยุด)';
                 record_button.classList.remove('bg-blue-200', 'hover:bg-blue-400');
                 record_button.classList.add('bg-red-400', 'hover:bg-red-600');
-            }else{
+            } else {
                 media_recorder.stop();
                 is_recording = false;
                 record.textContent = 'กดเพื่อพูดตอบคำถาม';
                 record_button.classList.remove('bg-red-400', 'hover:bg-red-600');
                 record_button.classList.add('bg-blue-200', 'hover:bg-blue-400');
             }
+
         });
+
+        async function convertWebmToWav(arrayBuffer) {
+            const audioContext = new AudioContext({ sampleRate: 16000 });
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+            const numOfChan = audioBuffer.numberOfChannels;
+            const length = audioBuffer.length * numOfChan * 2 + 44;
+            const buffer = new ArrayBuffer(length);
+            const view = new DataView(buffer);
+
+            function writeUTFBytes(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            writeUTFBytes(view, 0, 'RIFF');
+            view.setUint32(4, 36 + audioBuffer.length * numOfChan * 2, true);
+            writeUTFBytes(view, 8, 'WAVE');
+            writeUTFBytes(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numOfChan, true);
+            view.setUint32(24, audioBuffer.sampleRate, true);
+            view.setUint32(28, audioBuffer.sampleRate * numOfChan * 2, true);
+            view.setUint16(32, numOfChan * 2, true);
+            view.setUint16(34, 16, true);
+            writeUTFBytes(view, 36, 'data');
+            view.setUint32(40, audioBuffer.length * numOfChan * 2, true);
+
+            let offset = 44;
+            for (let i = 0; i < audioBuffer.length; i++) {
+                for (let ch = 0; ch < numOfChan; ch++) {
+                    const sample = audioBuffer.getChannelData(ch)[i];
+                    const s = Math.max(-1, Math.min(1, sample));
+                    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+                    offset += 2;
+                }
+            }
+
+            return new Blob([view], { type: "audio/wav" });
+        }
     </script>
 </body>
+
 </html>

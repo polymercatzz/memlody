@@ -106,7 +106,7 @@
     </div>
 
     <div class="flex flex-row items-center m-[2.5vh]">
-        <a class="fancy" href="#">
+        <a class="fancy" href="/home/game_sound/pairing_mode">
             <span class="top-key"></span>
             <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
             <span class="bottom-key-1"></span>
@@ -173,10 +173,10 @@
         </div>
 
         <!-- เสียง -->
-        <audio id="audio1" src="thunder.mp3"></audio>
-        <audio id="audio2" src="sound2.mp3"></audio>
-        <audio id="audio3" src="sound3.mp3"></audio>
-        <audio id="audio4" src="sound4.mp3"></audio>
+        <audio id="audio1" src="{{sound[0]}}"></audio>
+        <audio id="audio2" src="{{sound[1]}}"></audio>
+        <audio id="audio3" src="{{sound[2]}}"></audio>
+        <audio id="audio4" src="{{sound[3]}}"></audio>
 
 
 
@@ -186,32 +186,32 @@
 
             <div class=" grid grid-cols-2 gap-[2vh]">
 
-                <button onclick="selectImage(1, this)" class="relative rounded-[12px]">
-                    <img src="/static/img/weather.jpg" alt=""
+                <button onclick="selectImage(this)" class="relative rounded-[12px]">
+                    <img src="{{ images[0] }}" alt=""
                         class="h-full w-full object-cover rounded-[12px] outline outline-2 outline-[#E8E8E8]" />
                     <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct"></div>
                     <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect"></div>
 
                 </button>
 
-                <button onclick="selectImage(2, this)" class="relative rounded-[12px]">
-                    <img src="/static/img/bug.jpg" alt=""
+                <button onclick="selectImage(this)" class="relative rounded-[12px]">
+                    <img src="{{ images[1] }}" alt=""
                         class="h-full w-full object-cover rounded-[12px] outline outline-2 outline-[#E8E8E8]" />
                     <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct"></div>
                     <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect"></div>
 
                 </button>
 
-                <button onclick="selectImage(3, this)" class="relative rounded-[12px]">
-                    <img src="/static/img/sea.jpg" alt=""
+                <button onclick="selectImage(this)" class="relative rounded-[12px]">
+                    <img src="{{ images[2] }}" alt=""
                         class="h-full w-full object-cover rounded-[12px] outline outline-2 outline-[#E8E8E8]" />
                     <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct"></div>
                     <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect"></div>
 
                 </button>
 
-                <button onclick="selectImage(4, this)" class="relative rounded-[12px]">
-                    <img src="/static/img/pirot.jpg" alt=""
+                <button onclick="selectImage(this)" class="relative rounded-[12px]">
+                    <img src="{{ images[3] }}" alt=""
                         class="h-full w-full object-cover rounded-[12px] outline outline-2 outline-[#E8E8E8]" />
                     <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct"></div>
                     <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect"></div>
@@ -235,14 +235,10 @@
     </div>
 
     <script>
+        const clean = (url) => url.replace(location.origin, "");
+        let answer = JSON.parse(`{{ answer | tojson }}`);
+        let done_questions = new Set();
 
-
-        const correctAnswers = {
-            1: 1, // เสียง 1 = รูปที่ 1
-            2: 2,
-            3: 3,
-            4: 4,
-        };
 
         function playSound(index) {
             // หยุดทุกเสียงก่อน
@@ -255,13 +251,21 @@
             currentSound = index;
         }
 
-        function selectImage(imageIndex, button) {
+        function selectImage(button) {
             if (currentSound === null) {
                 alert("กรุณาเลือกเสียงก่อน");
                 return;
             }
 
-            const isCorrect = imageIndex === correctAnswers[currentSound];
+            sound = clean(document.getElementById('audio' + currentSound).src);
+            img = clean(button.querySelector("img").src);
+            if (done_questions.has(sound) || done_questions.has(img)) {
+                alert("คุณได้เลือกคำตอบนี้ไปแล้ว");
+                return;
+            }
+            done_questions.add(sound);
+            done_questions.add(img);
+            const isCorrect = img === answer[sound];
 
             const overlayCorrect = button.querySelector(".overlay-correct");
             const overlayIncorrect = button.querySelector(".overlay-incorrect");
