@@ -137,10 +137,10 @@
         <div class="bg-[#FFFFFF] w-[50vh] max-[480px]:w-[40vh] p-[10px] flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8]">
           <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] mt-[1.5vh]">เหตุการณ์</p>
           <div class="flex flex-col gap-[2vh] mb-[1.7vh]">
-            <button class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer" data-value="1">ทานข้าวเช้า</button>
-            <button class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer" data-value="2">ไปโรงเรียน</button>
-            <button class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer" data-value="3">เล่นกีฬา</button>
-            <button class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer" data-value="4">เข้านอน</button>
+            <button class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer" data-value="1" onclick="SetSelectedButton(this)">ทานข้าวเช้า</button>
+            <button class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer" data-value="2" onclick="SetSelectedButton(this)">ไปโรงเรียน</button>
+            <button class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer" data-value="3" onclick="SetSelectedButton(this)">เล่นกีฬา</button>
+            <button class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer" data-value="4" onclick="SetSelectedButton(this)">เข้านอน</button>
           </div>
         </div>
       
@@ -148,17 +148,17 @@
         <div class="bg-[#FFFFFF] w-[50vh] max-[480px]:w-[40vh] p-[10px] flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8]">
           <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] mt-[1.5vh]">ลำดับ</p>
           <div class="flex flex-col gap-[2vh] mb-[1.7vh]">
-            <button class="order-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#DFE9FF]  transition-colors cursor-pointer text-left" data-position="1">1.</button>
-            <button class="order-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#DFE9FF]  transition-colors cursor-pointer text-left" data-position="2">2.</button>
-            <button class="order-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#DFE9FF]  transition-colors cursor-pointer text-left" data-position="3">3.</button>
-            <button class="order-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#DFE9FF]  transition-colors cursor-pointer text-left" data-position="4">4.</button>
+            <button class="order-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#DFE9FF]  transition-colors cursor-pointer text-left" data-position="1" onclick="CheckAnswer(this)">1.</button>
+            <button class="order-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#DFE9FF]  transition-colors cursor-pointer text-left" data-position="2" onclick="CheckAnswer(this)">2.</button>
+            <button class="order-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#DFE9FF]  transition-colors cursor-pointer text-left" data-position="3" onclick="CheckAnswer(this)">3.</button>
+            <button class="order-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#DFE9FF]  transition-colors cursor-pointer text-left" data-position="4" onclick="CheckAnswer(this)">4.</button>
           </div>
         </div>
       </div>
       
       
     <div class="flex justify-center items-center m-[7vh] max-[480px]:m-[5vh]">
-        <a href="index.html"
+        <a href="#" onclick="GenerateOrderButtons()"
         class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
         <img src="/static/img/right-arrow.png" alt="" class="w-[5vh] object-contain mr-[1vh] ">
         <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">ถัดไป</p>
@@ -183,21 +183,22 @@
 
 
     <script>
+        const order_questions = JSON.parse(`{{ order_questions | tojson}}`);
+        const all_map_choices = JSON.parse(`{{ all_map_choices | tojson}}`);
+        
+        let currentQuestionIndex = 0;
         let selectedEvent = null;
       
         // เมื่อกดปุ่มเหตุการณ์
-        document.querySelectorAll('.event-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
+        function SetSelectedButton(btn){
             // ล้าง highlight ก่อน
             document.querySelectorAll('.event-btn').forEach(b => b.classList.remove('ring', 'ring-blue-500'));
             selectedEvent = btn;
-            btn.classList.add('ring', 'ring-[#8D8D8D]'); // แสดงว่าเลือกอยู่
-          });
-        });
-      
+            btn.classList.add('ring', 'ring-[#8D8D8D]');
+        }
+    
         // เมื่อกดปุ่มลำดับ
-        document.querySelectorAll('.order-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
+        function CheckAnswer(btn) {
             if (!selectedEvent) return;
       
             const eventAnswer = selectedEvent.dataset.value;
@@ -211,15 +212,40 @@
             } else {
               btn.classList.add('ring-4', 'ring-red-500','bg-[#FFDFDF]'); // ผิด
             }
-      
+            btn.disabled = true;
             selectedEvent.disabled = true;
             selectedEvent.classList.add('opacity-50', 'cursor-default');
             selectedEvent = null;
       
             // เอา highlight ออก
             document.querySelectorAll('.event-btn').forEach(b => b.classList.remove('ring', 'ring-blue-500'));
-          });
-        });
+        }
+
+        GenerateOrderButtons();
+        function GenerateOrderButtons(){
+            let array_values = [];
+            all_map_choices[currentQuestionIndex].forEach((item) => {
+                array_values.push(order_questions[currentQuestionIndex]["map_choice_4"].indexOf(item));
+            });
+            const orderBUtton = document.querySelectorAll('.order-btn')
+            const eventButtons = document.querySelectorAll('.event-btn');
+            eventButtons.forEach((btn, index) => {
+                btn.textContent = `${all_map_choices[currentQuestionIndex][index]}`;
+                btn.dataset.value = array_values[index];
+                orderBUtton[index].dataset.position = index;
+
+                btn.classList.remove('ring', 'ring-blue-500')
+                btn.classList.remove('opacity-50', 'cursor-default')
+                btn.disabled = false;
+
+                orderBUtton[index].classList.remove('ring-4', 'ring-green-500', 'ring-red-500','bg-[#D7FFE6]','bg-[#FFDFDF]');
+                orderBUtton[index].classList.add('bg-[#DFE9FF]');
+                orderBUtton[index].disabled = false;
+
+            });
+            currentQuestionIndex++;
+
+        }
       </script>
 
 </body>

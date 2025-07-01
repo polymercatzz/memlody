@@ -106,7 +106,7 @@
 
     <div class="flex flex-row items-center m-[2.5vh]">
 
-        <a class="fancy" href="#">
+        <a class="fancy" href="/home/game_pic/todo_mode/">
             <span class="top-key"></span>
             <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
             <span class="bottom-key-1"></span>
@@ -143,7 +143,7 @@
             <div class="flex flex-col gap-[2vh]  mb-[1.7vh]">
                 <button onclick="selectAnswer(this, 1)" class="answer-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors 
                 break-words whitespace-normal cursor-pointer">เขียนจดบันทึก</button>
-                <button  onclick="selectAnswer(this, 2)" class="answer-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors 
+                <button onclick="selectAnswer(this, 2)" class="answer-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors 
                 break-words whitespace-normal cursor-pointer">ใส่น้ำ</button>
                 <button onclick="selectAnswer(this, 3)" class="answer-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors 
                 break-words whitespace-normal cursor-pointer">ลบแก้คำผิด</button>
@@ -153,11 +153,15 @@
         </div>
     </div>
     <div class="flex justify-center items-center m-[7vh] max-[480px]:m-[5vh]">
-        <a href="index.html"
-        class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
-        <img src="/static/img/right-arrow.png" alt="" class="w-[5vh] object-contain mr-[1vh] ">
-        <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">ถัดไป</p>
-    </a>
+        <a href="#" id="next-button"
+            class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
+            <img src="/static/img/right-arrow.png" alt="" class="w-[5vh] object-contain mr-[1vh] ">
+            <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap" onclick="generateQuestion()">ถัดไป</p>
+        </a>
+        <a href="/home/submit/game_pic/todo_mode" id="submit-button" style="display: none;"
+            class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
+            <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">เสร็จสิ้น</p>
+        </a>
     </div>
 
     <div class="flex justify-center mt-[-5vh]">
@@ -166,34 +170,72 @@
     </div>
 
     <script>
-        const correctAnswerIndex = 1; 
+        const question = JSON.parse(`{{ todo_list | tojson | safe }}`);
+        console.log(question);
+        let correctAnswer = "";
         let hasAnswered = false;
-    
+
+        let currentquestion = 0;
+
         function selectAnswer(button, index) {
             if (hasAnswered) return;
             hasAnswered = true;
-    
+
             const buttons = document.querySelectorAll('.answer-btn');
             buttons.forEach((btn, i) => {
                 btn.classList.remove(
                     'ring-4', 'ring-green-500', 'ring-red-500',
-                    'bg-green-200', 'bg-red-200' 
+                    'bg-green-200', 'bg-red-200'
                 );
-    
-                const isCorrect = (i + 1) === correctAnswerIndex;
+
+                const isCorrect = btn.textContent === correctAnswer;
                 if (isCorrect) {
                     btn.classList.remove('bg-[#E8E8E8]', 'hover:bg-[#D0D0D0]')
                     btn.classList.add('ring-4', 'ring-green-500', 'bg-[#D7FFE6]');
                 }
             });
-    
-            if (index !== correctAnswerIndex) {
+
+            if (button.textContent !== correctAnswer) {
                 button.classList.remove('bg-[#E8E8E8]', 'hover:bg-[#D0D0D0]')
                 button.classList.add('ring-4', 'ring-red-500', 'bg-[#FFDFDF]');
             }
         }
+        generateQuestion();
+        function generateQuestion() {
+            console.log("generation question");
+            if (!hasAnswered && currentquestion) return
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach((button, index) => {
+                button.textContent = question[currentquestion].choice_4[index];
+                button.classList.remove(
+                    'ring-4', 'ring-green-500', 'ring-red-500',
+                    'bg-green-200', 'bg-red-200',
+                    'bg-[#D7FFE6]', 'bg-[#FFDFDF]', 'bg-[#E8E8E8]', 'hover:bg-[#D0D0D0]'
+                );
+                button.classList.add('bg-[#E8E8E8]', 'hover:bg-[#D0D0D0]'); // กลับสู่พื้นหลังเดิม
+            })
+            correctAnswer = question[currentquestion].answer;
+            currentquestion++;
+            hasAnswered = false;
+
+            const nextBtn = document.getElementById("next-button");
+            const submitBtn = document.getElementById("submit-button");
+
+
+            if (currentquestion >= question.length - 1) {
+                // ข้อสุดท้าย
+                nextBtn.style.display = "none";
+                submitBtn.style.display = "flex";
+            } else {
+                // ยังไม่จบ
+                nextBtn.style.display = "flex";
+                submitBtn.style.display = "none";
+            }
+        }
+
+
     </script>
-    
+
 </body>
 
 </html>
