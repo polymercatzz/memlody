@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Carousel</title>
+    <title>Memlody</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
     <style>
         :lang(en) {
-          font-family: 'Huninn', sans-serif;
+          font-family: 'Huninn';
         }
         .dot{
             display: inline-block;
@@ -23,14 +23,151 @@
         .active-dot{
             background-color: #717171;
         }
+        #popup{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #popup.active{
+            visibility: visible;
+            opacity: 1;
+        }
+        #popup_box{
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 20px;
+            width: 30%;
+            max-width: 90vw;
+            box-shadow: 0 0 15px rgb(0 0 0 / 0.2);
+            position: relative;
+        }
+        #popup_box > form{
+            display: none;
+            flex-direction: column;
+        }
+        #popup_box > form.active {
+            display: flex;
+        }
     </style>
 </head>
+<!-- bg-[#0E0E5D] -->
 <body class="m-0 font-[Kanit]">
     <div class="bg-[#0E0E5D] flex justify-between h-[13vh]">
         <div class="flex justify-center items-center text-white ml-[4%]"><h1 class="text-[40px]">MEMLODY</h1></div>
         <div class="flex justify-center items-center w-[20%] gap-[10px]">
-            <button class="bg-white text-black w-[30%] h-[45%] border-none text-[24px] cursor-pointer rounded-[15px]"><a href="/home">Log in</a></button>
-            <button class="bg-[#0080FF] text-white w-[30%] h-[45%] border-none text-[24px] cursor-pointer rounded-[15px]">sign up</button>
+            <button onclick="open_popup('login')" class="bg-white text-black w-[30%] h-[45%] text-[24px] border-0 cursor-pointer rounded-[15px] hover:text-[#0080FF] hover:border-2">Log in</button>
+            <button onclick="open_popup('register')" class="bg-[#0080FF] text-white w-[30%] h-[45%] text-[24px] border-0 cursor-pointer rounded-[15px] hover:text-[#0080FF] hover:bg-white hover:border-2">Sign up</button>
+        </div>
+    </div>
+
+    <div id="popup">
+        <div id="popup_box">
+            <button class="absolute top-[-10px] right-[-10px] bg-white rounded-full border-[#ccc] border w-10 h-10 font-bold cursor-pointer" onclick="close_popup()">X</button>
+            <!-- popup login -->
+            <form id="login" class="active" onsubmit="event.preventDefault();">
+                <div class="max-w relative flex flex-col px-5 py-3 rounded-md text-black bg-gray-50 h-fit">
+                    <div class="text-4xl font-bold my-3 text-black text-center">Welcome to <span class="text-blue-300">Memlody</span></div>
+                    <div class="text-xl mb-4 text-center text-black">กรุณาเข้าสู่ระบบของคุณ</div>
+                    <div class="flex flex-col">
+                        <div class="relative w-full mb-5">
+                            <input type="text" id="Username" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <label for="Username" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Username</label>
+                        </div>
+                        <div class="relative w-full mb-2">
+                            <input type="password" id="Password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <label for="Password" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Password</label>
+                        </div>
+                        <div class="mx-1 mb-5 cursor-pointer" onclick="switch_popup('forgot')">
+                            <span class="text-xl text-blue-300 hover:underline">Forgot your password?</span>
+                        </div>
+                        <button type="submit" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl cursor-pointer hover:bg-sky-500">Login</button>
+                    </div>
+                    <div class="text-xl text-center my-5">Don't have a MEMLODY account?<label class="text-xl text-blue-300 cursor-pointer hover:underline" onclick="switch_popup('register')"> Sign up for Memlody</label></div>
+                </div>
+            </form>
+
+            <!-- popup forgot -->
+            <form id="forgot" class="active" onsubmit="event.preventDefault();">
+                <div class="max-w relative flex flex-col px-10 py-3 rounded-md text-black bg-gray-50 h-fit">
+                    <div class="text-4xl font-bold my-3 text-black text-center">Forgot Your Password?</div>
+                    <div class="text-xl mb-4 text-center text-black">กรุณาใส่ E-mail ที่ลงทะเบียน</div>
+                    <div class="flex flex-col">
+                        <div class="relative w-full mb-5">
+                            <input type="text" id="Email" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <label for="Email" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Email</label>
+                        </div>
+                        <div class="relative w-full mb-5">
+                            <input type="password" id="NewPassword" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <label for="NewPassword" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">New Password</label>
+                        </div>
+                        <button type="submit" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl hover:bg-sky-500">Change Password</button>
+                    </div>
+                    <div class="text-xl text-center my-5 text-blue-300 cursor-pointer hover:underline" onclick="switch_popup('login')">return to login</div>
+                </div>
+            </form>
+
+            <!-- popup register -->
+            <form id="register" onsubmit="event.preventDefault();">
+                <div class="max-w relative flex flex-col px-4 py-2 rounded-md text-black bg-gray-50">
+                    <div class="text-4xl font-bold my-3 text-black text-start">Sign up</div>
+                    <div class="text-xl mb-4 text-start text-black">โปรดใส่ข้อมูลให้ถูกต้อง</div>
+                    <div class="flex flex-col gap-3">
+                        <div class="relative w-full flex gap-5 mb-5">
+                            <div class="relative w-[50%]">
+                                <input type="text" id="FirstName" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                                <label for="FirstName" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">ชื่อ</label>
+                            </div>
+                        
+                            <div class="relative w-[50%]">
+                                <input type="text" id="LastName" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                                <label for="LastName" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">นามสกุล</label>
+                            </div>
+                        </div>
+                        <div class="relative w-full flex gap-5 mb-5">
+                            <div class="relative w-[50%]">
+                                <input type="text" id="Age" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                                <label for="Age" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">อายุ</label>
+                            </div>
+                            <div class="relative w-[50%]">
+                                <select id="Gender" required class="w-full h-[45px] border border-gray-300 rounded-xl px-3 py-2 text-xl text-gray-400 outline-none focus:border-blue-500 focus:text-black bg-gray-50" onchange="this.classList.remove('text-gray-400'); this.classList.add('text-black')">
+                                    <option value="" disabled selected hidden>--- เลือกเพศ ---</option>
+                                    <option value="ชาย">ชาย</option>
+                                    <option value="หญิง">หญิง</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="relative w-full mb-5">
+                            <input type="date" id="Birth" required class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl text-gray-400 outline-none focus:text-black"/>
+                            <label for="Birth" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">วันเกิด</label>
+                        </div>
+                        <div class="relative w-full mb-5">
+                            <input type="text" id="Email" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <label for="Email" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Email</label>
+                        </div>
+                        <div class="relative w-full mb-5">
+                            <input type="text" id="Username" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <label for="Username" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Username</label>
+                        </div>
+                        <div class="relative w-full mb-5">
+                            <input type="password" id="Password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <label for="Password" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Password</label>
+                        </div>
+                        <div class="relative w-full mb-5">
+                            <input type="password" id="ConfirmPassword" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <label for="ConfirmPassword" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Confirm Password</label>
+                        </div>
+                        <button type="submit" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl hover:bg-sky-500">Submit</button>
+                    </div>
+                    <div class="text-xl text-center my-5">Already have an account?<label class="text-xl text-blue-300 cursor-pointer hover:underline" onclick="switch_popup('login')"> Log in here.</label></div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -92,24 +229,70 @@
                 <div class="flex flex-col justify-center">
                     <p class="text-[20px] font-bold m-0 text-left text-gray-900">เกมนี่เสียงอะไร??</p>
                 </div>
-                <img src="/static/img/sound-game.png" class="w-[80px] h-[80px]" alt="Icon เกมนี่เสียงอะไร">
+                <img src="/static/img/sound-game.png" class="w-[80px] h-[80px]">
             </a>
             <a href="#" class="flex justify-between items-center p-5 rounded-[20px] bg-[#E9EFFF] border border-gray-300 shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-gray-50">
                 <div class="flex flex-col justify-center">
                     <p class="text-[20px] font-bold m-0 text-left text-gray-900">เกมทายของจากรูปภาพ</p>
                 </div>
-                <img src="/static/img/problem-game.png" class="w-[80px] h-[80px]" alt="Icon เกมทายของจากรูปภาพ">
+                <img src="/static/img/problem-game.png" class="w-[80px] h-[80px]">
             </a>
             <a href="#" class="flex justify-between items-center p-5 rounded-[20px] bg-[#E9EFFF] border border-gray-300 shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-gray-50">
                 <div class="flex flex-col justify-center">
                     <p class="text-[20px] font-bold m-0 text-left text-gray-900">สถิติทั้งหมด</p>
                 </div>
-                <img src="/static/img/trend.png" class="w-[80px] h-[80px]" alt="Icon สถิติทั้งหมด">
+                <img src="/static/img/trend.png" class="w-[80px] h-[80px]">
             </a>
         </div>
     </div>
 
     <script>
+        const popup = document.getElementById('popup');
+        const login = document.getElementById('login');
+        const forgot = document.getElementById('forgot');
+        const register = document.getElementById('register');
+        function open_popup(name){
+            popup.classList.add('active');
+            if (name === 'login'){
+                login.classList.add('active');
+                forgot.classList.remove('active');
+                register.classList.remove('active');
+            }else{
+                register.classList.add('active');
+                login.classList.remove('active');
+                forgot.classList.remove('active');
+            }
+        }
+        function close_popup(){
+            popup.classList.remove('active');
+        }
+        function switch_popup(name){
+            if (name === 'login'){
+                login.classList.add('active');
+                forgot.classList.remove('active');
+                register.classList.remove('active');
+            }else if (name === 'register'){
+                register.classList.add('active');
+                login.classList.remove('active');
+                forgot.classList.remove('active');
+            }else if (name === 'forgot'){
+                forgot.classList.add('active');
+                login.classList.remove('active');
+                register.classList.remove('active');
+            }
+        }
+    
+        const birthday = document.getElementById('Birth');
+        birthday.addEventListener('change', function (){
+            if (this.value){
+              this.classList.remove('text-gray-400');
+              this.classList.add('text-black');
+            }else{
+              this.classList.remove('text-black');
+              this.classList.add('text-gray-400');
+            }
+        });
+
         const slides = document.getElementById("slides");
         const dotsContainer = document.getElementById("dots");
         let autoSlideInterval;
