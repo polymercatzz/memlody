@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stat</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+</head>
+<style>
+    .fancy {
+        display: inline-block;
+        position: relative;
+        border-radius: 20px;
+        font-size: 2vh;
+        /* margin: 20px 0 0 20px; */
+        padding-right: 2vh;
+        color: #fff;
+        border: 2px solid #BBBCBF;
+        background-color: #F0F0F0;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        white-space: nowrap;
+    }
+
+    .fancy .text {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        padding-left: 2em;
+        text-align: left;
+        transition: all 0.3s ease-in-out;
+        color: black;
+    }
+
+    .img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        margin-left: -1.5em;
+    }
+
+    .fancy .top-key,
+    .fancy .bottom-key-1,
+    .fancy .bottom-key-2 {
+        height: 2px;
+        position: absolute;
+        background: #e8e8e8;
+        transition: width 0.5s ease-out, left 0.3s ease-out, right 0.3s ease-out;
+    }
+
+    .fancy .top-key {
+        width: 1.5625rem;
+        top: -2px;
+        left: 0.625rem;
+    }
+
+    .fancy .bottom-key-1 {
+        width: 1.5625rem;
+        right: 1.875rem;
+        bottom: -2px;
+    }
+
+    .fancy .bottom-key-2 {
+        width: 0.625rem;
+        right: 0.625rem;
+        bottom: -2px;
+    }
+
+    .fancy:hover {
+        background: white;
+        border-color: transparent;
+        box-shadow: 1px 2px 5px 2px #BBBCBF;
+    }
+
+    .fancy:hover .text {
+        padding-left: 1.5em;
+    }
+
+    .fancy:hover .top-key {
+        left: -2px;
+        width: 0px;
+    }
+
+    .fancy:hover .bottom-key-1,
+    .fancy:hover .bottom-key-2 {
+        right: 0;
+        width: 0;
+    }
+</style>
+
+<body class="m-0 font-[Kanit]">
+    <div class="bg-[#0E0E5D] flex justify-between">
+        <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]">
+            <h1 class="text-[3.5vh]">MEMLODY</h1>
+        </div>
+        <div class="flex justify-center items-center mr-[2%] m-[1.5vh]">
+            <a href="">
+                <img src="person_5.png" alt="" class="w-[5vh] h-[5vh] object-contain">
+            </a>
+        </div>
+    </div>
+
+    <div class="flex flex-row items-center mx-[2.5vh] mt-[2.7vh]">
+
+        <a class="fancy" href="#">
+            <span class="top-key"></span>
+            <span class="text"><img src="return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
+            <span class="bottom-key-1"></span>
+            <span class="bottom-key-2"></span>
+        </a>
+    </div>
+
+    <div class="flex">
+        <ul class="flex items-center justify-center gap-4 m-[2.5vh] text-[2vh]">
+            <li>
+                <a href="#"
+                    class="bg-sky-100 shadow-xl hover:shadow-xl hover:bg-sky-100 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 rounded-full px-10 py-3 block text-center">
+                    เกมนี่คือเสียงอะไร
+                </a>
+            </li>
+            <li>
+                <a href="stat_pic.html"
+                    class="border-2 border-gray-300 hover:shadow-xl  transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-full px-6 py-3 block text-center">
+                    เกมทายสิ่งของจากภาพ
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="charts grid grid-cols-2 gap-5 m-[2vh] max-[1000px]:grid-cols-1 ">
+        <div
+            class="charts-card bg-white mb-5 p-[25px] box-border break-inside-avoid border border-[#d2d2d3] rounded-[16px] shadow-lg">
+            <p class="chart-title flex items-center justify-center text-[2vh]">ระยะเวลาที่เล่น</p>
+            <div id="bar-chart"></div>
+        </div>
+
+        <div>
+            <select id="modeSelect" onchange="changePage()"
+                class=" p-2 mb-5 text-[2vh] rounded-lg border border-gray-300 shadow-sm">
+                <option value="">โหมดจับคู่</option>
+                <option value="stat_sound1.html">โหมดออกเสียง</option>
+                <option value="stat_sound2.html">เสียงของฉัน</option>
+            </select>
+            <div
+                class="charts-card bg-white mb-5 p-[25px] box-border break-inside-avoid border border-[#d2d2d3] rounded-[16px] shadow-lg">
+                <p class="chart-title flex items-center justify-center text-[2vh]">
+                    เปรียบเทียบเวลาและความถูกต้องในแต่ละด่าน</p>
+                <div id="area-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex gap-[2vh] m-[2vh] flex-wrap">
+        <div class="bg-white ml-[2vh] box-border  border border-[#d2d2d3] rounded-[16px] shadow-lg w-fit">
+            <p class="flex items-center justify-center text-[2vh] mt-4">ค่าเฉลี่ยความถูกต้องทั้งหมด</p>
+            <div id="chart2"></div>
+        </div>
+
+        <div  class="bg-white ml-[2vh] box-border  border border-[#d2d2d3] rounded-[16px] shadow-lg w-fit">
+            <p class="flex items-center justify-center text-[2vh] mt-4">ค่าเฉลี่ยความถูกต้อง</p>
+            <div id="pine"></div>
+
+        </div>
+
+        <div class="bg-white ml-[2vh] box-border  border border-[#d2d2d3] rounded-[16px] shadow-lg w-fit max-w-[600px]">
+            <p class="text-[2vh] m-4">วิเคราะห์</p>
+            <div class="flex flex-col m-[2vh] bg-sky-100 p-[2vh] rounded-lg shadow-md  text-[2vh]">
+                <div class="flex cl">
+                    <p>- ความถูกต้องเฉลี่ย:</p>
+                    <p class="ml-2">70%</p>
+                </div>
+                <div class="flex">
+                    <p>- ด่านที่ดีที่สุด:</p>
+                    <p class="ml-2">ด่านที่ 1 (90%)</p>
+                </div>
+                <div class="flex">
+                    <p>- ด่านที่ต้องปรับปรุง:</p>
+                    <p class="ml-2">ด่านที่ 7 (20%)</p>
+                </div>
+            </div>
+            <p class="m-[2vh] max-w-[400px]">แนวโน้ม: ยิ่งใช้เวลานาน ความถูกต้องมักจะลดลง
+                อาจมีปัญหาในการทำความเข้าใจโจทย์ที่ยากขึ้น.</p>
+        </div>
+
+
+
+    </div>
+    <!-- apexchart -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.7.0/apexcharts.min.js"></script>
+
+    <script>
+
+        // กด select เปลี่ยนหน้า
+        function changePage() {
+            const select = document.getElementById("modeSelect");
+            const url = select.value;
+            if (url) {
+                window.location.href = url;
+            }
+        }
+
+        //กราฟแท่ง
+        const barChartOptions = {
+            series: [
+                {
+                    name: '',
+                    data: [10, 20, 30, 40, 45, 50, 60],
+                },
+            ],
+            chart: {
+                type: 'bar',
+                height: 400,
+                toolbar: {
+                    show: false,
+                },
+            },
+            colors: ['#246dec'],
+            plotOptions: {
+                bar: {
+                    distributed: false,
+                    borderRadius: 4,
+                    horizontal: false,
+                    columnWidth: '50%',
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            legend: {
+                show: false,
+            },
+            xaxis: {
+                categories: ['รอบที่ 1', 'รอบที่ 2', 'รอบที่ 3', 'รอบที่ 4', 'รอบที่ 5', 'รอบที่ 6', 'รอบที่ 7'],
+                title: {
+                    text: 'รอบการเล่น 7 รอบล่าสุด',
+
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'ระยะเวลา (นาที)',
+                },
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val, opts) {
+                        const label = opts.w.globals.labels[opts.dataPointIndex];
+                        return `ใช้เวลา ${val} นาที`;
+                    },
+                },
+            },
+        };
+
+        const barChart = new ApexCharts(
+            document.querySelector('#bar-chart'),
+            barChartOptions
+        );
+        barChart.render();
+
+        //กราฟเส้น
+        const areaChartOptions = {
+            series: [
+                {
+                    name: 'เวลาที่ใช้(นาที)',
+                    data: [12, 18, 25, 40, 30, 22, 15, 20, 60],
+                },
+                {
+                    name: 'ความถูกต้อง(%)',
+                    data: [11, 32, 45, 32, 34, 52, 41, 50, 20],
+                },
+            ],
+            chart: {
+                height: 350,
+                type: 'area',
+                toolbar: {
+                    show: false,
+                },
+            },
+            colors: ['#38bdf8', '#246dec'],
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                curve: 'smooth',
+            },
+            labels: ['ด่านที่ 1', 'ด่านที่ 2', 'ด่านที่ 3', 'ด่านที่ 4', 'ด่านที่ 5', 'ด่านที่ 6', 'ด่านที่ 7', 'ด่านที่ 8', 'ด่านที่ 9'],
+            markers: {
+                size: 0,
+            },
+            yaxis: [
+                {
+                    title: {
+                        text: 'เวลาที่ใช้ (นาที)',
+                    },
+                },
+                {
+                    opposite: true,
+                    title: {
+                        text: 'ความถูกต้อง (%)',
+                    },
+                },
+            ],
+            tooltip: {
+                shared: true,
+                intersect: false,
+            },
+        };
+
+        const areaChart = new ApexCharts(
+            document.querySelector('#area-chart'),
+            areaChartOptions
+        );
+        areaChart.render();
+
+        //กราฟ % เวลา
+        // var options = {
+        //     series: [20],
+        //     chart: {
+        //         height: 200,
+        //         type: 'radialBar',
+        //     },
+        //     plotOptions: {
+        //         radialBar: {
+        //             hollow: {
+        //                 size: '60%',
+        //             },
+        //             dataLabels: {
+        //                 name: {
+        //                     show: false
+        //                 },
+        //                 value: {
+        //                     show: true,
+        //                     fontSize: '32px',
+        //                     fontWeight: 600,
+        //                     color: '#111'
+        //                 }
+        //             }
+        //         },
+        //     },
+        // };
+
+        // var chart = new ApexCharts(document.querySelector("#chart"), options);
+        // chart.render();
+
+
+        //กราฟ % ความถูกต้อง
+        var options = {
+            series: [80],
+            chart: {
+                height: 200,
+                type: 'radialBar',
+            },
+            plotOptions: {
+                radialBar: {
+                    hollow: {
+                        size: '60%',
+                    },
+                    dataLabels: {
+                        name: {
+                            show: false
+                        },
+                        value: {
+                            show: true,
+                            fontSize: '32px',
+                            fontWeight: 600,
+                            color: '#111'
+                        }
+                    }
+                },
+            },
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart2"), options);
+        chart.render();
+
+        //pinechart
+        var options = {
+            series: [44, 55],
+            chart: {
+                width: 350,
+                type: 'pie',
+            },
+            labels: ['เกี่ยวกับสัตว์', 'ธรรมชาติ'],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 300
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#pine"), options);
+        chart.render();
+
+
+
+    </script>
+
+
+
+
+
+</body>
+
+</html>
