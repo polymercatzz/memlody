@@ -103,6 +103,7 @@
             <p id="record" class="text-xl font-bold">กดเพื่อพูดตอบคำถาม</p>
         </div>
         <audio id="play_back" controls class="mx-auto mt-4 hidden"></audio>
+        <p id="score"></p>
         <div class="flex justify-center mt-5">
             <button class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
                 <p>ถัดไป</p>
@@ -111,6 +112,12 @@
         </div>
     </div>
     <script>
+        let currentQuestion = 0;
+        const questions = JSON.parse(`{{ what_you_see | tojson}}`);
+        function GenerateQuestion(){
+            // ยังไม่เสร็จ------------------------------------------------
+            currentQuestion++;
+        }
         let play = false;
         function sound(){
             const audio = document.getElementById("sound");
@@ -162,11 +169,30 @@
                     list_audio.push(e.data);
                 };
             
-                media_recorder.onstop = () => {
+                media_recorder.onstop = async () => {
                     const audioBlob = new Blob(list_audio, { type: 'audio/webm' });
                     const audioUrl = URL.createObjectURL(audioBlob);
                     play_back.src = audioUrl;
                     play_back.classList.remove('hidden');
+
+                    const arrayBuffer = await audioBlob.arrayBuffer();
+                    const wavBlob = await convertWebmToWav(arrayBuffer);
+                    const wavFile = new File([wavBlob], "recorded.wav", { type: "audio/wav" });
+
+                    const formData = new FormData();
+                    formData.append("label", "recorded");
+                    formData.append("file", wavFile);
+                    formData.append("answer", questions[currentQuestion].answer);
+
+                    const response = await fetch('/home/check_voice', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        const score = document.getElementById('score');
+                        score.textContent = `${data}`;
+                    })
                 };
             
                 media_recorder.start();
@@ -182,6 +208,47 @@
                 record_button.classList.add('bg-blue-200', 'hover:bg-blue-400');
             }
         });
+        async function convertWebmToWav(arrayBuffer) {
+            const audioContext = new AudioContext({ sampleRate: 16000 });
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+            const numOfChan = audioBuffer.numberOfChannels;
+            const length = audioBuffer.length * numOfChan * 2 + 44;
+            const buffer = new ArrayBuffer(length);
+            const view = new DataView(buffer);
+
+            function writeUTFBytes(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            writeUTFBytes(view, 0, 'RIFF');
+            view.setUint32(4, 36 + audioBuffer.length * numOfChan * 2, true);
+            writeUTFBytes(view, 8, 'WAVE');
+            writeUTFBytes(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numOfChan, true);
+            view.setUint32(24, audioBuffer.sampleRate, true);
+            view.setUint32(28, audioBuffer.sampleRate * numOfChan * 2, true);
+            view.setUint16(32, numOfChan * 2, true);
+            view.setUint16(34, 16, true);
+            writeUTFBytes(view, 36, 'data');
+            view.setUint32(40, audioBuffer.length * numOfChan * 2, true);
+
+            let offset = 44;
+            for (let i = 0; i < audioBuffer.length; i++) {
+                for (let ch = 0; ch < numOfChan; ch++) {
+                    const sample = audioBuffer.getChannelData(ch)[i];
+                    const s = Math.max(-1, Math.min(1, sample));
+                    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+                    offset += 2;
+                }
+            }
+
+            return new Blob([view], { type: "audio/wav" });
+        }
     </script>
 </body>
 </html>

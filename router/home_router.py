@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, UploadFile, File, Form
 from fastapi.templating import Jinja2Templates
+from faster_whisper import WhisperModel
 import random
 import os
 import shutil
@@ -7,6 +8,8 @@ import shutil
 router = APIRouter(prefix="/home")
 
 templates = Jinja2Templates(directory="templates")
+
+model = WhisperModel("medium", compute_type="int8", device="cpu")
 
 @router.get("")
 async def home(request: Request):
@@ -46,26 +49,55 @@ async def speaking_mode(request: Request):
 
 @router.get("/game_sound/speaking_mode/{id}")
 async def play_speaking(request: Request, id: int):
-    return templates.TemplateResponse("game_sound2.html", {"request": request})
+    all_sounds = [
+    {
+        "id": 1,
+        "stage": 1,
+        "path_sound": "/static/sounds/sound1.mp3",
+        "answer": "เสียงนกร้อง"
+    },
+    {
+        "id": 2,
+        "stage": 1,
+        "path_sound": "/static/sounds/sound2.mp3",
+        "answer": "เสียงหมาเห่า"
+    },
+    {
+        "id": 3,
+        "stage": 1,
+        "path_sound": "/static/sounds/sound3.mp3",
+        "answer": "เสียงแมวร้อง"
+    },
+    {
+        "id": 4,
+        "stage": 1,
+        "path_sound": "/static/sounds/sound4.mp3",
+        "answer": "เสียงฝนตก"
+    },
+    {
+        "id": 5,
+        "stage": 1,
+        "path_sound": "/static/sounds/sound5.mp3",
+        "answer": "เสียงรถวิ่ง"
+    }
+]
+    # random.shuffle(all_sounds)
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds})
 
-# @router.post("/game_sound/speaking_mode/compare")
-# async def compare(request: Request, label: str = Form(...), file: UploadFile = File(...)):
-#     UPLOAD_FOLDER = "uploads"
-#     upload_path = os.path.join(UPLOAD_FOLDER, file.filename)
-#     with open(upload_path, "wb") as f:
-#         shutil.copyfileobj(file.file, f)
+@router.post("/check_voice")
+async def check_voice(request: Request, label: str = Form(...), file: UploadFile = File(...), answer: str = Form(...)):
+    temp_path = f"uploads/{file.filename}"
+    with open (temp_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
 
-#     target_path = f"static/sounds/{label}.wav"
-#     if not os.path.exists(target_path):
-#         return "Find the target file in not found"
-
-#     result, score = is_similar(target_path, upload_path)
-#     score_percent = round(float(score) * 100, 2)
-#     os.remove(upload_path)
-#     return {
-#         "score": score_percent,
-#         "result": "✅ เสียงคล้ายกัน" if result else "❌ ยังไม่ค่อยเหมือน ลองใหม่อีกครั้ง"
-#     }
+    segments, _ = model.transcribe(temp_path, language="th")
+    full_text = "".join([segment.text for segment in segments])
+    print(full_text)
+    ##  เช็คคำตอบตรงๆก่อนเดี๋ยวจะหาวิธีที่ดีกว่านี้
+    if full_text == answer:
+        return "ถูกต้อง"
+    else:
+        return "ไม่ถูกต้อง"
 
 @router.get("/game_sound/my_voice_mode")
 async def my_voice_mode(request: Request):
@@ -73,6 +105,7 @@ async def my_voice_mode(request: Request):
 
 @router.get("/game_sound/my_voice_mode/{id}")
 async def play_my_voice(request: Request, id: int):
+
     return templates.TemplateResponse("game_sound3.html", {"request": request})
 
 
@@ -128,7 +161,39 @@ async def what_you_see_mode(request: Request):
 
 @router.get("/game_pic/what_you_see_mode/{id}")
 async def play_what_you_see(request: Request, id: int):
-    return templates.TemplateResponse("game_guess2.html", {"request": request})
+    what_you_see = [
+    {
+        "id": 1,
+        "stage": 1,
+        "path_img": "/static/img/elephant.png",
+        "answer": "ช้าง"
+    },
+    {
+        "id": 2,
+        "stage": 1,
+        "path_img": "/static/img/dog.png",
+        "answer": "สุนัข"
+    },
+    {
+        "id": 3,
+        "stage": 1,
+        "path_img": "/static/img/apple.png",
+        "answer": "แอปเปิ้ล"
+    },
+    {
+        "id": 4,
+        "stage": 1,
+        "path_img": "/static/img/phone.png",
+        "answer": "โทรศัพท์"
+    },
+    {
+        "id": 5,
+        "stage": 1,
+        "path_img": "/static/img/fork.png",
+        "answer": "ส้อม"
+    }
+    ]
+    return templates.TemplateResponse("game_guess2.html", {"request": request, "what_you_see": what_you_see})
 
 @router.get("/game_pic/order_mode")
 async def order_mode(request: Request):
@@ -175,3 +240,4 @@ async def play_order(request: Request, id: int):
 @router.get("/submit/{game}/{mode}")
 async def submit(request: Request):
     return templates.TemplateResponse("sum.html", {"request": request})
+

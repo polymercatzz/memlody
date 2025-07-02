@@ -134,13 +134,20 @@
     <div class="flex justify-center mt-5">
         <button
             class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-            style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
+            style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="GenerateQuestion()">
             <p>ถัดไป</p>
             <img src="/static/img/right-arrow.png"
                 class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
         </button>
     </div>
     <script>
+        let currentQuestion = 0;
+        const questions = JSON.parse(`{{ all_sounds | tojson}}`);
+
+        function GenerateQuestion(){
+            // ยังไม่เสร็จ------------------------------------------------
+            currentQuestion++;
+        }
         let play = false;
         function sound() {
             const audio = document.getElementById("sound");
@@ -205,15 +212,16 @@
                     const formData = new FormData();
                     formData.append("label", "recorded");
                     formData.append("file", wavFile);
+                    formData.append("answer", questions[currentQuestion].answer);
 
-                    const response = await fetch('/home/game_sound/speaking_mode/compare', {
+                    const response = await fetch('/home/check_voice', {
                         method: 'POST',
                         body: formData
                     })
                     .then(res => res.json())
                     .then(data => {
                         const score = document.getElementById('score');
-                        score.textContent = `คะแนนความเหมือน: ${data.score}`;
+                        score.textContent = `${data}`;
                     })
                 };
 
