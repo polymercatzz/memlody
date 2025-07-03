@@ -389,9 +389,6 @@
   .my-15 {
     margin-block: calc(var(--spacing) * 15);
   }
-  .my-20 {
-    margin-block: calc(var(--spacing) * 20);
-  }
   .my-\[20px\] {
     margin-block: 20px;
   }
@@ -409,6 +406,9 @@
   }
   .mt-10 {
     margin-top: calc(var(--spacing) * 10);
+  }
+  .mt-15 {
+    margin-top: calc(var(--spacing) * 15);
   }
   .mt-\[-5vh\] {
     margin-top: -5vh;
@@ -478,12 +478,6 @@
   }
   .mb-5 {
     margin-bottom: calc(var(--spacing) * 5);
-  }
-  .mb-6 {
-    margin-bottom: calc(var(--spacing) * 6);
-  }
-  .mb-8 {
-    margin-bottom: calc(var(--spacing) * 8);
   }
   .mb-10 {
     margin-bottom: calc(var(--spacing) * 10);
@@ -623,15 +617,6 @@
   .w-60 {
     width: calc(var(--spacing) * 60);
   }
-  .w-\[0vh\] {
-    width: 0vh;
-  }
-  .w-\[02\] {
-    width: 02;
-  }
-  .w-\[02vh\] {
-    width: 02vh;
-  }
   .w-\[3\.5vh\] {
     width: 3.5vh;
   }
@@ -650,14 +635,8 @@
   .w-\[20\%\] {
     width: 20%;
   }
-  .w-\[20vh\] {
-    width: 20vh;
-  }
   .w-\[30\%\] {
     width: 30%;
-  }
-  .w-\[30vh\] {
-    width: 30vh;
   }
   .w-\[40\%\] {
     width: 40%;
@@ -689,9 +668,6 @@
   .w-\[70\%\] {
     width: 70%;
   }
-  .w-\[70vh\] {
-    width: 70vh;
-  }
   .w-\[80\%\] {
     width: 80%;
   }
@@ -703,9 +679,6 @@
   }
   .w-\[200px\] {
     width: 200px;
-  }
-  .w-\[705\] {
-    width: 705;
   }
   .w-fit {
     width: fit-content;
@@ -856,6 +829,9 @@
   .rounded-\[15px\] {
     border-radius: 15px;
   }
+  .rounded-\[16\] {
+    border-radius: 16;
+  }
   .rounded-\[16px\] {
     border-radius: 16px;
   }
@@ -870,9 +846,6 @@
   }
   .rounded-md {
     border-radius: var(--radius-md);
-  }
-  .rounded-sm {
-    border-radius: var(--radius-sm);
   }
   .rounded-xl {
     border-radius: var(--radius-xl);
@@ -992,9 +965,6 @@
   .bg-gray-50 {
     background-color: var(--color-gray-50);
   }
-  .bg-gray-200 {
-    background-color: var(--color-gray-200);
-  }
   .bg-gray-300 {
     background-color: var(--color-gray-300);
   }
@@ -1055,17 +1025,8 @@
   .p-\[1vh\] {
     padding: 1vh;
   }
-  .p-\[2\.5\] {
-    padding: 2.5;
-  }
-  .p-\[2\.5hv\] {
-    padding: 2.5hv;
-  }
   .p-\[2\.5vh\] {
     padding: 2.5vh;
-  }
-  .p-\[2\] {
-    padding: 2;
   }
   .p-\[2vh\] {
     padding: 2vh;
@@ -1135,6 +1096,12 @@
   }
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
+  }
+  .py-15 {
+    padding-block: calc(var(--spacing) * 15);
+  }
+  .py-20 {
+    padding-block: calc(var(--spacing) * 20);
   }
   .py-\[1vh\] {
     padding-block: 1vh;
@@ -1211,14 +1178,11 @@
   .text-\[3\.5vh\] {
     font-size: 3.5vh;
   }
-  .text-\[4\.44px\] {
-    font-size: 4.44px;
-  }
   .text-\[4\.44vh\] {
     font-size: 4.44vh;
   }
-  .text-\[4px\] {
-    font-size: 4px;
+  .text-\[4vh\] {
+    font-size: 4vh;
   }
   .text-\[5vh\] {
     font-size: 5vh;
@@ -1283,11 +1247,8 @@
   .text-\[\#FFFFFF\] {
     color: #FFFFFF;
   }
-  .text-\[2\.7\] {
-    color: 2.7;
-  }
-  .text-\[px\] {
-    color: px;
+  .text-\[vh\] {
+    color: vh;
   }
   .text-black {
     color: var(--color-black);
@@ -1393,9 +1354,6 @@
   }
   .outline-gray-200 {
     outline-color: var(--color-gray-200);
-  }
-  .outline-gray-500 {
-    outline-color: var(--color-gray-500);
   }
   .transition {
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, visibility, content-visibility, overlay, pointer-events;

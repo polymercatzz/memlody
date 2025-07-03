@@ -17,7 +17,7 @@
             margin: 20px 0 0 20px;
             padding: 8px 20px;
             color: #fff;
-            border: 2px solid #000;
+            border: 2px solid #BBBCBF;
             background-color: #F0F0F0;
             text-align: center;
             cursor: pointer;
@@ -92,9 +92,9 @@
 </head>
 
 <body class="m-0 font-[Kanit]">
-    <div class="bg-[#0E0E5D] flex justify-between h-[13vh]">
-        <div class="flex justify-center items-center text-white ml-[4%]">
-            <h1 class="text-[40px]">MEMLODY</h1>
+    <div class="bg-[#0E0E5D] flex justify-between">
+        <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]">
+            <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
         <div class="flex justify-end items-center w-[20%] gap-[10px]">
             <img src="/static/img/person_5.png" class="w-[50px] h-[50px] mr-[20%]">
@@ -114,9 +114,9 @@
         </div>
     </div>
     <label
-        class=" flex justify-center w-fit mx-auto px-10 py-4 bg-white text-2xl rounded-3xl border-blue-700 border-2 shadow">โปรดออกเสียงให้ตรงกับเสียงที่ได้ยิน</label>
-    <div class=" flex flex-col justify-center px-5 py-10 mx-auto mt-10 w-[70%] border-none rounded-4xl"
-        style="box-shadow: 4px 4px 2px 5px #C0C0C0;">
+       class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.7vh] text-[#0E0E5D] mt-2 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดออกเสียงให้ตรงกับเสียงที่ได้ยิน ?</label>
+    <div class=" flex flex-col justify-center px-5 py-15 mx-auto mt-15 w-[60%] border-none rounded-4xl outline outline-2 outline-gray-200 shadow-xl"
+        >
         <div class="flex justify-center items-center bg-gray-300 px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 hover:bg-sky-200 hover:-translate-y-1 transform transition duration-300"
             onclick="sound()">
             <img src="/static/img/volume-up-black.png" class="w-12 h-12">
@@ -131,7 +131,7 @@
         <audio id="play_back" controls class="mx-auto mt-4 hidden"></audio>
         <p id="score"></p>
     </div>
-    <div class="flex justify-center mt-5">
+    <div class="flex justify-center mt-10">
         <button
             class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
             style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="GenerateQuestion()">

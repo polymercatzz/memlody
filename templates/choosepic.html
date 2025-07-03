@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memlody</title>
-    <link rel="stylesheet" href="/static/css/app2.css">
+    <link rel="stylesheet" href="/static/css/app.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
@@ -96,7 +96,7 @@
 <body class="m-0 font-[Kanit]">
     <div class="bg-[#0E0E5D] flex justify-between">
         <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]">
-            <h1 class="text-[3.5vh]">MEMLODY</h1>
+            <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
         <div class="flex justify-center items-center mr-[2%] m-[1.5vh]">
             <a href="">
@@ -156,11 +156,21 @@
         </div>
     </div>
     <div class="flex justify-center items-center m-[7vh] max-[480px]:m-[5vh]">
-        <a href="#" id="next-button"
+        <!-- <a href="#" id="next-button"
             class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
             <img src="/static/img/right-arrow.png" alt="" class="w-[5vh] object-contain mr-[1vh] ">
             <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap" onclick="generateQuestion()">ถัดไป</p>
-        </a>
+        </a> -->
+        <div class="flex justify-center mt-5">
+            <button
+                class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+                style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
+                <p>ถัดไป</p>
+                <img src="/static/img/right-arrow.png"
+                    class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
+            </button>
+        </div>
+
         <a href="/home/submit/game_pic/todo_mode" id="submit-button" style="display: none;"
             class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
             <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">เสร็จสิ้น</p>
