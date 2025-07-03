@@ -93,6 +93,7 @@ async def check_voice(request: Request, label: str = Form(...), file: UploadFile
     segments, _ = model.transcribe(temp_path, language="th")
     full_text = "".join([segment.text for segment in segments])
     print(full_text)
+    os.remove(temp_path)
     ##  เช็คคำตอบตรงๆก่อนเดี๋ยวจะหาวิธีที่ดีกว่านี้
     if full_text == answer:
         return "ถูกต้อง"
@@ -105,10 +106,78 @@ async def my_voice_mode(request: Request):
 
 @router.get("/game_sound/my_voice_mode/{id}")
 async def play_my_voice(request: Request, id: int):
+    cousins = [
+    {
+        "cousin_id": 1,
+        "user_id": 101,
+        "nickname": "พี่บอย",
+        "relation": "พี่ชาย",
+        "path_sound": "/static/sounds/cousin1.mp3",
+        "path_img": "/static/img/cousin1.jpg"
+    },
+    {
+        "cousin_id": 2,
+        "user_id": 101,
+        "nickname": "น้องแพร",
+        "relation": "น้องสาว",
+        "path_sound": "/static/sounds/cousin2.mp3",
+        "path_img": "/static/img/cousin2.jpg"
+    },
+    {
+        "cousin_id": 3,
+        "user_id": 101,
+        "nickname": "อาแดง",
+        "relation": "อา",
+        "path_sound": "/static/sounds/cousin3.mp3",
+        "path_img": "/static/img/cousin3.jpg"
+    },
+    {
+        "cousin_id": 4,
+        "user_id": 101,
+        "nickname": "น้าเอ๋",
+        "relation": "น้า",
+        "path_sound": "/static/sounds/cousin4.mp3",
+        "path_img": "/static/img/cousin4.jpg"
+    },
+    {
+        "cousin_id": 5,
+        "user_id": 101,
+        "nickname": "ลุงหมู",
+        "relation": "ลุง",
+        "path_sound": "/static/sounds/cousin5.mp3",
+        "path_img": "/static/img/cousin5.jpg"
+    }
+]
+    random.shuffle(cousins)
+    questions_cosins = create_questions(cousins)
+    return templates.TemplateResponse("game_sound3.html", {"request": request, "questions_cosins": questions_cosins})
 
-    return templates.TemplateResponse("game_sound3.html", {"request": request})
+def create_questions(cousins, num_questions=5, num_choices=4):
+    questions = []
 
+    for _ in range(num_questions):
+        answer = random.choice(cousins)
+        others = [c for c in cousins if c["cousin_id"] != answer["cousin_id"]]
+        random.shuffle(others)
 
+        choices = others[:num_choices - 1] + [answer]
+        random.shuffle(choices)
+
+        question = {
+            "question_sound": answer["path_sound"],
+            "choices": [
+                {
+                    "nickname": f'{c["nickname"]} ({c["relation"]})',
+                    "path_img": c["path_img"]
+                }
+                for c in choices
+            ],
+            "correct_id": f'{answer["nickname"]} ({answer["relation"]})'
+        }
+
+        questions.append(question)
+
+    return questions
 
 @router.get("/game_pic/todo_mode")
 async def todo_mode(request: Request):

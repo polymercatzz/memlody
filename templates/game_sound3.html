@@ -83,7 +83,7 @@
         </div>
     </div>
     <div class="flex justify-between">
-        <a class="fancy" href="./main_sound3.html">
+        <a class="fancy" href="/home/game_sound/my_voice_mode/">
             <span class="top-key"></span>
             <span class="text"><img src="/static/img/return.png" class="img">ย้อนกลับ</span>
             <span class="bottom-key-1"></span>
@@ -105,28 +105,28 @@
             </div>
             <div>
                 <div class="grid grid-cols-4 w-[90%] mx-auto gap-4">
-                    <div onclick="box(0)" id="box-0" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                    <div onclick="checkanswer(this)" id="box-0" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
                         <div class="bg-white rounded-3xl">
                             <img src="/static/img/people1.jpg" class="w-56 h-56 object-contain border-1 rounded-3xl">
                         </div>
                         <p class="flex justify-center mt-2 mb-10 font-bold text-xl">เจมส์ (ลูก)</p>
                     </div>
                 
-                    <div onclick="box(1)" id="box-1" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                    <div onclick="checkanswer(this)" id="box-1" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
                         <div class="bg-white rounded-3xl">
                             <img src="/static/img/people2.jpg" class="w-56 h-56 object-contain border-1 rounded-3xl">
                         </div>
                         <p class="flex justify-center mt-2 mb-10 font-bold text-xl">ไมเคิล (หลาน)</p>
                     </div>
                 
-                    <div onclick="box(2)" id="box-2" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                    <div onclick="checkanswer(this)" id="box-2" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
                         <div class="bg-white rounded-3xl">
                             <img src="/static/img/people3.jpg" class="w-56 h-56 object-contain border-1 rounded-3xl">
                         </div>
                         <p class="flex justify-center mt-2 mb-10 font-bold text-xl">ซาบีน่า (น้องสาว)</p>
                     </div>
                 
-                    <div onclick="box(3)" id="box-3" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                    <div onclick="checkanswer(this)" id="box-3" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
                         <div class="bg-white rounded-3xl">
                             <img src="/static/img/people4.jpg" class="w-56 h-56 object-contain border-1 rounded-3xl">
                         </div>
@@ -135,7 +135,7 @@
                 </div>
             </div>
             <div class="flex justify-center mt-5">
-                <button class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
+                <button class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="generateQuestion()">
                     <p>ถัดไป</p>
                     <img src="/static/img/right-arrow.png" class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
                 </button>
@@ -143,6 +143,43 @@
         </div>
     </div>
     <script>
+        const questions = JSON.parse(`{{ questions_cosins | tojson}}`);
+        let check_answer = false;
+        let currentquestion = 0;
+        let correct_answer = null
+        console.log(questions);
+        generateQuestion();
+        function generateQuestion(){
+            const question = questions[currentquestion];
+
+            document.querySelectorAll('.select-box').forEach((box, index) => {
+                box.classList.remove('ring-4', 'ring-green-500', 'ring-red-500', 'bg-[#D7FFE6]', 'bg-[#FFDFDF]');
+                box.classList.add('hover:bg-gray-200');
+                box.querySelector('p').textContent = question.choices[index].nickname;
+                if (box.querySelector('p').textContent === question.correct_id){
+                    correct_answer = box;
+                }
+            })
+            currentquestion++;
+            check_answer = false
+        }
+
+
+        function checkanswer(selectedBox){
+            if (check_answer) return;
+            check_answer = true;
+            let answer = selectedBox.querySelector('p').textContent;
+            let correctAnswer = questions[currentquestion - 1].correct_id;
+            document.querySelectorAll('.select-box').forEach(box => {
+                box.classList.remove('hover:bg-gray-200');
+            });
+            if (answer === correctAnswer){
+                selectedBox.classList.add('ring-4', 'ring-green-500','bg-[#D7FFE6]');
+            }else{
+                selectedBox.classList.add('ring-4', 'ring-green-500','bg-[#D7FFE6]');
+                correct_answer.classList.add('ring-4', 'ring-red-500', 'bg-[#FFDFDF]');
+            }
+        }
         let play = false;
         function sound(){
             const audio = document.getElementById("sound");
@@ -158,13 +195,6 @@
             };
         }
 
-        function box(index){
-            const total = 4;
-            for (let i = 0; i < total; i++){
-                document.getElementById('box-' + i).classList.remove('bg-gray-200');
-            }
-            document.getElementById('box-' + index).classList.add('bg-gray-200');
-        }
 
         let second = 0;
         let time = null;
