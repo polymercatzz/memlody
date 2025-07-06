@@ -1,6 +1,10 @@
-from fastapi import APIRouter, Request, UploadFile, File, Form
+from fastapi import APIRouter, Request, UploadFile, File, Form, Depends
 from fastapi.templating import Jinja2Templates
 from faster_whisper import WhisperModel
+from database import Base, engine
+from sqlalchemy.orm import Session
+from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion
+import json
 import random
 import os
 import shutil
@@ -10,6 +14,15 @@ router = APIRouter(prefix="/home")
 templates = Jinja2Templates(directory="templates")
 
 model = WhisperModel("medium", compute_type="int8", device="cpu")
+
+Base.metadata.create_all(bind=engine)
+
+def get_db():
+    db = Session(bind=engine)
+    try:
+        yield db
+    finally:
+        db.close()
 
 @router.get("")
 async def home(request: Request):
@@ -48,38 +61,15 @@ async def speaking_mode(request: Request):
     return templates.TemplateResponse("main_sound2.html", {"request": request})
 
 @router.get("/game_sound/speaking_mode/{id}")
-async def play_speaking(request: Request, id: int):
+async def play_speaking(request: Request, id: int, db: Session = Depends(get_db)):
+    all_sounds_raw = db.query(SpeakingQuestion).filter(SpeakingQuestion.stage==id).all()
     all_sounds = [
     {
-        "id": 1,
-        "stage": 1,
-        "path_sound": "/static/sounds/sound1.mp3",
-        "answer": "เสียงนกร้อง"
-    },
-    {
-        "id": 2,
-        "stage": 1,
-        "path_sound": "/static/sounds/sound2.mp3",
-        "answer": "เสียงหมาเห่า"
-    },
-    {
-        "id": 3,
-        "stage": 1,
-        "path_sound": "/static/sounds/sound3.mp3",
-        "answer": "เสียงแมวร้อง"
-    },
-    {
-        "id": 4,
-        "stage": 1,
-        "path_sound": "/static/sounds/sound4.mp3",
-        "answer": "เสียงฝนตก"
-    },
-    {
-        "id": 5,
-        "stage": 1,
-        "path_sound": "/static/sounds/sound5.mp3",
-        "answer": "เสียงรถวิ่ง"
+        "stage": question.stage,
+        "path_sound": question.path_sound,
+        "answer": question.answer
     }
+    for question in all_sounds_raw
 ]
     # random.shuffle(all_sounds)
     return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds})
@@ -184,43 +174,17 @@ async def todo_mode(request: Request):
     return templates.TemplateResponse("main_guess1.html", {"request": request})
 
 @router.get("/game_pic/todo_mode/{id}")
-async def play_todo(request: Request, id: int):
+async def play_todo(request: Request, id: int, db: Session = Depends(get_db)):
+    todo_list_raw = db.query(TodoQuestion).filter(TodoQuestion.stage==id).all()
     todo_list = [
-    {
-        "todo_id": 1,
-        "stage": 1,
-        "path_img": "/static/img/cat.png",
-        "choice_4": ["แมว", "สุนัข", "นก", "ปลา"],
-        "answer": "แมว"
-    },
-    {
-        "todo_id": 2,
-        "stage": 1,
-        "path_img": "/static/img/banana.png",
-        "choice_4": ["ส้ม", "กล้วย", "แอปเปิ้ล", "มะม่วง"],
-        "answer": "กล้วย"
-    },
-    {
-        "todo_id": 3,
-        "stage": 1,
-        "path_img": "/static/img/television.png",
-        "choice_4": ["โทรศัพท์", "วิทยุ", "ทีวี", "ไมโครเวฟ"],
-        "answer": "ทีวี"
-    },
-    {
-        "todo_id": 4,
-        "stage": 1,
-        "path_img": "/static/img/spoon.png",
-        "choice_4": ["มีด", "ตะเกียบ", "ช้อน", "ส้อม"],
-        "answer": "ช้อน"
-    },
-    {
-        "todo_id": 5,
-        "stage": 1,
-        "path_img": "/static/img/car.png",
-        "choice_4": ["รถจักรยาน", "รถไฟ", "รถยนต์", "เครื่องบิน"],
-        "answer": "รถยนต์"
-    }
+        {
+        "stage": question.stage,
+        "path_img": question.path_img,
+        "choice_4": json.loads(question.choice_4),
+        "answer": question.answer,
+        "category":question.category_id
+        }
+        for question in todo_list_raw
 ]
     return templates.TemplateResponse("choosepic.html", {"request": request, "todo_list": todo_list})
 
@@ -229,39 +193,18 @@ async def what_you_see_mode(request: Request):
     return templates.TemplateResponse("main_guess2.html", {"request": request})
 
 @router.get("/game_pic/what_you_see_mode/{id}")
-async def play_what_you_see(request: Request, id: int):
+async def play_what_you_see(request: Request, id: int, db: Session = Depends(get_db)):
+    what_you_see_raw = db.query(SeeQuestion).filter(SeeQuestion.stage==id).all()
+
     what_you_see = [
     {
-        "id": 1,
-        "stage": 1,
-        "path_img": "/static/img/elephant.png",
-        "answer": "ช้าง"
-    },
-    {
-        "id": 2,
-        "stage": 1,
-        "path_img": "/static/img/dog.png",
-        "answer": "สุนัข"
-    },
-    {
-        "id": 3,
-        "stage": 1,
-        "path_img": "/static/img/apple.png",
-        "answer": "แอปเปิ้ล"
-    },
-    {
-        "id": 4,
-        "stage": 1,
-        "path_img": "/static/img/phone.png",
-        "answer": "โทรศัพท์"
-    },
-    {
-        "id": 5,
-        "stage": 1,
-        "path_img": "/static/img/fork.png",
-        "answer": "ส้อม"
+        "stage": question.stage,
+        "path_img": question.path_img,
+        "answer": question.answer,
+        "category":question.category_id
     }
-    ]
+    for question in what_you_see_raw
+]
     return templates.TemplateResponse("game_guess2.html", {"request": request, "what_you_see": what_you_see})
 
 @router.get("/game_pic/order_mode")
@@ -269,41 +212,24 @@ async def order_mode(request: Request):
     return templates.TemplateResponse("main_guess3.html", {"request": request})
 
 @router.get("/game_pic/order_mode/{id}")
-async def play_order(request: Request, id: int):
+async def play_order(request: Request, id: int, db: Session = Depends(get_db)):
+    order_questions_raw = db.query(OrderQuestion).filter(OrderQuestion.stage==id).all()
     order_questions = [
-    {
-        "order_id": 1,
-        "stage": 1,
-        "map_choice_4": ["ตื่นนอน", "แปรงฟัน", "ล้างหน้า", "แต่งตัว"]
-    },
-    {
-        "order_id": 2,
-        "stage": 1,
-        "map_choice_4": ["กินข้าวเช้า", "ไปโรงเรียน", "เรียนหนังสือ", "กลับบ้าน"]
-    },
-    {
-        "order_id": 3,
-        "stage": 2,
-        "map_choice_4": ["อาบน้ำ", "ใส่ชุดนอน", "แปรงฟันก่อนนอน", "เข้านอน"]
-    },
-    {
-        "order_id": 4,
-        "stage": 2,
-        "map_choice_4": ["เดินเข้าห้องน้ำ", "กดชักโครก", "ล้างมือ", "ออกจากห้องน้ำ"]
-    },
-    {
-        "order_id": 5,
-        "stage": 3,
-        "map_choice_4": ["หยิบจาน", "ตักข้าว", "นั่งโต๊ะอาหาร", "กินข้าว"]
-    }
-]
+        {
+        "order_id": question.order_id,
+        "stage": question.stage,
+        "map_choice_4": json.loads(question.map_choice_4),
+        "category":question.category_id
+         }
+        for question in order_questions_raw
+    ]
+    print(order_questions)
     all_map_choices = []
     for q in order_questions:
-        choices = list(q["map_choice_4"])
+        choices = list(q['map_choice_4'])
         random.shuffle(choices)
 
         all_map_choices.append(choices)
-    print(all_map_choices)
     return templates.TemplateResponse("event_order.html", {"request": request, "order_questions": order_questions, "all_map_choices": all_map_choices})
 
 @router.get("/submit/{game}/{mode}")

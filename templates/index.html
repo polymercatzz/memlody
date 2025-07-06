@@ -71,7 +71,7 @@
         <div id="popup_box">
             <button class="absolute top-[-10px] right-[-10px] bg-white rounded-full border-[#ccc] border w-10 h-10 font-bold cursor-pointer" onclick="close_popup()">X</button>
             <!-- popup login -->
-            <form id="login" class="active" onsubmit="event.preventDefault();">
+            <form id="login" class="active" onsubmit="Submit_Login();">
                 <div class="max-w relative flex flex-col px-5 py-3 rounded-md text-black bg-gray-50 h-fit">
                     <div class="text-4xl font-bold my-3 text-black text-center">Welcome to <span class="text-blue-300">Memlody</span></div>
                     <div class="text-xl mb-4 text-center text-black">กรุณาเข้าสู่ระบบของคุณ</div>
@@ -94,7 +94,7 @@
             </form>
 
             <!-- popup forgot -->
-            <form id="forgot" class="active" onsubmit="event.preventDefault();">
+            <form id="forgot" class="active" >
                 <div class="max-w relative flex flex-col px-10 py-3 rounded-md text-black bg-gray-50 h-fit">
                     <div class="text-4xl font-bold my-3 text-black text-center">Forgot Your Password?</div>
                     <div class="text-xl mb-4 text-center text-black">กรุณาใส่ E-mail ที่ลงทะเบียน</div>
@@ -114,7 +114,7 @@
             </form>
 
             <!-- popup register -->
-            <form id="register" onsubmit="event.preventDefault();">
+            <form id="register" onsubmit="Submit_Register()">
                 <div class="max-w relative flex flex-col px-4 py-2 rounded-md text-black bg-gray-50">
                     <div class="text-4xl font-bold my-3 text-black text-start">Sign up</div>
                     <div class="text-xl mb-4 text-start text-black">โปรดใส่ข้อมูลให้ถูกต้อง</div>
@@ -130,9 +130,13 @@
                                 <label for="LastName" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">นามสกุล</label>
                             </div>
                         </div>
+                        <div class="relative w-full mb-5">
+                            <input type="date" id="Birth" required class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl text-gray-400 outline-none focus:text-black" onchange="calculateAge()"/>
+                            <label for="Birth" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">วันเกิด</label>
+                        </div>
                         <div class="relative w-full flex gap-5 mb-5">
                             <div class="relative w-[50%]">
-                                <input type="text" id="Age" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                                <input type="text" id="Age" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500" disabled />
                                 <label for="Age" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">อายุ</label>
                             </div>
                             <div class="relative w-[50%]">
@@ -144,19 +148,15 @@
                             </div>
                         </div>
                         <div class="relative w-full mb-5">
-                            <input type="date" id="Birth" required class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl text-gray-400 outline-none focus:text-black"/>
-                            <label for="Birth" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">วันเกิด</label>
-                        </div>
-                        <div class="relative w-full mb-5">
-                            <input type="text" id="Email" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <input type="email" id="email" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
                             <label for="Email" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Email</label>
                         </div>
                         <div class="relative w-full mb-5">
-                            <input type="text" id="Username" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <input type="text" id="username" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
                             <label for="Username" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Username</label>
                         </div>
                         <div class="relative w-full mb-5">
-                            <input type="password" id="Password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <input type="password" id="password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
                             <label for="Password" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Password</label>
                         </div>
                         <div class="relative w-full mb-5">
@@ -366,6 +366,80 @@
             startAutoSlide();
         }
         startAutoSlide();
+
+        function calculateAge() {
+            const birthInput = document.getElementById("Birth").value;
+            const ageInput = document.getElementById("Age");
+
+            if (!birthInput) return;
+
+            const birthDate = new Date(birthInput);
+            const today = new Date();
+
+            let age = today.getFullYear() - birthDate.getFullYear();
+
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            ageInput.value = age + " ปี";
+        }
+        function Submit_Register(){
+            const data = {
+                "first_Name":document.getElementById('FirstName').value,
+                "last_Name":document.getElementById('LastName').value,
+                "birth":document.getElementById('Birth').value,
+                "gender":document.getElementById("Gender").value,
+                "username":document.getElementById('username').value,
+                "password":document.getElementById('password').value,
+                "confirmPassword":document.getElementById('ConfirmPassword').value,
+                "email":document.getElementById('email').value
+            }
+            const formdata = new FormData();
+            for (let key in data) {
+                formdata.append(key, data[key]);
+            }
+            fetch('/register', {
+                method: "POST",
+                body: formdata
+            }).then(response => {
+                if (response.ok) {
+                    alert("สมัครสมาชิกสำเร็จ");
+                    close_popup();
+                } else {
+                    alert("เกิดข้อผิดพลาดในการสมัครสมาชิก");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("เกิดข้อผิดพลาดในการสมัครสมาชิก");
+            });
+
+        }
+
+        function Submit_Login(){
+            const data = {
+                "username":document.getElementById('Username').value,
+                "password":document.getElementById('Password').value
+            }
+            const formdata = new FormData();
+            for (let key in data) {
+                formdata.append(key, data[key]);
+            }
+            fetch("/login", {
+                method: "POST",
+                body: formdata
+            }).then(response => response.json())
+            .then(data => {
+                if (data.message === "admin") {
+                    window.location.href = "/admin";
+                } else if (data.message === "เข้าสู่ระบบสำเร็จ") {
+                    window.location.href = "/home";
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
     </script>
 </body>
 </html>
