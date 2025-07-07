@@ -74,6 +74,13 @@ async def play_speaking(request: Request, id: int, db: Session = Depends(get_db)
     # random.shuffle(all_sounds)
     return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds})
 
+@router.get("/game_sound/speaking_mode_json")
+async def get_speaking_questions_json(db: Session = Depends(get_db)):
+    all_sounds_raw = db.query(SpeakingQuestion).filter(SpeakingQuestion.stage==1).all()
+    print(all_sounds_raw)
+    return all_sounds_raw
+
+
 @router.post("/check_voice")
 async def check_voice(request: Request, label: str = Form(...), file: UploadFile = File(...), answer: str = Form(...)):
     temp_path = f"uploads/{file.filename}"
