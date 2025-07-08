@@ -6,9 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memlody</title>
     <link rel="stylesheet" href="/static/css/app.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <link
         href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <style>
     .fancy {
@@ -98,12 +102,10 @@
         <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]">
             <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
-        <div class="flex justify-center items-center mr-[2%] m-[1.5vh]">
-            <a href="">
-                <p
-                    class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF]">
-                    1</p>
-            </a>
+        <div class="flex justify-center items-center mr-[2%] m-[1.5vh] gap-2">
+            <p class="text-[2vh] text-[#0E0E5D] rounded-xl bg-[#DFE9FF] p-2">#สัตว์</p>
+            <p class="text-[2vh] text-[#0E0E5D] rounded-xl bg-[#DFE9FF] p-2">#ธรรมชาติ</p>
+
         </div>
     </div>
 
@@ -123,17 +125,120 @@
         </div>
     </div>
 
+    <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]">
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
+            1</p>
+        <p href="#voicepic_addmin copy.html"
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            2</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            3</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            4</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            5</p>
 
-    <div class="flex flex-row m-[2.5vh] mt-[1vh] ">
+    </div>
+    <div class="flex flex-row m-[2.5vh] mt-[2vh] ">
         <p
             class="text-[#0E0E5D] items-center justify-center p-[2.5vh] rounded-[16px] shadow-lg w-fit text-[2.7vh] outline-solid outline-2 outline-[#4A67BA] mx-auto whitespace-nowrap max-[480px]:text-[2.5vh]">
             โปรดจับคู่คำตอบให้ตรงกับเสียงที่ได้ยิน ?</p>
     </div>
 
+    <div
+        class=" flex flex-col justify-center px-5 py-10 mx-auto mt-10 w-[70%] border-none rounded-4xl  outline outline-2 outline-gray-200 shadow-xl max-[700px]:w-[85%]">
+        <div class="flex flex-col">
+            <div class="flex justify-center items-center bg-gray-300 px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 hover:bg-sky-200 hover:-translate-y-1 transform transition duration-300"
+                onclick="sound()">
+                <img src="/static/img/volume-up-black.png" class="w-12 h-12">
+                <p class="text-[2vh] font-bold whitespace-nowrap max-[500px]:text-[2.7vh]">กดเพื่อฟังเสียง</p>
+                <audio id="sound" src="/static/img/thunder.mp3"></audio>
+            </div>
+            <div>
+                <div class="grid grid-cols-4  mx-auto my-5 gap-4 max-[1000px]:grid-cols-2 max-[500px]:grid-cols-1">
+                    <div onclick="checkanswer(this)" id="box-0"
+                        class="select-box  relative flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                        <div class="bg-white rounded-3xl ">
+                            <img src="/static/img/sea.jpg"
+                                class="w-[22vh] h-[22vh] object-fit outline outline-2 outline-[#E8E8E8] rounded-3xl">
+                        </div>
+                        <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct">
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect">
+                        </div>
+
+
+                    </div>
+
+                    <div onclick="checkanswer(this)" id="box-1"
+                        class="select-box relative flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                        <div class="bg-white rounded-3xl ">
+                            <img src="/static/img/bug.jpg"
+                                class="w-[22vh] h-[22vh] object-fit outline outline-2 outline-[#E8E8E8] rounded-3xl">
+                        </div>
+                        <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct">
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect">
+                        </div>
+
+                    </div>
+
+                    <div onclick="checkanswer(this)" id="box-2"
+                        class="select-box  relative flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                        <div class="bg-white rounded-3xl">
+                            <img src="/static/img/weather.jpg"
+                                class="w-[22vh] h-[22vh] object-fit outline outline-2 outline-[#E8E8E8] rounded-3xl">
+                        </div>
+                        <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct">
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect">
+                        </div>
+
+
+                    </div>
+
+                    <div onclick="checkanswer(this)" id="box-3"
+                        class="select-box relative flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                        <div class="bg-white rounded-3xl">
+                            <img src="/static/img/pirot.jpg"
+                                class="w-[22vh] h-[22vh] object-fit outline outline-2 outline-[#E8E8E8] rounded-3xl">
+                        </div>
+                        <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct">
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect">
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center mt-5 mb-5">
+            <button id="nextBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="generateQuestion()">
+                <p>ถัดไป</p>
+                <img src="/static/img/right-arrow.png"
+                    class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
+            </button>
+            <button id="checkBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl"
+                onclick="checkResult()">
+                <p>ตรวจ</p>
+            </button>
+
+        </div>
+
+    </div>
 
 
 
-    <div class="w-full flex justify-center  gap-[10vh] flex-wrap mt-[5vh] mb-[2.5vh] max-[480px]:gap-[5vh]">
+
+    <!-- <div class="w-full flex justify-center  gap-[10vh] flex-wrap mt-[5vh] mb-[2.5vh] max-[480px]:gap-[5vh]">
         <div
             class="bg-[#FFFFFF] w-[50vh] h-[40vh] p-[10px] flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh]">
             <div class="flex flex-row">
@@ -172,17 +277,17 @@
                     </div>
                 </button>
             </div>
-        </div>
+        </div> -->
 
-        <!-- เสียง -->
-        <audio id="audio1" src="{{sound[0]}}"></audio>
+    <!-- เสียง -->
+    <!-- <audio id="audio1" src="{{sound[0]}}"></audio>
         <audio id="audio2" src="{{sound[1]}}"></audio>
         <audio id="audio3" src="{{sound[2]}}"></audio>
-        <audio id="audio4" src="{{sound[3]}}"></audio>
+        <audio id="audio4" src="{{sound[3]}}"></audio> -->
 
 
 
-        <div
+    <!-- <div
             class="flex flex-col bg-[#FFFFFF] w-[50vh] p-[2vh] rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh]">
             <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] ">ตัวเลือก</p>
 
@@ -222,13 +327,8 @@
 
             </div>
         </div>
-    </div>
-    <div class="flex justify-center items-center m-[5vh] max-[480px]:m-[5vh]">
-        <!-- <a href="index.html"
-            class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
-            <img src="/static/img/right-arrow.png" alt="" class="w-[5vh] object-contain mr-[1vh] ">
-            <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">ถัดไป</p>
-        </a> -->
+    </div> -->
+    <!-- <div class="flex justify-center items-center m-[5vh] max-[480px]:m-[5vh]">
         <div class="flex justify-center mt-5">
             <button
                 class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
@@ -239,59 +339,152 @@
             </button>
         </div>
 
-    </div>
+    </div> -->
 
     <script>
         const clean = (url) => url.replace(location.origin, "");
-        let answer = JSON.parse(`{{ answer | tojson }}`);
+        // let answer = JSON.parse(`{{ answer | tojson }}`);
         let done_questions = new Set();
 
-
-        function playSound(index) {
-            // หยุดทุกเสียงก่อน
-            for (let i = 1; i <= 4; i++) {
-                const audio = document.getElementById('audio' + i);
+        let play = false;
+        function sound() {
+            const audio = document.getElementById("sound");
+            if (play) {
                 audio.pause();
-                audio.currentTime = 0;
-            }
-            document.getElementById('audio' + index).play();
-            currentSound = index;
-        }
-
-        function selectImage(button) {
-            if (currentSound === null) {
-                alert("กรุณาเลือกเสียงก่อน");
-                return;
-            }
-
-            sound = clean(document.getElementById('audio' + currentSound).src);
-            img = clean(button.querySelector("img").src);
-            if (done_questions.has(sound) || done_questions.has(img)) {
-                alert("คุณได้เลือกคำตอบนี้ไปแล้ว");
-                return;
-            }
-            done_questions.add(sound);
-            done_questions.add(img);
-            const isCorrect = img === answer[sound];
-
-            const overlayCorrect = button.querySelector(".overlay-correct");
-            const overlayIncorrect = button.querySelector(".overlay-incorrect");
-
-            // ลบ border ก่อน
-            button.classList.remove("ring-4", "ring-green-500", "ring-red-500");
-
-            // ถ้าตอบถูก
-            if (isCorrect) {
-                overlayCorrect.classList.remove("hidden");
-                button.classList.add("ring-4", "ring-green-500");
             } else {
-                overlayIncorrect.classList.remove("hidden");
-                button.classList.add("ring-4", "ring-red-500");
+                audio.time = 0;
+                audio.play();
+            }
+            play = !play;
+            audio.onended = function () {
+                play = false;
+            };
+        }
+        // function playSound(index) {
+        // หยุดทุกเสียงก่อน
+        //     for (let i = 1; i <= 4; i++) {
+        //         const audio = document.getElementById('audio' + i);
+        //         audio.pause();
+        //         audio.currentTime = 0;
+        //     }
+        //     document.getElementById('audio' + index).play();
+        //     currentSound = index;
+        // }
+
+        // function selectImage(button) {
+        //     if (currentSound === null) {
+        //         alert("กรุณาเลือกเสียงก่อน");
+        //         return;
+        //     }
+
+        //     sound = clean(document.getElementById('audio' + currentSound).src);
+        //     img = clean(button.querySelector("img").src);
+        //     if (done_questions.has(sound) || done_questions.has(img)) {
+        //         alert("คุณได้เลือกคำตอบนี้ไปแล้ว");
+        //         return;
+        //     }
+        //     done_questions.add(sound);
+        //     done_questions.add(img);
+        //     const isCorrect = img === answer[sound];
+
+        //     const overlayCorrect = button.querySelector(".overlay-correct");
+        //     const overlayIncorrect = button.querySelector(".overlay-incorrect");
+
+        //     // ลบ border ก่อน
+        //     button.classList.remove("ring-4", "ring-green-500", "ring-red-500");
+
+        //     // ถ้าตอบถูก
+        //     if (isCorrect) {
+        //         overlayCorrect.classList.remove("hidden");
+        //         button.classList.add("ring-4", "ring-green-500");
+        //     } else {
+        //         overlayIncorrect.classList.remove("hidden");
+        //         button.classList.add("ring-4", "ring-red-500");
+        //     }
+
+        //     // reset เสียงที่เลือก
+        //     currentSound = null;
+        // }
+
+        const correctAnswerIndex = 2; // เปลี่ยนตามคำตอบจริง
+        let selectedIndex = null;
+        let hasChecked = false;
+
+        function checkanswer(element) {
+            if (hasChecked) return; // ถ้าเฉลยไปแล้วห้ามเปลี่ยน
+
+            // ลบกรอบเดิมก่อน
+            document.querySelectorAll('.select-box').forEach(box => {
+                box.classList.remove("ring-4", "ring-green-500", "ring-red-500");
+            });
+
+            selectedIndex = parseInt(element.id.split('-')[1]);
+            element.classList.add("ring-4", "ring-blue-400"); // เน้นว่าผู้ใช้เลือกอะไร
+        }
+
+        function checkResult() {
+            if (selectedIndex === null) {
+                alert("กรุณาเลือกคำตอบก่อนตรวจ");
+                return;
             }
 
-            // reset เสียงที่เลือก
-            currentSound = null;
+            hasChecked = true;
+
+            const boxes = document.querySelectorAll('.select-box');
+
+            // ลบกรอบสีน้ำเงินก่อนเฉลย
+            boxes.forEach(box => box.classList.remove("ring-blue-400"));
+
+            boxes.forEach((box, idx) => {
+                const overlayCorrect = box.querySelector(".overlay-correct");
+                const overlayIncorrect = box.querySelector(".overlay-incorrect");
+                if (idx === correctAnswerIndex) {
+                    if (overlayCorrect) overlayCorrect.classList.remove("hidden");
+                    box.classList.add("ring-4", "ring-green-500");
+
+                } else if (idx === selectedIndex && idx !== correctAnswerIndex) {
+                    if (overlayIncorrect) overlayIncorrect.classList.remove("hidden");
+                    box.classList.add("ring-4", "ring-red-500");
+                }
+            });
+
+            // ซ่อนปุ่ม "ตรวจ" และแสดงปุ่ม "ถัดไป"
+            document.getElementById("checkBtn").classList.add("hidden");
+            document.getElementById("nextBtn").classList.remove("hidden");
+
+            if (selectedIndex === correctAnswerIndex) {
+                Swal.fire({
+                    icon: "success",
+                    title: "ถูกต้อง!",
+                    text: "เก่งมาก 👏",
+                    confirmButtonText: "เยี่ยม!",
+                    confirmButtonColor: "#4CAF50",
+                    customClass: {
+                        popup: 'text-[2vh]  rounded-2xl font-[Kanit] max-[600px]:w-[40vh] w-[50vh]', 
+                        title: 'text-[2.5vh] text-[#0E0E5D] font-bold',                     
+                        confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
+                    }
+                });
+            } else {
+                const correctBox = boxes[correctAnswerIndex];
+                const correctImg = correctBox.querySelector("img");
+                const correctAlt = correctImg?.alt || "เสียงฟ้าผ่า";
+
+                Swal.fire({
+                    icon: "error",
+                    title: "ไม่ถูกต้อง",
+                    text: `คำตอบที่ถูกต้องคือ: ${correctAlt}`,
+                    confirmButtonText: "เข้าใจแล้ว",
+                    confirmButtonColor: "#EF4444",
+                    customClass: {
+                        popup: 'text-[2vh]  rounded-2xl font-[Kanit] max-[600px]:w-[40vh] w-[50vh]', 
+                        title: 'text-[2.5vh] text-[#0E0E5D] font-bold',                     
+                        confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
+                    }
+                });
+            }
         }
+
 
 
     </script>

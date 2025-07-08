@@ -6,6 +6,8 @@
     <title>Memlody</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         .fancy{
             display: inline-block;
@@ -78,8 +80,8 @@
 <body class="m-0 font-[Kanit]">
     <div class="bg-[#0E0E5D] flex justify-between ">
         <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]"><h1 class="text-[4vh]">MEMLODY</h1></div>
-        <div class="flex justify-end items-center w-[20%] gap-[10px]">
-            <img src="/static/img/person_5.png" class="w-[50px] h-[50px] mr-[20%]">
+        <div class="flex justify-center items-center mr-[2%] m-[1.5vh] gap-2">
+            <p class="text-[2vh] text-[#0E0E5D] rounded-xl bg-[#DFE9FF] p-2">#ครอบครัว</p>
         </div>
     </div>
     <div class="flex justify-between">
@@ -95,7 +97,26 @@
             <p class="text-2xl" id="timer">00:00</p>
         </div>
     </div>
-    <label class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.7vh] text-[#0E0E5D] mt-2 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดเลือกคำตอบให้ตรงกับเสียงที่ได้ยิน ?</label>
+        <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]">
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
+            1</p>
+        <p href="#voicepic_addmin copy.html"
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            2</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            3</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            4</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            5</p>
+
+    </div>
+
+    <label class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.7vh] text-[#0E0E5D] mt-4 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดเลือกคำตอบให้ตรงกับเสียงที่ได้ยิน ?</label>
     <div class=" flex flex-col justify-center px-5 py-10 mx-auto mt-15 w-[70%] border-none rounded-4xl  outline outline-2 outline-gray-200 shadow-xl" >
         <div class="flex flex-col">
             <div class="flex justify-center items-center bg-gray-300 px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 hover:bg-sky-200 hover:-translate-y-1 transform transition duration-300" onclick="sound()">
@@ -105,41 +126,70 @@
             </div>
             <div>
                 <div class="grid grid-cols-4 w-[90%] mx-auto gap-4">
-                    <div onclick="checkanswer(this)" id="box-0" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                    <div onclick="checkanswer(this)" id="box-0" class="select-box relative flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
                         <div class="bg-white rounded-3xl">
                             <img src="/static/img/people1.jpg" class="w-56 h-56 object-contain border-1 rounded-3xl">
                         </div>
                         <p class="flex justify-center mt-2 mb-10 font-bold text-xl">เจมส์ (ลูก)</p>
+                                                <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct">
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect">
+                        </div>
+
                     </div>
                 
-                    <div onclick="checkanswer(this)" id="box-1" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                    <div onclick="checkanswer(this)" id="box-1" class="select-box relative flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
                         <div class="bg-white rounded-3xl">
                             <img src="/static/img/people2.jpg" class="w-56 h-56 object-contain border-1 rounded-3xl">
                         </div>
                         <p class="flex justify-center mt-2 mb-10 font-bold text-xl">ไมเคิล (หลาน)</p>
+                                                <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct">
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect">
+                        </div>
+
                     </div>
                 
-                    <div onclick="checkanswer(this)" id="box-2" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                    <div onclick="checkanswer(this)" id="box-2" class="select-box  relative flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
                         <div class="bg-white rounded-3xl">
                             <img src="/static/img/people3.jpg" class="w-56 h-56 object-contain border-1 rounded-3xl">
                         </div>
                         <p class="flex justify-center mt-2 mb-10 font-bold text-xl">ซาบีน่า (น้องสาว)</p>
+                                                <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct">
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect">
+                        </div>
+
                     </div>
                 
-                    <div onclick="checkanswer(this)" id="box-3" class="select-box flex flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
+                    <div onclick="checkanswer(this)" id="box-3" class="select-box relative  flex-col items-center rounded-3xl p-4 cursor-pointer transition duration-300 hover:bg-gray-200">
                         <div class="bg-white rounded-3xl">
                             <img src="/static/img/people4.jpg" class="w-56 h-56 object-contain border-1 rounded-3xl">
                         </div>
                         <p class="flex justify-center mt-2 mb-10 font-bold text-xl">จีน่า (ภรรยา)</p>
+                                                <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct">
+                        </div>
+                        <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect">
+                        </div>
+
                     </div>
                 </div>
             </div>
-            <div class="flex justify-center mt-5">
-                <button class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="generateQuestion()">
-                    <p>ถัดไป</p>
-                    <img src="/static/img/right-arrow.png" class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
-                </button>
-            </div>
+        <div class="flex justify-center mt-5 mb-5">
+            <button id="nextBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="generateQuestion()">
+                <p>ถัดไป</p>
+                <img src="/static/img/right-arrow.png"
+                    class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
+            </button>
+            <button id="checkBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl"
+                onclick="checkResult()">
+                <p>ตรวจ</p>
+            </button>
+
+        </div>
         </div>
     </div>
     <script>
@@ -165,21 +215,101 @@
         }
 
 
-        function checkanswer(selectedBox){
-            if (check_answer) return;
-            check_answer = true;
-            let answer = selectedBox.querySelector('p').textContent;
-            let correctAnswer = questions[currentquestion - 1].correct_id;
+        // function checkanswer(selectedBox){
+        //     if (check_answer) return;
+        //     check_answer = true;
+        //     let answer = selectedBox.querySelector('p').textContent;
+        //     let correctAnswer = questions[currentquestion - 1].correct_id;
+        //     document.querySelectorAll('.select-box').forEach(box => {
+        //         box.classList.remove('hover:bg-gray-200');
+        //     });
+        //     if (answer === correctAnswer){
+        //         selectedBox.classList.add('ring-4', 'ring-green-500','bg-[#D7FFE6]');
+        //     }else{
+        //         selectedBox.classList.add('ring-4', 'ring-green-500','bg-[#D7FFE6]');
+        //         correct_answer.classList.add('ring-4', 'ring-red-500', 'bg-[#FFDFDF]');
+        //     }
+        // }
+        const correctAnswerIndex = 2; // เปลี่ยนตามคำตอบจริง
+        let selectedIndex = null;
+        let hasChecked = false;
+
+        function checkanswer(element) {
+            if (hasChecked) return; // ถ้าเฉลยไปแล้วห้ามเปลี่ยน
+
+            // ลบกรอบเดิมก่อน
             document.querySelectorAll('.select-box').forEach(box => {
-                box.classList.remove('hover:bg-gray-200');
+                box.classList.remove("ring-4", "ring-green-500", "ring-red-500");
             });
-            if (answer === correctAnswer){
-                selectedBox.classList.add('ring-4', 'ring-green-500','bg-[#D7FFE6]');
-            }else{
-                selectedBox.classList.add('ring-4', 'ring-green-500','bg-[#D7FFE6]');
-                correct_answer.classList.add('ring-4', 'ring-red-500', 'bg-[#FFDFDF]');
+
+            selectedIndex = parseInt(element.id.split('-')[1]);
+            element.classList.add("ring-4", "ring-blue-400"); // เน้นว่าผู้ใช้เลือกอะไร
+        }
+
+        function checkResult() {
+            if (selectedIndex === null) {
+                alert("กรุณาเลือกคำตอบก่อนตรวจ");
+                return;
+            }
+
+            hasChecked = true;
+
+            const boxes = document.querySelectorAll('.select-box');
+
+            // ลบกรอบสีน้ำเงินก่อนเฉลย
+            boxes.forEach(box => box.classList.remove("ring-blue-400"));
+
+            boxes.forEach((box, idx) => {
+                const overlayCorrect = box.querySelector(".overlay-correct");
+                const overlayIncorrect = box.querySelector(".overlay-incorrect");
+                if (idx === correctAnswerIndex) {
+                    if (overlayCorrect) overlayCorrect.classList.remove("hidden");
+                    box.classList.add("ring-4", "ring-green-500");
+
+                } else if (idx === selectedIndex && idx !== correctAnswerIndex) {
+                    if (overlayIncorrect) overlayIncorrect.classList.remove("hidden");
+                    box.classList.add("ring-4", "ring-red-500");
+                }
+            });
+
+            // ซ่อนปุ่ม "ตรวจ" และแสดงปุ่ม "ถัดไป"
+            document.getElementById("checkBtn").classList.add("hidden");
+            document.getElementById("nextBtn").classList.remove("hidden");
+
+            if (selectedIndex === correctAnswerIndex) {
+                Swal.fire({
+                    icon: "success",
+                    title: "ถูกต้อง!",
+                    text: "เก่งมาก 👏",
+                    confirmButtonText: "เยี่ยม!",
+                    confirmButtonColor: "#4CAF50",
+                    customClass: {
+                        popup: 'text-[2vh]  rounded-2xl font-[Kanit] max-[600px]:w-[40vh] w-[50vh]', 
+                        title: 'text-[2.5vh] text-[#0E0E5D] font-bold',                     
+                        confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
+                    }
+                });
+            } else {
+                const correctBox = boxes[correctAnswerIndex];
+                const correctImg = correctBox.querySelector("img");
+                const correctAlt = correctImg?.alt || "น้องแพร(น้องสาว)";
+
+                Swal.fire({
+                    icon: "error",
+                    title: "ไม่ถูกต้อง",
+                    text: `คำตอบที่ถูกต้องคือ: ${correctAlt}`,
+                    confirmButtonText: "เข้าใจแล้ว",
+                    confirmButtonColor: "#EF4444",
+                    customClass: {
+                        popup: 'text-[2vh]  rounded-2xl font-[Kanit] max-[600px]:w-[40vh] w-[50vh]', 
+                        title: 'text-[2.5vh] text-[#0E0E5D] font-bold',                     
+                        confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
+                    }
+                });
             }
         }
+
+
         let play = false;
         function sound(){
             const audio = document.getElementById("sound");

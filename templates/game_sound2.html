@@ -96,8 +96,8 @@
         <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]">
             <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
-        <div class="flex justify-end items-center w-[20%] gap-[10px]">
-            <img src="/static/img/person_5.png" class="w-[50px] h-[50px] mr-[20%]">
+        <div class="flex justify-center items-center mr-[2%] m-[1.5vh] gap-2">
+            <p class="text-[2vh] text-[#0E0E5D] rounded-xl bg-[#DFE9FF] p-2">#ธรรมชาติ</p>
         </div>
     </div>
     <div class="flex justify-between">
@@ -113,8 +113,27 @@
             <p class="text-2xl" id="timer">00:00</p>
         </div>
     </div>
+        <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]">
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
+            1</p>
+        <p href="#voicepic_addmin copy.html"
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            2</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            3</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            4</p>
+        <p
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
+            5</p>
+
+    </div>
+
     <label
-       class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.7vh] text-[#0E0E5D] mt-2 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดออกเสียงให้ตรงกับเสียงที่ได้ยิน ?</label>
+       class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.7vh] text-[#0E0E5D] mt-4 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดออกเสียงให้ตรงกับเสียงที่ได้ยิน ?</label>
     <div class=" flex flex-col justify-center px-5 py-15 mx-auto mt-15 w-[60%] border-none rounded-4xl outline outline-2 outline-gray-200 shadow-xl"
         >
         <div class="flex justify-center items-center bg-gray-300 px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 hover:bg-sky-200 hover:-translate-y-1 transform transition duration-300"
@@ -128,17 +147,26 @@
             <img src="/static/img/mic.png" class="w-12 h-12 mr-3">
             <p id="record" class="text-xl font-bold">กดเพื่อพูดตอบคำถาม</p>
         </div>
+        
         <audio id="play_back" controls class="mx-auto mt-4 hidden"></audio>
         <p id="score"></p>
-    </div>
-    <div class="flex justify-center mt-10">
-        <button
-            class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-            style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="GenerateQuestion()">
-            <p>ถัดไป</p>
-            <img src="/static/img/right-arrow.png"
-                class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
-        </button>
+            </div>
+            <div class="flex justify-center mt-5 mb-5">
+            <button id="nextBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="generateQuestion()">
+                <p>ถัดไป</p>
+                <img src="/static/img/right-arrow.png"
+                    class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
+            </button>
+            <button id="checkBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[2.7vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl"
+                onclick="checkResult()">
+                <p>ตรวจ</p>
+            </button>
+
+        </div>
+
     </div>
     <script>
         let currentQuestion = 0;
