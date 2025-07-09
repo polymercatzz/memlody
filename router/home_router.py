@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, UploadFile, File, Form, Depends
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from faster_whisper import WhisperModel
 from database import Base, engine
 from sqlalchemy.orm import Session
@@ -24,8 +25,11 @@ def get_db():
     finally:
         db.close()
 
-@router.get("")
+@router.get("/")
 async def home(request: Request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     return templates.TemplateResponse("index2.html", {"request": request})
 
 @router.get("/game_sound/pairing_mode")
@@ -73,13 +77,6 @@ async def play_speaking(request: Request, id: int, db: Session = Depends(get_db)
 ]
     # random.shuffle(all_sounds)
     return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds})
-
-@router.get("/game_sound/speaking_mode_json")
-async def get_speaking_questions_json(db: Session = Depends(get_db)):
-    all_sounds_raw = db.query(SpeakingQuestion).filter(SpeakingQuestion.stage==1).all()
-    print(all_sounds_raw)
-    return all_sounds_raw
-
 
 @router.post("/check_voice")
 async def check_voice(request: Request, label: str = Form(...), file: UploadFile = File(...), answer: str = Form(...)):

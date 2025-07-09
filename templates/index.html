@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         :lang(en) {
           font-family: 'Huninn';
@@ -71,7 +74,7 @@
         <div id="popup_box">
             <button class="absolute top-[-10px] right-[-10px] bg-white rounded-full border-[#ccc] border w-10 h-10 font-bold cursor-pointer" onclick="close_popup()">X</button>
             <!-- popup login -->
-            <form id="login" class="active" onsubmit="Submit_Login();">
+            <form id="login" class="active">
                 <div class="max-w relative flex flex-col px-5 py-3 rounded-md text-black bg-gray-50 h-fit">
                     <div class="text-4xl font-bold my-3 text-black text-center">Welcome to <span class="text-blue-300">Memlody</span></div>
                     <div class="text-xl mb-4 text-center text-black">กรุณาเข้าสู่ระบบของคุณ</div>
@@ -87,7 +90,7 @@
                         <div class="mx-1 mb-5 cursor-pointer" onclick="switch_popup('forgot')">
                             <span class="text-xl text-blue-300 hover:underline">Forgot your password?</span>
                         </div>
-                        <button type="submit" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl cursor-pointer hover:bg-sky-500">Login</button>
+                        <button type="button" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl cursor-pointer hover:bg-sky-500" onclick="Submit_Login();">Login</button>
                     </div>
                     <div class="text-xl text-center my-5">Don't have a MEMLODY account?<label class="text-xl text-blue-300 cursor-pointer hover:underline" onclick="switch_popup('register')"> Sign up for Memlody</label></div>
                 </div>
@@ -114,7 +117,7 @@
             </form>
 
             <!-- popup register -->
-            <form id="register" onsubmit="Submit_Register()">
+            <form id="register">
                 <div class="max-w relative flex flex-col px-4 py-2 rounded-md text-black bg-gray-50">
                     <div class="text-4xl font-bold my-3 text-black text-start">Sign up</div>
                     <div class="text-xl mb-4 text-start text-black">โปรดใส่ข้อมูลให้ถูกต้อง</div>
@@ -163,7 +166,7 @@
                             <input type="password" id="ConfirmPassword" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
                             <label for="ConfirmPassword" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Confirm Password</label>
                         </div>
-                        <button type="submit" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl hover:bg-sky-500">Submit</button>
+                        <button type="button" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl hover:bg-sky-500" onclick="Submit_Register();">Submit</button>
                     </div>
                     <div class="text-xl text-center my-5">Already have an account?<label class="text-xl text-blue-300 cursor-pointer hover:underline" onclick="switch_popup('login')"> Log in here.</label></div>
                 </div>
@@ -247,6 +250,7 @@
     </div>
 
     <script>
+        
         const popup = document.getElementById('popup');
         const login = document.getElementById('login');
         const forgot = document.getElementById('forgot');
@@ -281,7 +285,6 @@
                 register.classList.remove('active');
             }
         }
-    
         const birthday = document.getElementById('Birth');
         birthday.addEventListener('change', function (){
             if (this.value){
@@ -396,25 +399,58 @@
                 "confirmPassword":document.getElementById('ConfirmPassword').value,
                 "email":document.getElementById('email').value
             }
-            const formdata = new FormData();
-            for (let key in data) {
-                formdata.append(key, data[key]);
+            if (data.password !== data.confirmPassword) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "รหัสผ่านไม่ตรงกัน",
+                    text: "กรุณากรอกรหัสผ่านให้ตรงกัน",
+                    confirmButtonText: "เข้าใจแล้ว",
+                });
             }
-            fetch('/register', {
-                method: "POST",
-                body: formdata
-            }).then(response => {
-                if (response.ok) {
-                    alert("สมัครสมาชิกสำเร็จ");
-                    close_popup();
-                } else {
-                    alert("เกิดข้อผิดพลาดในการสมัครสมาชิก");
+            else if (data.password.length < 8){
+                Swal.fire({
+                    icon: "warning",
+                    title: "รหัสผ่านสั้นเกินไป",
+                    text: "กรุณากรอกรหัสผ่านให้มีอย่างน้อย 8 ตัวอักษร",
+                    confirmButtonText: "เข้าใจแล้ว",
+                });
+            }else{
+                const formdata = new FormData();
+                for (let key in data) {
+                    formdata.append(key, data[key]);
                 }
-            }).catch(error => {
-                console.error("Error:", error);
-                alert("เกิดข้อผิดพลาดในการสมัครสมาชิก");
-            });
-
+                fetch('/register', {
+                    method: "POST",
+                    body: formdata
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.message === "สมัครสมาชิกสำเร็จ") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "สมัครสมาชิกสำเร็จ",
+                            confirmButtonText: "ตกลง",
+                        }).then(() => {
+                            close_popup();
+                            document.getElementById("register").reset();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: data.message || "เกิดข้อผิดพลาดในการสมัครสมาชิก",
+                            confirmButtonText: "ตกลง",
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์",
+                        confirmButtonText: "ตกลง",
+                    });
+                });
+            }
+            
         }
 
         function Submit_Login(){
@@ -431,6 +467,7 @@
                 body: formdata
             }).then(response => response.json())
             .then(data => {
+                console.log(data.message)
                 if (data.message === "admin") {
                     window.location.href = "/admin";
                 } else if (data.message === "เข้าสู่ระบบสำเร็จ") {
@@ -440,6 +477,16 @@
                 }
             });
         }
+        {% if msg  == "กรุณาเข้าสู่ระบบ" %}
+            Swal.fire({
+                icon: "warning",
+                title: "กรุณาเข้าสู่ระบบ",
+                text: "กรุณาล็อกอินเพื่อเข้าถึงเนื้อหานี้",
+                confirmButtonText: "ตกลง",
+            }).then(
+                open_popup("login")
+            );
+        {% endif %}
     </script>
 </body>
 </html>

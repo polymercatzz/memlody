@@ -2,5 +2,7 @@ fastapi
 uvicorn
 jinja2
 python-multipart
+itsdangerous
 faster-whisper
 python-dotenv
+passlib[bcrypt] bcrypt==4.0.1
