@@ -99,12 +99,12 @@
             <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
         <div class="flex justify-center items-center gap-5 text-white mr-5">
-            <a href="">
+            <a href="#">
                 <p
                     class=" text-[2.3vh] border-b-4  hover:border-b-4 hover:border-white cursor-pointer max-[480px]:text-[1.7vh]">
                     เกมนี่คือเสียงอะไร</p>
             </a>
-            <a href="">
+            <a href="stat_pic.html">
                 <p
                     class="text-[2.3vh] text-gray-300 hover:border-b-4 hover:border-white  hover:text-white cursor-pointer max-[480px]:text-[1.7vh]">
                     เกมทายของจากรูป</p>
@@ -134,11 +134,18 @@
                 </a>
             </li>
             <li>
-                <a href="stat_pic.html" 
+                <a href="stat_sound1.html"
                     class="border-2 border-gray-300 hover:shadow-xl  transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-full px-6 py-3 block text-center">
                     โหมดออกเสียง
                 </a>
             </li>
+            <li>
+                <a href="stat_sound2.html"
+                    class="border-2 border-gray-300 hover:shadow-xl  transition-all duration-300 transform hover:scale-105 active:scale-95 rounded-full px-6 py-3 block text-center">
+                    โหมดเสียงของฉัน
+                </a>
+            </li>
+
         </ul>
     </div>
     <div class="charts grid grid-cols-2 gap-5 mx-[4vh] max-[1000px]:grid-cols-1 ">
@@ -187,7 +194,8 @@
 
         </div>
 
-        <div class="bg-white ml-[2vh]  box-border  border border-[#d2d2d3] rounded-[16px] shadow-lg w-fit max-w-[700px] w-full">
+        <div
+            class="bg-white ml-[2vh]  box-border  border border-[#d2d2d3] rounded-[16px] shadow-lg w-fit max-w-[700px] w-full">
             <p class="text-[2vh] m-4">วิเคราะห์</p>
             <div class="flex flex-col m-[2vh] bg-sky-100 p-[2vh] rounded-lg shadow-md  text-[2vh]">
                 <div class="flex cl">
@@ -205,7 +213,7 @@
             </div>
             <div class="flex">
                 <p class="mx-[2vh] mb-[2vh]  text-[2vh]  ">แนวโน้ม: ยิ่งใช้เวลานาน ความถูกต้องมักจะลดลง
-                อาจมีปัญหาในการทำความเข้าใจโจทย์ที่ยากขึ้นอาจต้องเรียนรู้เรื่องธรรมชาติเพิ่ม.</p>
+                    อาจมีปัญหาในการทำความเข้าใจโจทย์ที่ยากขึ้นอาจต้องเรียนรู้เรื่องธรรมชาติเพิ่ม.</p>
 
             </div>
         </div>
@@ -330,7 +338,7 @@
                     show: false,
                 },
             },
-            colors: ['#38bdf8', '#246dec'],
+            colors: ['#0E0E5D', '#85B3DD'],
             dataLabels: {
                 enabled: false,
             },
@@ -506,12 +514,12 @@
 
         //pinechart
         var options = {
-            series: [44, 55, 41, 17, 15],
+            series: [44, 55, 41, 17, 50],
             chart: {
                 width: 370,
                 type: 'pie',
             },
-            labels: ['เกี่ยวกับสัตว์', 'ธรรมชาติ','สิ่งของ','ดนตรี','ชีวิตประจำวัน'],
+            labels: ['เกี่ยวกับสัตว์', 'ธรรมชาติ', 'ดนตรี', 'ชีวิตประจำวัน', 'ครอบครัว'],
             responsive: [{
                 breakpoint: 480,
                 options: {
