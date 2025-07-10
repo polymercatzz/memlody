@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memlody</title>
-    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="stylesheet" href="/static/css/app.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
@@ -191,17 +191,16 @@
 
     </div>
     <div class="flex justify-center items-center  gap-5 m-5 cursor-pointer" id="number">
-        <a
+        <a onclick="Select_Option(0)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-blue-100 outline outline-2 outline-[#4A67BA]">1</a>
-        <a
+        <a onclick="Select_Option(1)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</a>
-        <a
+        <a onclick="Select_Option(2)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</a>
-        <a
+        <a onclick="Select_Option(3)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</a>
-        <a
+        <a onclick="Select_Option(4)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</a>
-
     </div>
 
 
@@ -232,7 +231,7 @@
                 class="bg-[#DFE9FF] w-full h-[30vh] flex justify-center items-center rounded-[12px] overflow-hidden">
                 <label class="flex justify-center items-center w-full h-full cursor-pointer">
                     <img id="previewImage" src="/static/img/add-button.png" alt="เพิ่มรูปภาพ" class="w-[6vh] object-contain" />
-                    <input type="file" onchange="handleUpload(this)" class="hidden" accept="image/*">
+                    <input type="file" onchange="handleUpload(this)" class="hidden" accept="image/*" id="input_img">
                 </label>
             </div>
         </div>
@@ -258,7 +257,7 @@
                                 <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
                             </button>
                         </div>
-                        <input type="radio" class="answer-btn w-6" name="answer" value="1">
+                        <input type="radio" class="answer-btn w-6" name="answer" value=0>
 
     
                     </div>
@@ -269,7 +268,7 @@
                                 <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
                             </button>
                         </div>
-                        <input type="radio" class="answer-btn w-6" name="answer" value="1">
+                        <input type="radio" class="answer-btn w-6" name="answer" value=1>
 
     
                     </div>
@@ -280,7 +279,7 @@
                                 <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
                             </button>
                         </div>
-                        <input type="radio" class="answer-btn w-6" name="answer" value="1">
+                        <input type="radio" class="answer-btn w-6" name="answer" value=2>
 
     
                     </div>
@@ -291,7 +290,7 @@
                                 <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
                             </button>
                         </div>
-                        <input type="radio" class="answer-btn w-6" name="answer" value="1">
+                        <input type="radio" class="answer-btn w-6" name="answer" value=3>
 
     
                     </div>
@@ -301,56 +300,107 @@
         </div>
     </div>
     <div class="flex justify-center items-center m-[7vh] max-[480px]:m-[5vh]">
-        <a href="index.html"
+        <button
             class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl ">
             <p>ถัดไป</p>
             <img src="/static/img/right-arrow.png"
                 class="w-[5vh] transform transition-transform duration-300 group-hover:translate-x-1">
-        </a>
-
+        </button>
+        <button
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+                onclick="Add_Data();">
+                <p>เพิ่มข้อมูล</p>
+            </button>
+            <button
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+                onclick="sendData();">
+                <p>บันทึกข้อมูล</p>
+            </button>
     </div>
 
 
     <script>
-          function handleUpload(input) {
-    const file = input.files[0];
-    const preview = document.getElementById('previewImage');
-  
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-  
-      reader.onload = function (e) {
-        preview.src = e.target.result;
-        preview.classList.add("object-contain", "w-full", "h-full", "bg-white");
-      };
-  
-      reader.readAsDataURL(file);
-    }
-  }
-
-
-  function showInput(index) {
+        function handleUpload(input) {
+            const file = input.files[0];
+            const preview = document.getElementById('previewImage');
+        
+            if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+        
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.classList.add("object-contain", "w-full", "h-full", "bg-white");
+            };
+        
+            reader.readAsDataURL(file);
+            }
+        }
+        function showInput(index) {
             const container = document.getElementById(`eventBox${index}`);
             container.innerHTML = `
-      <input type="text"
-        class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC] text-[#0E0E5D] text-[2vh]"
-        placeholder="พิมพ์ตัวเลือกที่ ${index} ได้ที่นี่" />
-    `;
-        }
+                <input type="text" id="order"
+                    class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC] text-[#0E0E5D] text-[2vh]"
+                    placeholder="พิมพ์ตัวเลือกที่ ${index} ได้ที่นี่" />
+                `;
+            }
+        let input_data = new Set();
+        let current_index = 0;
+        let data_all = [{}, {}, {}, {}, {}]
 
+        function Select_Option(select = current_index){
+            console.log(data_all);
+            if (current_index === select) {
+                select++;
+            }
+            current_index = select;
             const buttons = document.querySelectorAll("#number a");
-        buttons.forEach(a => {
-            a.addEventListener("click", () => {
-                buttons.forEach(b => {
+            buttons.forEach(b => {
                     b.classList.remove("bg-blue-400", "text-white");
                     b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
                 });
-                a.classList.remove("bg-white", "hover:bg-gray-200");
-                a.classList.add("bg-blue-100");
+            buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
+            buttons[select].classList.add("bg-blue-100");
+            const preview = document.getElementById('previewImage');
+            if (preview) {
+                preview.src = "/static/img/add-button.png";
+                preview.classList.remove("object-contain", "w-full", "h-full", "bg-white");
+            }
+        }
+        function Add_Data(){
+            const l_order = []
+            document.querySelectorAll("#order").forEach(order => {
+                l_order.push(order.value)
             });
-        });
-
-
+            const selectedRadio = document.querySelector('input[name="answer"]:checked');
+            const fileInput = document.getElementById("input_img");
+            const file = fileInput.files[0];
+            if (!l_order || !file || !selectedRadio) {
+                alert("กรุณากรอกข้อความและเลือกไฟล์เสียงก่อน");
+                return;
+            }
+            data_all[current_index] = {
+                l_order: JSON.stringify(l_order),
+                answer: l_order[selectedRadio.value],
+                file: file
+            };
+            input_data.add(current_index);
+        }
+        function sendData() {
+            if(input_data.size < 5){
+                alert("กรอกให้ครบ");
+                return;
+            }
+            data_all.forEach(data => {
+                const formData = new FormData();
+                formData.append("l_order", data.l_order);
+                formData.append("answer", data.answer);
+                formData.append("file", data.file);
+                fetch("/admin/todo_mode/create/{{ stage }}", {
+                    method: "POST",
+                    body: formData,
+                    });
+            });
+        }
     </script>
 
 </body>

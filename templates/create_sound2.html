@@ -188,17 +188,16 @@
 
     </div>
     <div class="flex justify-center items-center  gap-5 m-5 cursor-pointer" id="number">
-        <a
+        <a onclick="Select_Option(0)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-blue-100 outline outline-2 outline-[#4A67BA]">1</a>
-        <a
+        <a onclick="Select_Option(1)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</a>
-        <a
+        <a onclick="Select_Option(2)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</a>
-        <a
+        <a onclick="Select_Option(3)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</a>
-        <a
+        <a onclick="Select_Option(4)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</a>
-
     </div>
 
     <div class="mb-10">
@@ -235,17 +234,27 @@
             </div>
             <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] mt-[1vh] mx-auto">เพิ่มคำตอบ</p>
             <div class="mx-auto">
-                <input type="text" class="w-fit text-[2.3vh] py-1 border-b-2  outline-none "
+                <input type="text" class="w-fit text-[2.3vh] py-1 border-b-2  outline-none " id="text-input"
                     style="width: 100%; max-width: 500px;">
             </div>
         </div>
         <div class="flex justify-center mt-10">
             <button
                 class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-                onclick="stop()">
+                onclick="Select_Option()">
                 <p>ถัดไป</p>
                 <img src="/static/img/right-arrow.png"
                     class="w-[5vh] transform transition-transform duration-300 group-hover:translate-x-2">
+            </button>
+            <button
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+                onclick="Add_Data();">
+                <p>เพิ่มข้อมูล</p>
+            </button>
+            <button
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+                onclick="sendData();">
+                <p>บันทึกข้อมูล</p>
             </button>
         </div>
 
@@ -253,17 +262,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const buttons = document.querySelectorAll("#number a");
-        buttons.forEach(a => {
-            a.addEventListener("click", () => {
-                buttons.forEach(b => {
-                    b.classList.remove("bg-blue-400", "text-white");
-                    b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
-                });
-                a.classList.remove("bg-white", "hover:bg-gray-200");
-                a.classList.add("bg-blue-100");
-            });
-        });
 
         document.getElementById("file").addEventListener("change", function (event) {
             const file = event.target.files[0];
@@ -280,6 +278,56 @@
                 });
             }
         });
+        let input_data = new Set();
+        let current_index = 0;
+        let data_all = [{}, {}, {}, {}, {}]
+
+        function Select_Option(select = current_index){
+            if (current_index === select) {
+                select++;
+            }
+            current_index = select;
+            const buttons = document.querySelectorAll("#number a");
+            buttons.forEach(b => {
+                    b.classList.remove("bg-blue-400", "text-white");
+                    b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
+                });
+            buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
+            buttons[select].classList.add("bg-blue-100");
+            document.getElementById("text-input").value = "";
+            document.getElementById("preview").src = "/static/img/add-button.png";
+            document.getElementById("preview").classList.add("h-16");
+            document.getElementById("preview").classList.remove("h-40");
+        }
+        function Add_Data(){
+            const text = document.getElementById("text-input").value;
+            const fileInput = document.getElementById("file");
+            const file = fileInput.files[0];
+            if (!text || !file) {
+                alert("กรุณากรอกข้อความและเลือกไฟล์เสียงก่อน");
+                return;
+            }
+            data_all[current_index] = {
+                text: text,
+                file: file
+            };
+            input_data.add(current_index);
+        }
+        function sendData() {
+            if(input_data.size < 5){
+                alert("กรอกให้ครบ");
+                return;
+            }
+            data_all.forEach(data => {
+                const formData = new FormData();
+                formData.append("answer", data.text);
+                formData.append("file", data.file);
+                fetch("/admin/what_you_see_mode/create/{{ stage }}", {
+                    method: "POST",
+                    body: formData,
+                    });
+            });
+        }
     </script>
 </body>
 
