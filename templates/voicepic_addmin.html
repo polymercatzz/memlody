@@ -217,7 +217,7 @@
 
     <div class="w-full flex justify-center   gap-[10vh] flex-wrap mt-[5vh] mb-[2.5vh] max-[480px]:gap-[5vh]">
         <div
-            class="bg-[#FFFFFF] w-[50vh] h-[40vh] p-5 flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh]">
+            class="bg-[#FFFFFF] w-[50vh] h-[17vh] p-5 flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh]">
             <div class="flex flex-row">
                 <img src="/static/img/volume-up.png" alt="" class="w-[4vh] object-contain mr-2 mb-[1.5vh]">
                 <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh]">เพิ่มเสียง</p>
@@ -227,7 +227,7 @@
             <div class="flex flex-col gap-[2vh]  mb-[1.7vh]">
                 <div class="flex items-center gap-[1vh] ">
                     <button onclick="playSound(1)"
-                        class="text-white rounded-[10px]  hover:bg-green-600 transition-colors rounded-full w-10 h-10 cursor-pointer">
+                        class="text-white rounded-[10px]   transition-colors rounded-full w-10 h-10 cursor-pointer">
                         <img src="/static/img/play.png" alt="">
                     </button>
                     <label
@@ -237,9 +237,9 @@
                     </label>
 
                 </div>
-                <div class="flex items-center gap-[1vh] ">
+                <!-- <div class="flex items-center gap-[1vh] ">
                     <button onclick="playSound(2)"
-                        class="text-white rounded-[10px]  hover:bg-green-600 transition-colors rounded-full w-10 h-10 cursor-pointer">
+                        class="text-white rounded-[10px]   transition-colors rounded-full w-10 h-10 cursor-pointer">
                         <img src="/static/img/play.png" alt="">
                     </button>
                     <label
@@ -251,7 +251,7 @@
                 </div>
                 <div class="flex items-center gap-[1vh] ">
                     <button onclick="playSound(3)"
-                        class="text-white rounded-[10px] hover:bg-green-600 transition-colors rounded-full w-10 h-10 cursor-pointer">
+                        class="text-white rounded-[10px]  transition-colors rounded-full w-10 h-10 cursor-pointer">
                         <img src="/static/img/play.png" alt="">
                     </button>
                     <label
@@ -263,7 +263,7 @@
                 </div>
                 <div class="flex items-center gap-[1vh] ">
                     <button onclick="playSound(4)"
-                        class="text-white rounded-[10px] hover:bg-green-600 transition-colors rounded-full w-10 h-10 cursor-pointer">
+                        class="text-white rounded-[10px]  transition-colors rounded-full w-10 h-10 cursor-pointer">
                         <img src="/static/img/play.png" alt="">
                     </button>
                     <label
@@ -273,7 +273,7 @@
                     </label>
 
                 </div>
-
+ -->
             </div>
         </div>
 
@@ -287,11 +287,11 @@
 
         <div
             class="flex flex-col bg-[#FFFFFF] w-[50vh] p-[2vh] rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh]">
-            <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] ">เพิ่มรูปภาพตามลำดับ</p>
+            <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] ">เพิ่มรูปภาพ</p>
 
             <div class="grid grid-cols-2 gap-[2vh] p-2">
                 <div class="flex rounded-[12px] ">
-                    <p class="text-[2vh] text-[#0E0E5D]">1.</p>
+                    <input type="radio" name="answer" value="1" class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
                     <label
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-1" src="/static/img/add-button.png"
@@ -301,7 +301,7 @@
                 </div>
 
                 <div class="flex rounded-[12px]">
-                    <p class="text-[2vh] text-[#0E0E5D]">2.</p>
+                    <input type="radio" name="answer" value="1" class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
                     <label
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-2" src="/static/img/add-button.png"
@@ -311,7 +311,7 @@
                 </div>
 
                 <div class="flex rounded-[12px] ">
-                    <p class="text-[2vh] text-[#0E0E5D]">3.</p>
+                    <input type="radio" name="answer" value="1" class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
                     <label
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-3" src="/static/img/add-button.png"
@@ -321,7 +321,7 @@
                 </div>
 
                 <div class="flex rounded-[12px] ">
-                    <p class="text-[2vh] text-[#0E0E5D]">4.</p>
+                    <input type="radio" name="answer" value="1" class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
                     <label
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-4" src="/static/img/add-button.png"
