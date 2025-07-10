@@ -6,6 +6,8 @@
     <title>Memlody</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/crown&star.css">
+    <script src="/static/javascript/crown.js"></script>
     <style>
         .fancy{
             display: inline-block;
@@ -15,7 +17,7 @@
             margin: 20px 0 0 20px;
             padding: 8px 20px;
             color: #fff;
-            border: 2px solid #000;
+            border: 2px solid #BBBCBF;
             background-color: #F0F0F0;
             text-align: center;
             cursor: pointer;
@@ -81,7 +83,7 @@
         <div class="flex justify-center items-center mr-[5%]">
             <label class="relative inline-block">
                 <input type="checkbox" class="hidden peer"/>
-                <div class="w-[50px] h-[50px] cursor-pointer rounded-full overflow-hidden border-none bg-none p-0" tabindex="0">
+                <div class="w-16 h-16 cursor-pointer rounded-full overflow-hidden border-none bg-none p-0 transition-shadow duration-200 ease-in-out transform hover:ring-2 hover:ring-white perr-checked:ring-2 peer-checked:ring-white">
                     <img src="/static/img/person_5.png" class="w-full h-full object-cover" />
                 </div>
                 <nav class="absolute right-0 top-[60px] w-[200px] bg-white border border-none rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.25)] invisible opacity-0 transition-all duration-200 ease-in-out z-10 peer-checked:visible peer-checked:opacity-100">
@@ -90,13 +92,16 @@
                             <a href="./information.html" class="block w-full px-4 py-2 text-left text-xl rounded-md hover:bg-blue-200 hover:text-white cursor-pointer transition-colors duration-150">ข้อมูลผู้ใช้</a>
                         </li>
                         <li>
-                            <a href="" class="block w-full px-4 py-2 text-left text-xl rounded-md hover:bg-blue-200 hover:text-white cursor-pointer transition-colors duration-150">ออกจากระบบ</a>
+                            <a href="/logout" class="block w-full px-4 py-2 text-left text-xl rounded-md hover:bg-blue-200 hover:text-white cursor-pointer transition-colors duration-150">ออกจากระบบ</a>
                         </li>
                     </ul>
                 </nav>
             </label>
         </div>
     </div>
+    <button onclick="open_popup('')" class="fixed bottom-6 right-6 z-50">
+        <img src="/static/img/info.png" class="w-12 h-12">
+    </button>
     <a class="fancy" href="/home">
         <span class="top-key"></span>
         <span class="text"><img src="/static/img/return.png" class="img">ย้อนกลับ</span>
@@ -105,7 +110,21 @@
     </a>
     <div>
         <div>
-            <h1 class="flex justify-center text-6xl py-6">เกมนี่เสียงอะไร??</h1>
+            <div class="flex justify-center items-center gap-5">
+                <div class="crown-wrapper">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FED843; stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#FABE2C; stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <polygon fill="none" stroke="black" stroke-width="2" points="256,56 312,144 288,172 304,216 320,232 352,240 384,224 400,192 384,160 512,112 456,384 256,384 56,384 0,112 128,160 112,192 128,224 160,240 192,232 208,216 224,172 200,144"/>
+                        <polygon id="crown" points="256,56 312,144 288,172 304,216 320,232 352,240 384,224 400,192 384,160 512,112 456,384 256,384 56,384 0,112 128,160 112,192 128,224 160,240 192,232 208,216 224,172 200,144"/>
+                    </svg>
+                </div>
+                <h1 class="flex justify-center text-6xl py-6">เกมนี่เสียงอะไร??</h1>
+            </div>
             <p class="flex justify-center text-3xl pb-6">เลือกโหมด</p>
         </div>
         <div class="flex justify-center items-center">
@@ -119,25 +138,90 @@
             <div class="mt-10 w-full max-w-5xl px-10">
                 <p class="flex justify-center text-2xl mb-5">เลือกด่าน</p>
                 <div class="grid grid-cols-3 gap-10 bg-white text-2xl px-10 py-6">
-                    <a href="/home/game_sound/speaking_mode/1" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
+                    <a href="/home/game_sound/speaking_mode/1" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
                         <h4 class="text-3xl font-bold">ด่าน 1</h4>
-                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                        <p class="text-xl mb-2">จำนวน 5 ข้อ</p>
+                        <div class="flex">
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                        </div>
                     </a>
-                    <a href="./game_sound2.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
+                    <a href="#" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
                         <h4 class="text-3xl font-bold">ด่าน 2</h4>
-                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                        <p class="text-xl mb-2">จำนวน 5 ข้อ</p>
+                        <div class="flex">
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                        </div>
                     </a>
-                    <a href="./game_sound2.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
+                    <a href="#" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
                         <h4 class="text-3xl font-bold">ด่าน 3</h4>
-                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                        <p class="text-xl mb-2">จำนวน 5 ข้อ</p>
+                        <div class="flex">
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                           <label class="container">
+                               <input type="checkbox">
+                               <svg height="24px" id="Layer_1" version="1.2" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><g><path d="M9.362,9.158c0,0-3.16,0.35-5.268,0.584c-0.19,0.023-0.358,0.15-0.421,0.343s0,0.394,0.14,0.521    c1.566,1.429,3.919,3.569,3.919,3.569c-0.002,0-0.646,3.113-1.074,5.19c-0.036,0.188,0.032,0.387,0.196,0.506    c0.163,0.119,0.373,0.121,0.538,0.028c1.844-1.048,4.606-2.624,4.606-2.624s2.763,1.576,4.604,2.625    c0.168,0.092,0.378,0.09,0.541-0.029c0.164-0.119,0.232-0.318,0.195-0.505c-0.428-2.078-1.071-5.191-1.071-5.191    s2.353-2.14,3.919-3.566c0.14-0.131,0.202-0.332,0.14-0.524s-0.23-0.319-0.42-0.341c-2.108-0.236-5.269-0.586-5.269-0.586    s-1.31-2.898-2.183-4.83c-0.082-0.173-0.254-0.294-0.456-0.294s-0.375,0.122-0.453,0.294C10.671,6.26,9.362,9.158,9.362,9.158z"></path></g></g></svg>
+                           </label>
+                        </div>
                     </a>
-                    <a href="./game_sound2.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
-                        <h4 class="text-3xl font-bold">ด่าน 4</h4>
-                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                    <a href="#" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
+                        <img src="/static/img/lock.png" class="w-14 h-14">
                     </a>
-                    <a href="./game_sound2.html" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-100">
-                        <h4 class="text-3xl font-bold">ด่าน 5</h4>
-                        <p class="text-xl">จำนวน 5 ข้อ</p>
+                    <a href="#" class="flex flex-col justify-center items-center px-6 py-6 border-4 border-yellow-400 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-yellow-50">
+                        <p class="text-3xl font-extrabold text-yellow-800 mb-2 mt-2">ด่านพิเศษ</p>
+                        <p class="text-xl mb-2 text-yellow-700">โหมดท้าทาย</p>
                     </a>
                 </div>
             </div>

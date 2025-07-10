@@ -205,7 +205,7 @@
     </div>
 
 
-    <div class="flex flex-row m-[2.5vh] ">
+    <div class="flex flex-row m-[2.5vh]">
         <p
             class="text-[#0E0E5D] items-center justify-center p-[2.5vh] rounded-[16px] shadow-lg w-fit text-[2.7vh] outline-solid outline-2 outline-[#4A67BA] mx-auto whitespace-nowrap max-[480px]:text-[2.5vh]">
             โปรดเลือกว่าของในภาพเอาไว้ทำอะไร ?</p>
@@ -309,7 +309,7 @@
   
       reader.onload = function (e) {
         preview.src = e.target.result;
-        preview.classList.add("object-cover", "w-full", "h-full");
+        preview.classList.add("object-contain", "w-full", "h-full", "bg-white");
       };
   
       reader.readAsDataURL(file);
