@@ -124,11 +124,11 @@
         </div>
     </div>
 
-    <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]">
+    <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]" id="current_choice">
         <p
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
             1</p>
-        <p href="#voicepic_addmin copy.html"
+        <p
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
             2</p>
         <p
@@ -219,7 +219,7 @@
         <div class="flex justify-center mt-5 mb-5">
             <button id="nextBtn"
                 class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
-                onclick="generateQuestion()">
+                onclick="CreateQuestion()">
                 <p>ถัดไป</p>
                 <img src="/static/img/right-arrow.png"
                     class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
@@ -229,122 +229,19 @@
                 onclick="checkResult()">
                 <p>ตรวจ</p>
             </button>
-
+            <button id="submitBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="Tosubmit()">
+                <p>เสร็จสิ้น</p>
+            </button>
         </div>
 
     </div>
 
-
-
-
-    <!-- <div class="w-full flex justify-center  gap-[10vh] flex-wrap mt-[5vh] mb-[2.5vh] max-[480px]:gap-[5vh]">
-        <div
-            class="bg-[#FFFFFF] w-[50vh] h-[40vh] p-[10px] flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh]">
-            <div class="flex flex-row">
-                <img src="/static/img/volume-up.png" alt="" class="w-[4vh] object-contain mr-2">
-                <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] mt-[1.5vh]">เสียง</p>
-
-            </div>
-
-            <div class="flex flex-col gap-[2vh]  mb-[1.7vh]">
-                <button onclick="playSound(1)" class="p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors 
-                 cursor-pointer">
-                    <div class="flex justify-center items-center gap-[10px]">
-                        <img src="/static/img/volume-up-black.png" alt="" class="w-[3vh] h-[3vh] object-contain">
-                        <p>เล่นเสียงที่ 1</p>
-                    </div>
-                </button>
-                <button onclick="playSound(2)" class="p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors 
-                 cursor-pointer">
-                    <div class="flex justify-center items-center gap-[10px]">
-                        <img src="/static/img/volume-up-black.png" alt="" class="w-[3vh] h-[3vh] object-contain">
-                        <p>เล่นเสียงที่ 2</p>
-                    </div>
-                </button>
-                <button onclick="playSound(3)" class="p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors 
-                 cursor-pointer">
-                    <div class="flex justify-center items-center gap-[10px]">
-                        <img src="/static/img/volume-up-black.png" alt="" class="w-[3vh] h-[3vh] object-contain">
-                        <p>เล่นเสียงที่ 3</p>
-                    </div>
-                </button>
-                <button onclick="playSound(4)" class="p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors 
-                    break-words whitespace-normal cursor-pointer">
-                    <div class="flex justify-center items-center gap-[10px]">
-                        <img src="/static/img/volume-up-black.png" alt="" class="w-[3vh] h-[3vh] object-contain">
-                        <p>เล่นเสียงที่ 4</p>
-                    </div>
-                </button>
-            </div>
-        </div> -->
-
-    <!-- เสียง -->
-    <!-- <audio id="audio1" src="{{sound[0]}}"></audio>
-        <audio id="audio2" src="{{sound[1]}}"></audio>
-        <audio id="audio3" src="{{sound[2]}}"></audio>
-        <audio id="audio4" src="{{sound[3]}}"></audio> -->
-
-
-
-    <!-- <div
-            class="flex flex-col bg-[#FFFFFF] w-[50vh] p-[2vh] rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh]">
-            <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] ">ตัวเลือก</p>
-
-            <div class=" grid grid-cols-2 gap-[2vh]">
-
-                <button onclick="selectImage(this)" class="relative rounded-[12px]">
-                    <img src="{{ images[0] }}" alt=""
-                        class="h-full w-full object-cover rounded-[12px] outline outline-2 outline-[#E8E8E8]" />
-                    <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct"></div>
-                    <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect"></div>
-
-                </button>
-
-                <button onclick="selectImage(this)" class="relative rounded-[12px]">
-                    <img src="{{ images[1] }}" alt=""
-                        class="h-full w-full object-cover rounded-[12px] outline outline-2 outline-[#E8E8E8]" />
-                    <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct"></div>
-                    <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect"></div>
-
-                </button>
-
-                <button onclick="selectImage(this)" class="relative rounded-[12px]">
-                    <img src="{{ images[2] }}" alt=""
-                        class="h-full w-full object-cover rounded-[12px] outline outline-2 outline-[#E8E8E8]" />
-                    <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct"></div>
-                    <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect"></div>
-
-                </button>
-
-                <button onclick="selectImage(this)" class="relative rounded-[12px]">
-                    <img src="{{ images[3] }}" alt=""
-                        class="h-full w-full object-cover rounded-[12px] outline outline-2 outline-[#E8E8E8]" />
-                    <div class="absolute inset-0 bg-green-400 opacity-40 hidden rounded-[12px] overlay-correct"></div>
-                    <div class="absolute inset-0 bg-red-400 opacity-40 hidden rounded-[12px] overlay-incorrect"></div>
-
-                </button>
-
-            </div>
-        </div>
-    </div> -->
-    <!-- <div class="flex justify-center items-center m-[5vh] max-[480px]:m-[5vh]">
-        <div class="flex justify-center mt-5">
-            <button
-                class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-                style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
-                <p>ถัดไป</p>
-                <img src="/static/img/right-arrow.png"
-                    class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
-            </button>
-        </div>
-
-    </div> -->
-
     <script>
         const clean = (url) => url.replace(location.origin, "");
-        // let answer = JSON.parse(`{{ answer | tojson }}`);
-        let done_questions = new Set();
-
+        let questions = JSON.parse(`{{ questions | tojson }}`);
+        console.log(questions);
         let play = false;
         function sound() {
             const audio = document.getElementById("sound");
@@ -405,9 +302,9 @@
         //     currentSound = null;
         // }
 
-        const correctAnswerIndex = 2; // เปลี่ยนตามคำตอบจริง
-        let selectedIndex = null;
+        let selected = null;
         let hasChecked = false;
+        let currentQuestion = 0;
 
         function checkanswer(element) {
             if (hasChecked) return; // ถ้าเฉลยไปแล้วห้ามเปลี่ยน
@@ -417,12 +314,12 @@
                 box.classList.remove("ring-4", "ring-green-500", "ring-red-500");
             });
 
-            selectedIndex = parseInt(element.id.split('-')[1]);
+            selected = element;
             element.classList.add("ring-4", "ring-blue-400"); // เน้นว่าผู้ใช้เลือกอะไร
         }
 
         function checkResult() {
-            if (selectedIndex === null) {
+            if (selected === null) {
                 alert("กรุณาเลือกคำตอบก่อนตรวจ");
                 return;
             }
@@ -433,25 +330,25 @@
 
             // ลบกรอบสีน้ำเงินก่อนเฉลย
             boxes.forEach(box => box.classList.remove("ring-blue-400"));
-
-            boxes.forEach((box, idx) => {
+            let correct_choice = 0;
+            boxes.forEach((box, index) => {
                 const overlayCorrect = box.querySelector(".overlay-correct");
                 const overlayIncorrect = box.querySelector(".overlay-incorrect");
-                if (idx === correctAnswerIndex) {
+                const current_box_img = clean(decodeURIComponent(box.querySelector("img").src));
+                const correct_path_img = questions[currentQuestion-1].answer
+                console.log(current_box_img, correct_path_img)
+                if (current_box_img === correct_path_img) {
                     if (overlayCorrect) overlayCorrect.classList.remove("hidden");
                     box.classList.add("ring-4", "ring-green-500");
+                    correct_choice = index;
 
-                } else if (idx === selectedIndex && idx !== correctAnswerIndex) {
+                } else if (box === selected) {
                     if (overlayIncorrect) overlayIncorrect.classList.remove("hidden");
                     box.classList.add("ring-4", "ring-red-500");
                 }
             });
 
-            // ซ่อนปุ่ม "ตรวจ" และแสดงปุ่ม "ถัดไป"
-            document.getElementById("checkBtn").classList.add("hidden");
-            document.getElementById("nextBtn").classList.remove("hidden");
-
-            if (selectedIndex === correctAnswerIndex) {
+            if (clean(decodeURIComponent(selected.querySelector("img").src)) === questions[currentQuestion-1].answer) {
                 Swal.fire({
                     icon: "success",
                     title: "ถูกต้อง!",
@@ -465,14 +362,10 @@
                     }
                 });
             } else {
-                const correctBox = boxes[correctAnswerIndex];
-                const correctImg = correctBox.querySelector("img");
-                const correctAlt = correctImg?.alt || "เสียงฟ้าผ่า";
-
                 Swal.fire({
                     icon: "error",
                     title: "ไม่ถูกต้อง",
-                    text: `คำตอบที่ถูกต้องคือ: ${correctAlt}`,
+                    text: `คำตอบที่ถูกต้องคือ: ข้อที่ ${correct_choice+1}.`,
                     confirmButtonText: "เข้าใจแล้ว",
                     confirmButtonColor: "#EF4444",
                     customClass: {
@@ -481,10 +374,70 @@
                         confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
                     }
                 });
+            }            
+            // ซ่อนปุ่ม "ตรวจ" และแสดงปุ่ม "ถัดไป"
+            if (currentQuestion >= questions.length){
+                document.getElementById("nextBtn").classList.add("hidden");
+                document.getElementById("checkBtn").classList.add("hidden");
+                document.getElementById("submitBtn").classList.remove("hidden");
+            }else{
+                document.getElementById("checkBtn").classList.add("hidden");
+                document.getElementById("nextBtn").classList.remove("hidden");
             }
         }
+        function clearPage(){
+            Swal.fire({
+                title: 'กำลังโหลด...',
+                html: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                timer: 500,
+                timerProgressBar: true
+                })
+                .then(() => {
+                    document.querySelectorAll('.select-box').forEach(box => {
+                        box.classList.remove("ring-4", "ring-green-500", "ring-red-500");
+                        box.querySelector(".overlay-incorrect").classList.add('hidden');
+                        box.querySelector(".overlay-correct").classList.add('hidden');
+                    });
+                    document.getElementById("nextBtn").classList.add("hidden");
+                    document.getElementById("checkBtn").classList.remove("hidden");
+                    selectedIndex = null;
+                    hasChecked = false;
+                });
+        }
+        CreateQuestion()
+        function CreateQuestion(){
+            clearPage();
+            document.getElementById("sound").src = questions[currentQuestion].path_sound
+            document.querySelectorAll('.select-box').forEach((box, index) => {
+                box.querySelector("img").src = questions[currentQuestion].path_img[index]
+            });
+            document.querySelectorAll("#current_choice p").forEach((p, index) => {
+                const isActive = index === currentQuestion;
+                p.classList.toggle("bg-[#DFE9FF]", isActive);
+                p.classList.toggle("bg-[#FFFFFF]", !isActive);
+            });
+            currentQuestion++;
+        }
+        function Tosubmit() {
+            // สร้างฟอร์มส่ง POST ไปยัง /submit/...
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/home/submit/game_sound/pairing_mode/1';
 
+            // สร้าง input สำหรับส่ง finished = true
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'finished';
+            input.value = 'true';
 
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
 
     </script>
 </body>

@@ -5,5 +5,5 @@ python-multipart
 itsdangerous
 faster-whisper
 python-dotenv
-passlib[bcrypt]
-bcrypt==4.0.1
+passlib[bcrypt] bcrypt==4.0.1
+pythainlp

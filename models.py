@@ -34,6 +34,7 @@ class PairingQuestion(Base):
     stage = Column(Integer)
     path_img = Column(String)
     path_sound = Column(String)
+    answer = Column(String)
     category_id = Column(Integer, ForeignKey("categories.category_id"))
 
     category = relationship("Category", back_populates="pairing_questions")

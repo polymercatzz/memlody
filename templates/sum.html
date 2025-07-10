@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    <a class="fancy m-5" href="#">
+    <a class="fancy m-5" href="/home/{{ game }}/{{ mode }}">
         <span class="top-key"></span>
         <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
         <span class="bottom-key-1"></span>
@@ -149,14 +149,14 @@
     </div>
 
     <div class="flex justify-center items-center mt-[5vh] max-[480px]:m-[5vh] gap-4">
-        <a href="index.html"
+        <a href="/home/{{ game }}/{{ mode }}/{{ stage }}"
             class="group bg-[#797979] flex flex-row items-center gap-2 w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-500">
             <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">เล่นอีกครั้ง</p>
             <img src="/static/img/repeat.png"
                 class="w-10 h-10 transform transition-transform duration-500 ease-in-out group-hover:rotate-180 ">
 
         </a>
-        <a href="index.html"
+        <a href="/home/{{ game }}/{{ mode }}/{{ stage+1 }}"
             class="group bg-[#78C93C] flex flex-row items-center w-fit gap-2 px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg htransition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl">
 
             <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">ด่านถัดไป</p>

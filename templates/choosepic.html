@@ -150,7 +150,7 @@
         class="w-full flex justify-center  gap-[10vh] flex-wrap mt-[7vh] mb-[2.5vh] max-[480px]:mt-[5vh] max-[480px]:gap-[5vh]">
         <div
             class="bg-[#FFFFFF] w-[50vh] h-[40vh] p-[10px] rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh] ">
-            <img src="/static/img/pencil.jpg" alt="" class="h-full w-full object-contain rounded-[12px]">
+            <img src="/static/img/pencil.jpg" alt="" class="h-full w-full object-contain rounded-[12px]" id="current_img">
         </div>
 
         <div
@@ -173,12 +173,12 @@
         <!-- <a href="#" id="next-button"
             class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
             <img src="/static/img/right-arrow.png" alt="" class="w-[5vh] object-contain mr-[1vh] ">
-            <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap" onclick="generateQuestion()">ถัดไป</p>
+            <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap" onclick="CreateQuestion()">ถัดไป</p>
         </a> -->
         <div class="flex justify-center mb-5">
             <button id="nextBtn"
                 class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
-                onclick="generateQuestion()">
+                onclick="CreateQuestion()">
                 <p>ถัดไป</p>
                 <img src="/static/img/right-arrow.png"
                     class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
@@ -188,13 +188,17 @@
                 onclick="checkResult()">
                 <p>ตรวจ</p>
             </button>
-
+            <button id="submitBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="Tosubmit()">
+                <p>เสร็จสิ้น</p>
+            </button>
         </div>
 
-        <a href="/home/submit/game_pic/todo_mode" id="submit-button" style="display: none;"
+        <!-- <a href="/home/submit/game_pic/todo_mode" id="submit-button" style="display: none;"
             class="bg-[#78C93C] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer">
             <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">เสร็จสิ้น</p>
-        </a>
+        </a> -->
     </div>
 
     <!-- <div class="flex justify-center mt-[-5vh]">
@@ -203,13 +207,13 @@
     </div> -->
 
     <script>
-        const question = JSON.parse(`{{ todo_list | tojson | safe }}`);
-        console.log(question);
+        const questions = JSON.parse(`{{ todo_list | tojson | safe }}`);
+        let currentQuestion = 0;
         // let correctAnswer = "";
         // let hasAnswered = false;
         let selectedIndex = null;
         let hasAnswered = false;
-        const correctAnswer = "ใส่น้ำ"; // คำตอบที่ถูกต้อง
+        let correctAnswer = ""; // คำตอบที่ถูกต้อง
 
         function selectAnswer(button, index) {
             if (hasAnswered) return;
@@ -283,47 +287,73 @@
                     }
                 });
             }
-
-            document.getElementById("checkBtn")?.classList.add("hidden");
-            document.getElementById("nextBtn")?.classList.remove("hidden");
+            // ซ่อนปุ่ม "ตรวจ" และแสดงปุ่ม "ถัดไป"
+                console.log(currentQuestion)
+                if (currentQuestion >= questions.length){
+                    document.getElementById("nextBtn").classList.add("hidden");
+                    document.getElementById("checkBtn").classList.add("hidden");
+                    document.getElementById("submitBtn").classList.remove("hidden");
+                }else{
+                    document.getElementById("checkBtn").classList.add("hidden");
+                    document.getElementById("nextBtn").classList.remove("hidden");
+                }
         }
 
+        function clearPage(){
+            Swal.fire({
+                title: 'กำลังโหลด...',
+                html: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                timer: 500,
+                timerProgressBar: true
+                })
+                .then(() => {
+                    const buttons = document.querySelectorAll('.answer-btn');
+                    buttons.forEach((button, index) => {
+                        button.classList.remove(
+                            'ring-4', 'ring-green-500', 'ring-red-500',
+                            'bg-green-200', 'bg-red-200',
+                            'bg-[#D7FFE6]', 'bg-[#FFDFDF]', 'bg-[#E8E8E8]', 'hover:bg-[#D0D0D0]'
+                        );
+                        button.classList.add('bg-[#E8E8E8]', 'hover:bg-[#D0D0D0]'); // กลับสู่พื้นหลังเดิม
+                    });
+                    document.getElementById("nextBtn").classList.add("hidden");
+                    document.getElementById("checkBtn").classList.remove("hidden");
+                    hasAnswered = false;
+                    selectedIndex = null;
+                });
+        }
 
-
-        generateQuestion();
-        function generateQuestion() {
-            console.log("generation question");
-            if (!hasAnswered && currentquestion) return
-            const buttons = document.querySelectorAll('.answer-btn');
-            buttons.forEach((button, index) => {
-                button.textContent = question[currentquestion].choice_4[index];
-                button.classList.remove(
-                    'ring-4', 'ring-green-500', 'ring-red-500',
-                    'bg-green-200', 'bg-red-200',
-                    'bg-[#D7FFE6]', 'bg-[#FFDFDF]', 'bg-[#E8E8E8]', 'hover:bg-[#D0D0D0]'
-                );
-                button.classList.add('bg-[#E8E8E8]', 'hover:bg-[#D0D0D0]'); // กลับสู่พื้นหลังเดิม
+        CreateQuestion();
+        function CreateQuestion() {
+            clearPage()
+            document.getElementById("current_img").src = questions[currentQuestion].path_img
+            document.querySelectorAll('.answer-btn').forEach((button, index) => {
+                button.textContent = questions[currentQuestion].choice_4[index];
             })
-            correctAnswer = question[currentquestion].answer;
-            currentquestion++;
-            hasAnswered = false;
-
-            const nextBtn = document.getElementById("next-button");
-            const submitBtn = document.getElementById("submit-button");
-
-
-            if (currentquestion >= question.length - 1) {
-                // ข้อสุดท้าย
-                nextBtn.style.display = "none";
-                submitBtn.style.display = "flex";
-            } else {
-                // ยังไม่จบ
-                nextBtn.style.display = "flex";
-                submitBtn.style.display = "none";
-            }
+            correctAnswer = questions[currentQuestion].answer;
+            currentQuestion++;
         }
 
+        function Tosubmit() {
+            // สร้างฟอร์มส่ง POST ไปยัง /submit/...
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/home/submit/game_sound/pairing_mode/1';
 
+            // สร้าง input สำหรับส่ง finished = true
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'finished';
+            input.value = 'true';
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 
 </body>

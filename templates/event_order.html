@@ -153,7 +153,7 @@
             class="bg-[#FFFFFF] w-[50vh] max-[480px]:w-[40vh] p-4 flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8]">
             <div class="flex justify-between items-center mb-[1.5vh]">
                 <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] mt-[1.5vh]">เหตุการณ์</p>
-                <button onclick="resetQuestion()"><img src="/static/img/reload.png" alt=""
+                <button onclick="resetQuestion()" id="btn_reset"><img src="/static/img/reload.png" alt=""
                         class="w-[4vh] h-[4vh] cursor-pointer">
                 </button>
             </div>
@@ -204,7 +204,7 @@
         <div class="flex justify-center  mb-5">
             <button id="nextBtn"
                 class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
-                onclick="generateQuestion()">
+                onclick="CreateQuestion()">
                 <p>ถัดไป</p>
                 <img src="/static/img/right-arrow.png"
                     class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
@@ -214,7 +214,11 @@
                 onclick="checkResult()">
                 <p>ตรวจ</p>
             </button>
-
+            <button id="submitBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="Tosubmit()">
+                <p>เสร็จสิ้น</p>
+            </button>
         </div>
 
     </div>
@@ -236,16 +240,16 @@
 
 
     <script>
-        const order_questions = [];
-        const all_map_choices = [];
-
-        let currentQuestionIndex = 0;
+        const questions = JSON.parse(`{{ order_questions | tojson}}`);
+        const all_map_choices = JSON.parse(`{{ all_map_choices | tojson}}`);
+        let currentQuestion = 0;
+        let order_answer = [];
         let selectedEvent = null;
 
         // เมื่อกดปุ่มเหตุการณ์
         function SetSelectedButton(btn) {
             // ล้าง highlight ก่อน
-            document.querySelectorAll('.event-btn').forEach(b => b.classList.remove('ring', 'ring-blue-500'));
+            document.querySelectorAll('.event-btn').forEach(b => b.classList.remove('ring-4', 'ring-[#8D8D8D]'));
             selectedEvent = btn;
             btn.classList.add('ring-4', 'ring-[#8D8D8D]');
         }
@@ -266,6 +270,7 @@
             btn.textContent = `${correctPosition}. ${selectedEvent.textContent}`
             selectedEvent.disabled = true;
             selectedEvent.classList.add('opacity-50', 'cursor-default');
+            order_answer.push(btn.textContent);
             selectedEvent = null;
 
             // เอา highlight ออก
@@ -274,6 +279,7 @@
 
         function resetQuestion() {
             selectedEvent = null;
+            order_answer = [];
 
             // รีเซตปุ่ม event
             document.querySelectorAll('.event-btn').forEach(btn => {
@@ -284,7 +290,7 @@
 
             // รีเซตปุ่มลำดับ
             document.querySelectorAll('.order-btn').forEach(btn => {
-                btn.classList.remove('ring-4', 'ring-blue-400', 'bg-[#DFE9FF]', 'bg-green-300', 'bg-red-300');
+                btn.classList.remove('ring-4', 'ring-blue-400', 'bg-[#DFE9FF]', 'bg-green-300', 'bg-red-300', 'ring-green-500', 'ring-red-500', 'bg-[#D7FFE6]', 'bg-[#FFDFDF]');
                 btn.classList.add('bg-[#DFE9FF]');
                 btn.disabled = false;
                 btn.textContent = btn.dataset.position + ". ";
@@ -300,26 +306,21 @@
                 const defaultText = btn.dataset.originalText || ""; // เก็บไว้ใช้ใน setup
                 btn.textContent = defaultText;
             });
+            document.getElementById("checkBtn").classList.remove("hidden");
+            document.getElementById("nextBtn").classList.add("hidden");
+            document.getElementById('btn_reset').classList.remove("hidden");
         }
 
         function checkResult() {
-            if (selectedEvent === null) {
+            if (order_answer.length !== 4) {
                 alert("กรุณาเลือกคำตอบก่อนตรวจ");
                 return;
             }
             const orderButtons = document.querySelectorAll('.order-btn');
             let correctCount = 0;
-            const order_questions = [
-                { map_choice_4: ["ทานข้าวเช้า", "ไปโรงเรียน", "เล่นกีฬา", "เข้านอน"] }
-            ];
-
-            const all_map_choices = [
-                ["ทานข้าวเช้า", "ไปโรงเรียน", "เล่นกีฬา", "เข้านอน"]
-            ];
-
-            const correctAnswers = all_map_choices[currentQuestionIndex];
+            let correctAnswers = questions[currentQuestion-1].map_choice_4;
             orderButtons.forEach((btn, index) => {
-                const userValue = btn.dataset.value; // ค่าที่ผู้ใช้เลือก
+                const userValue = btn.textContent.split('. ')[1]; // ค่าที่ผู้ใช้เลือก
                 const correctValue = correctAnswers[index]; // ค่าที่ควรอยู่ในลำดับนี้
 
                 // ล้างสีเดิม
@@ -328,33 +329,8 @@
                 if (userValue === correctValue) {
                     btn.classList.add('ring-4', 'ring-green-500', 'bg-[#D7FFE6]');
                     correctCount++;
-
-                    Swal.fire({
-                        icon: "success",
-                        title: "ยอดเยี่ยม!",
-                        text: "คุณตอบถูกต้องทั้งหมด 👏",
-                        confirmButtonText: "เยี่ยม!",
-                        confirmButtonColor: "#4CAF50",
-                        customClass: {
-                            popup: 'text-[2vh]  rounded-2xl font-[Kanit] max-[600px]:w-[40vh] w-[50vh]',
-                            title: 'text-[2.5vh] text-[#0E0E5D] font-bold',
-                            confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'
-                        }
-                    });
                 } else {
                     btn.classList.add('ring-4', 'ring-red-500', 'bg-[#FFDFDF]');
-                    Swal.fire({
-                        icon: "info",
-                        title: "ตรวจคำตอบแล้ว",
-                        text: `คุณตอบถูก ${correctCount} จาก ${orderButtons.length} ข้อ`,
-                        confirmButtonText: "เข้าใจแล้ว",
-                        confirmButtonColor: "#3B82F6",
-                        customClass: {
-                            popup: 'text-[2vh] rounded-2xl font-[Kanit] w-[20vh] max-[600px]:w-[40vh]',
-                            title: 'text-[2.5vh] text-[#0E0E5D] font-bold',
-                            confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'
-                        }
-                    });
                 }
             });
 
@@ -371,43 +347,62 @@
                 Swal.fire({
                     icon: "info",
                     title: "ตรวจคำตอบแล้ว",
-                    text: `คุณตอบถูก ${correctCount} จาก ${orderButtons.length} ข้อ`,
+                    text: `คุณตอบถูก ${correctCount} จาก ${orderButtons.length} ข้อคำตอบที่ถูกคือ ${correctAnswers}`,
                     confirmButtonText: "เข้าใจแล้ว",
                     confirmButtonColor: "#3B82F6",
                 });
             }
 
             // ปิดปุ่มตรวจ และเปิดปุ่มถัดไป
-            document.getElementById("checkBtn").classList.add("hidden");
-            document.getElementById("nextBtn").classList.remove("hidden");
+            console.log(currentQuestion);
+            if (currentQuestion >= questions.length){
+                document.getElementById("nextBtn").classList.add("hidden");
+                document.getElementById("checkBtn").classList.add("hidden");
+                document.getElementById('btn_reset').classList.add("hidden");
+                document.getElementById("submitBtn").classList.remove("hidden");
+            }else{
+                document.getElementById("checkBtn").classList.add("hidden");
+                document.getElementById("nextBtn").classList.remove("hidden");
+                document.getElementById('btn_reset').classList.add("hidden");
+            }
         }
-
-
-        GenerateOrderButtons();
-        function GenerateOrderButtons() {
-            let array_values = [];
-            all_map_choices[currentQuestionIndex].forEach((item) => {
-                array_values.push(order_questions[currentQuestionIndex]["map_choice_4"].indexOf(item));
-            });
-            const orderBUtton = document.querySelectorAll('.order-btn')
-            const eventButtons = document.querySelectorAll('.event-btn');
-            eventButtons.forEach((btn, index) => {
-                btn.textContent = `${all_map_choices[currentQuestionIndex][index]}`;
-                btn.dataset.value = array_values[index];
-                orderBUtton[index].dataset.position = index;
-
-                btn.classList.remove('ring', 'ring-blue-500')
-                btn.classList.remove('opacity-50', 'cursor-default')
-                btn.disabled = false;
-
-                orderBUtton[index].classList.remove('ring-4', 'ring-green-500', 'ring-red-500', 'bg-[#D7FFE6]', 'bg-[#FFDFDF]');
-                orderBUtton[index].classList.add('bg-[#DFE9FF]');
-                orderBUtton[index].disabled = false;
-
-            });
-            currentQuestionIndex++;
-
+        CreateQuestion()
+        function CreateQuestion(){
+            resetQuestion();
+            Swal.fire({
+                title: 'กำลังโหลด...',
+                html: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                timer: 500,
+                timerProgressBar: true
+                })
+                .then(() => {
+                    document.querySelectorAll('.event-btn').forEach((btn, index) =>{
+                        btn.textContent = all_map_choices[currentQuestion][index]
+                    });
+                    currentQuestion++;
+                });
         }
+        function Tosubmit() {
+            // สร้างฟอร์มส่ง POST ไปยัง /submit/...
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/home/submit/game_sound/pairing_mode/1';
+
+            // สร้าง input สำหรับส่ง finished = true
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'finished';
+            input.value = 'true';
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
     </script>
 
 </body>

@@ -6,6 +6,8 @@
     <title>Memlody</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         .fancy{
             display: inline-block;
@@ -116,7 +118,7 @@
 
     <label class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.7vh] text-[#0E0E5D] mt-4 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดพูดชื่อสิ่งที่เห็นในภาพ ?</label>
     <div class=" flex flex-col justify-center px-5 py-10 mx-auto my-15 w-[60%] border-none rounded-4xl outline outline-2 outline-gray-200 shadow-xl">
-        <img src="/static/img/cat.webp" class="w-[40vh] h- mx-auto object-contain rounded-xl mb-4">
+        <img src="/static/img/cat.webp" class="w-[40vh] h- mx-auto object-contain rounded-xl mb-4" id="current_img">
         <div id="record_button" class="flex justify-center items-center px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer bg-blue-200 hover:bg-blue-400">
             <img src="/static/img/mic.png" class="w-12 h-12 mr-3">
             <p id="record" class="text-xl font-bold">กดเพื่อพูดตอบคำถาม</p>
@@ -124,19 +126,28 @@
         <audio id="play_back" controls class="mx-auto mt-4 hidden"></audio>
         <p id="score"></p>
         <div class="flex justify-center mt-5">
-            <button class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="stop()">
+            <button id="nextBtn"
+            class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 hidden" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="CreateQuestion()">
                 <p>ถัดไป</p>
                 <img src="/static/img/right-arrow.png" class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
+            </button>
+            <button id="checkBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl"
+                onclick="CheckVoice()">
+                <p>ตรวจ</p>
+            </button>
+            <button id="submitBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="Tosubmit()">
+                <p>เสร็จสิ้น</p>
             </button>
         </div>
     </div>
     <script>
         let currentQuestion = 0;
         const questions = JSON.parse(`{{ what_you_see | tojson}}`);
-        function GenerateQuestion(){
-            // ยังไม่เสร็จ------------------------------------------------
-            currentQuestion++;
-        }
+        let formData = new FormData();
+
         let play = false;
         function sound(){
             const audio = document.getElementById("sound");
@@ -197,21 +208,9 @@
                     const arrayBuffer = await audioBlob.arrayBuffer();
                     const wavBlob = await convertWebmToWav(arrayBuffer);
                     const wavFile = new File([wavBlob], "recorded.wav", { type: "audio/wav" });
-
-                    const formData = new FormData();
                     formData.append("label", "recorded");
                     formData.append("file", wavFile);
-                    formData.append("answer", questions[currentQuestion].answer);
-
-                    const response = await fetch('/home/check_voice', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        const score = document.getElementById('score');
-                        score.textContent = `${data}`;
-                    })
+                    formData.append("answer", questions[currentQuestion-1].answer);
                 };
             
                 media_recorder.start();
@@ -267,6 +266,73 @@
             }
 
             return new Blob([view], { type: "audio/wav" });
+        }
+
+        function clearPage(){
+            Swal.fire({
+                title: 'กำลังโหลด...',
+                html: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                timer: 500,
+                timerProgressBar: true
+                })
+                .then(() => {
+                    document.getElementById("play_back").classList.add("hidden");
+                    document.getElementById("nextBtn").classList.add("hidden");
+                    document.getElementById("checkBtn").classList.remove("hidden");
+                    list_audio = []
+                    hasChecked = false;
+                    score.textContent = "";
+                });
+        }
+        CreateQuestion();
+        function CreateQuestion(){
+            clearPage();
+            document.getElementById("current_img").src = questions[currentQuestion].path_img;
+            currentQuestion++;
+        }
+
+        async function CheckVoice() {
+            if (!list_audio || list_audio.length === 0) {
+                alert("กรุณาพูดก่อน");
+                return;
+            }
+            const response = await fetch('/home/check_voice', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                const score = document.getElementById('score');
+                score.textContent = `${data}`;
+            })
+            if (currentQuestion >= questions.length){
+                document.getElementById("nextBtn").classList.add("hidden");
+                document.getElementById("checkBtn").classList.add("hidden");
+                document.getElementById("submitBtn").classList.remove("hidden");
+            }else{
+                document.getElementById("checkBtn").classList.add("hidden");
+                document.getElementById("nextBtn").classList.remove("hidden");
+            }
+        }
+        function Tosubmit() {
+            // สร้างฟอร์มส่ง POST ไปยัง /submit/...
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/home/submit/game_sound/pairing_mode/1';
+
+            // สร้าง input สำหรับส่ง finished = true
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'finished';
+            input.value = 'true';
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 </body>
