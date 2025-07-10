@@ -161,11 +161,11 @@
 </style>
 
 <body class="m-0 font-[Kanit]">
-    <div class="bg-[#0E0E5D] flex justify-between">
-        <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]">
+        <div class="bg-[#0E0E5D] flex justify-between ">
+        <div class="flex justify-center items-center text-white ml-[4%] m-[2vh]">
             <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
-        <div class="flex justify-center items-center text-white mr-[2%] m-[1.5vh] text-[2.5vh]">
+        <div class="flex justify-center items-center gap-7 text-white mr-10">
             <a href="" class="Btn">
                 <div class="sign">
                     <svg viewBox="0 0 512 512">
@@ -179,6 +179,7 @@
         </div>
     </div>
 
+
     <div class="flex flex-row items-center m-[2.5vh]">
         <a class="fancy" href="#">
             <span class="top-key"></span>
@@ -189,22 +190,17 @@
 
     </div>
 
-    <div class="flex justify-center  gap-3 " id="pagination">
-        <a onclick="selectPage(this, 1)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
-            1</a>
-        <a onclick="selectPage(this, 2)" href="#voicepic_addmin copy.html"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
-            2</a>
-        <a onclick="selectPage(this, 3)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
-            3</a>
-        <a onclick="selectPage(this, 4)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
-            4</a>
-        <a onclick="selectPage(this, 5)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
-            5</a>
+    <div class="flex justify-center items-center  gap-5 m-5 cursor-pointer" id="number">
+        <a
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-blue-100 outline outline-2 outline-[#4A67BA]">1</a>
+        <a
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</a>
+        <a
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</a>
+        <a
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</a>
+        <a
+            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</a>
 
     </div>
 
@@ -273,7 +269,7 @@
             class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl ">
             <p>ถัดไป</p>
             <img src="/static/img/right-arrow.png"
-                class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
+                class="w-[5vh] transform transition-transform duration-300 group-hover:translate-x-1">
         </a>
 
     </div>
@@ -300,6 +296,20 @@
         placeholder="พิมพ์เหตุการณ์ที่ ${index} ได้ที่นี่" />
     `;
         }
+
+
+                const buttons = document.querySelectorAll("#number a");
+        buttons.forEach(a => {
+            a.addEventListener("click", () => {
+                buttons.forEach(b => {
+                    b.classList.remove("bg-blue-400", "text-white");
+                    b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
+                });
+                a.classList.remove("bg-white", "hover:bg-gray-200");
+                a.classList.add("bg-blue-100");
+            });
+        });
+
     </script>
 
 </body>
