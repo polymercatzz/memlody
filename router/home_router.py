@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 from faster_whisper import WhisperModel
 from database import Base, engine
 from sqlalchemy.orm import Session
-from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion
+from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion, User
 import ast
 import random
 import os
@@ -34,6 +34,20 @@ async def home(request: Request):
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     return templates.TemplateResponse("index2.html", {"request": request})
 
+@router.get("/my_info")
+async def my_info(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    user = db.query(User).filter(User.user_id==user_id).first()
+    user_age = calculate_age(user.date)
+    return templates.TemplateResponse("information.html", {"request": request, "user":user, "user_age":user_age})
+
+def calculate_age(birthdate):
+    from datetime import datetime
+    today = datetime.today()
+    return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+
 @router.get("/game_sound/pairing_mode")
 async def pairing_mode(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
@@ -61,7 +75,7 @@ async def play_pairing(request: Request, stage: int, db: Session = Depends(get_d
     } for question in questions_data_raw
 ]
     print(questions_data)
-    return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data})
+    return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data, "stage":stage})
 
 @router.get("/game_sound/speaking_mode")
 async def speaking_mode(request: Request, db: Session = Depends(get_db)):
@@ -72,12 +86,12 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     return templates.TemplateResponse("main_sound2.html", {"request": request, "all_stage":all_stage})
 
-@router.get("/game_sound/speaking_mode/{id}")
-async def play_speaking(request: Request, id: int, db: Session = Depends(get_db)):
+@router.get("/game_sound/speaking_mode/{stage}")
+async def play_speaking(request: Request, stage: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    all_sounds_raw = db.query(SpeakingQuestion).filter(SpeakingQuestion.stage==id).order_by(SpeakingQuestion.speaking_id).all()
+    all_sounds_raw = db.query(SpeakingQuestion).filter(SpeakingQuestion.stage==stage).order_by(SpeakingQuestion.speaking_id).all()
     all_sounds = [
     {
         "stage": question.stage,
@@ -87,7 +101,7 @@ async def play_speaking(request: Request, id: int, db: Session = Depends(get_db)
     for question in all_sounds_raw
 ]
     # random.shuffle(all_sounds)
-    return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds})
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds, "stage":stage})
 
 def is_similar(a, b, threshold=0.7):
     from difflib import SequenceMatcher
@@ -138,8 +152,8 @@ async def my_voice_mode(request: Request):
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     return templates.TemplateResponse("main_sound3.html", {"request": request})
 
-@router.get("/game_sound/my_voice_mode/{id}")
-async def play_my_voice(request: Request, id: int):
+@router.get("/game_sound/my_voice_mode/{stage}")
+async def play_my_voice(request: Request, stage: int):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
@@ -187,7 +201,7 @@ async def play_my_voice(request: Request, id: int):
 ]
     random.shuffle(cousins)
     questions_cosins = create_questions(cousins)
-    return templates.TemplateResponse("game_sound3.html", {"request": request, "questions_cosins": questions_cosins})
+    return templates.TemplateResponse("game_sound3.html", {"request": request, "questions_cosins": questions_cosins, "stage":stage})
 
 def create_questions(cousins, num_questions=5, num_choices=4):
     questions = []
@@ -225,12 +239,12 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     return templates.TemplateResponse("main_guess1.html", {"request": request, "all_stage":all_stage})
 
-@router.get("/game_pic/todo_mode/{id}")
-async def play_todo(request: Request, id: int, db: Session = Depends(get_db)):
+@router.get("/game_pic/todo_mode/{stage}")
+async def play_todo(request: Request, stage: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    todo_list_raw = db.query(TodoQuestion).filter(TodoQuestion.stage==id).order_by(TodoQuestion.todo_id).all()
+    todo_list_raw = db.query(TodoQuestion).filter(TodoQuestion.stage==stage).order_by(TodoQuestion.todo_id).all()
     todo_list = [
         {
         "stage": question.stage,
@@ -241,7 +255,8 @@ async def play_todo(request: Request, id: int, db: Session = Depends(get_db)):
         }
         for question in todo_list_raw
 ]
-    return templates.TemplateResponse("choosepic.html", {"request": request, "todo_list": todo_list})
+    print(todo_list)
+    return templates.TemplateResponse("choosepic.html", {"request": request, "todo_list": todo_list, "stage":stage})
 
 @router.get("/game_pic/what_you_see_mode")
 async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
@@ -252,12 +267,12 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     return templates.TemplateResponse("main_guess2.html", {"request": request, "all_stage":all_stage})
 
-@router.get("/game_pic/what_you_see_mode/{id}")
-async def play_what_you_see(request: Request, id: int, db: Session = Depends(get_db)):
+@router.get("/game_pic/what_you_see_mode/{stage}")
+async def play_what_you_see(request: Request, stage: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    what_you_see_raw = db.query(SeeQuestion).filter(SeeQuestion.stage==id).order_by(SeeQuestion.see_id).all()
+    what_you_see_raw = db.query(SeeQuestion).filter(SeeQuestion.stage==stage).order_by(SeeQuestion.see_id).all()
     what_you_see = [
     {
         "stage": question.stage,
@@ -278,12 +293,12 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     return templates.TemplateResponse("main_guess3.html", {"request": request, "all_stage":all_stage})
 
-@router.get("/game_pic/order_mode/{id}")
-async def play_order(request: Request, id: int, db: Session = Depends(get_db)):
+@router.get("/game_pic/order_mode/{stage}")
+async def play_order(request: Request, stage: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    order_questions_raw = db.query(OrderQuestion).filter(OrderQuestion.stage==id).order_by(OrderQuestion.order_id).all()
+    order_questions_raw = db.query(OrderQuestion).filter(OrderQuestion.stage==stage).order_by(OrderQuestion.order_id).all()
     order_questions = [
         {
         "order_id": question.order_id,
@@ -299,15 +314,15 @@ async def play_order(request: Request, id: int, db: Session = Depends(get_db)):
         random.shuffle(choices)
 
         all_map_choices.append(choices)
-    return templates.TemplateResponse("event_order.html", {"request": request, "order_questions": order_questions, "all_map_choices": all_map_choices})
+    return templates.TemplateResponse("event_order.html", {"request": request, "order_questions": order_questions, "all_map_choices": all_map_choices, "stage":stage})
 
 @router.post("/submit/{game}/{mode}/{stage}")
-async def post_submit(request: Request, game: str, mode: str, stage: int, finished: str = Form(...)):
+async def post_submit(request: Request, game: str, mode: str, stage: int, finished: str = Form(...), corrected: int = Form(...), time: int = Form(...)):
     if finished == "true":
         # ตั้งค่า session ว่าเล่นเกมจบแล้ว
         request.session[f"{game}_{mode}_{stage}_finished"] = True
 
-    return RedirectResponse(url=f"/home/submit/{game}/{mode}/{stage}", status_code=303)  # 303 = redirect หลัง POST
+    return RedirectResponse(url=f"/home/submit/{game}/{mode}/{stage}?corrected={corrected}&time={time}", status_code=303)  # 303 = redirect หลัง POST
 
 # GET: แสดงผลเฉพาะถ้าเกมจบ
 @router.get("/submit/{game}/{mode}/{stage}")
@@ -317,7 +332,8 @@ async def get_submit(request: Request, game: str, mode: str, stage: int):
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     key = f"{game}_{mode}_{stage}_finished"
     if request.session.get(key):
-        print(request.session[key])
         del request.session[key]
-        return templates.TemplateResponse("sum.html", {"request": request, "game": game, "mode": mode, "stage":stage})
+        corrected = request.query_params.get('corrected')
+        time = request.query_params.get('time')
+        return templates.TemplateResponse("sum.html", {"request": request, "game": game, "mode": mode, "stage":stage, "corrected":corrected, "time":time})
     return RedirectResponse(url=f"/home/{game}/{mode}", status_code=302)

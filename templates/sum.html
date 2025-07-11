@@ -136,14 +136,14 @@
                 <img src="/static/img/clock.png" alt="" class="w-10">
                 <p>เวลาที่ใช้</p>
             </div>
-            <p>06:24 นาที</p>
+            <p id="timer" >06:24 นาที</p>
         </div>
         <div class="flex justify-between items-center border-b-2 border-gray-300 pb-2">
             <div class="flex items-center gap-2 m-2 mt-5">
                 <img src="/static/img/check.png" alt="" class="w-10">
                 <p>คะแนน</p>
             </div>
-            <p>3/5</p>
+            <p>{{ corrected }}/5</p>
         </div>
 
     </div>
@@ -197,8 +197,14 @@
 
 
 
-
-
 </body>
-
+<script>
+    let second = parseInt(`{{ time }}`);
+    updateTimerDisplay()
+    function updateTimerDisplay() {
+            const min = String(Math.floor(second / 60)).padStart(2, '0');
+            const sec = String(second % 60).padStart(2, '0');
+            document.getElementById('timer').textContent = `${min}:${sec} นาที`;
+    }
+</script>
 </html>

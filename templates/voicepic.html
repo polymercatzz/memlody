@@ -239,6 +239,24 @@
     </div>
 
     <script>
+        let second = 0;
+        let time = null;
+        function updateTimerDisplay() {
+            const min = String(Math.floor(second / 60)).padStart(2, '0');
+            const sec = String(second % 60).padStart(2, '0');
+            document.getElementById('timer').textContent = `${min}:${sec}`;
+        }
+        function start() {
+            time = setInterval(() => {
+                second++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+        function stop() {
+            clearInterval(time);
+            time = null;
+        }
+        window.onload = start;
         const clean = (url) => url.replace(location.origin, "");
         let questions = JSON.parse(`{{ questions | tojson }}`);
         console.log(questions);
@@ -305,6 +323,7 @@
         let selected = null;
         let hasChecked = false;
         let currentQuestion = 0;
+        let corrected = 0;
 
         function checkanswer(element) {
             if (hasChecked) return; // ถ้าเฉลยไปแล้วห้ามเปลี่ยน
@@ -349,6 +368,7 @@
             });
 
             if (clean(decodeURIComponent(selected.querySelector("img").src)) === questions[currentQuestion-1].answer) {
+                corrected++;
                 Swal.fire({
                     icon: "success",
                     title: "ถูกต้อง!",
@@ -426,15 +446,28 @@
             // สร้างฟอร์มส่ง POST ไปยัง /submit/...
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/home/submit/game_sound/pairing_mode/1';
+            form.action = '/home/submit/game_sound/pairing_mode/{{ stage }}';
 
             // สร้าง input สำหรับส่ง finished = true
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'finished';
-            input.value = 'true';
+            const inputFinished = document.createElement('input');
+            inputFinished.type = 'hidden';
+            inputFinished.name = 'finished';
+            inputFinished.value = 'true';
+            form.appendChild(inputFinished);
 
-            form.appendChild(input);
+            // เพิ่ม input สำหรับส่ง corrected (เช่นจำนวนวินาทีหรือคะแนนที่ได้)
+            const inputCorrected = document.createElement('input');
+            inputCorrected.type = 'hidden';
+            inputCorrected.name = 'corrected';
+            inputCorrected.value = corrected;  // ต้องแน่ใจว่า corrected ถูกกำหนดไว้ก่อนหน้านี้
+            form.appendChild(inputCorrected);
+
+            const inputTime = document.createElement('input');
+            inputTime.type = 'hidden';
+            inputTime.name = 'time';
+            inputTime.value = second;// ต้องแน่ใจว่า corrected ถูกกำหนดไว้ก่อนหน้านี้
+            form.appendChild(inputTime);
+
             document.body.appendChild(form);
             form.submit();
         }
