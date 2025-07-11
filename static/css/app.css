@@ -705,8 +705,14 @@
   .w-60 {
     width: calc(var(--spacing) * 60);
   }
+  .w-\[2\.5vh\] {
+    width: 2.5vh;
+  }
   .w-\[2vh\] {
     width: 2vh;
+  }
+  .w-\[3\.5vh\] {
+    width: 3.5vh;
   }
   .w-\[3vh\] {
     width: 3vh;
@@ -1059,11 +1065,20 @@
   .bg-\[\#797979\] {
     background-color: #797979;
   }
+  .bg-\[\#D4F2E5\] {
+    background-color: #D4F2E5;
+  }
   .bg-\[\#D7FFE6\] {
     background-color: #D7FFE6;
   }
+  .bg-\[\#DBE9FD\] {
+    background-color: #DBE9FD;
+  }
   .bg-\[\#DFE9FF\] {
     background-color: #DFE9FF;
+  }
+  .bg-\[\#E0F2F1\] {
+    background-color: #E0F2F1;
   }
   .bg-\[\#E8E8E8\] {
     background-color: #E8E8E8;
@@ -1077,6 +1092,9 @@
   .bg-\[\#F9FAFB\] {
     background-color: #F9FAFB;
   }
+  .bg-\[\#FDF7DB\] {
+    background-color: #FDF7DB;
+  }
   .bg-\[\#FFDFDF\] {
     background-color: #FFDFDF;
   }
@@ -1085,6 +1103,9 @@
   }
   .bg-\[\#FFFFFF\] {
     background-color: #FFFFFF;
+  }
+  .bg-\[D4F2E5\] {
+    background-color: D4F2E5;
   }
   .bg-black {
     background-color: var(--color-black);
@@ -1103,6 +1124,9 @@
   }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
+  }
+  .bg-gray-100 {
+    background-color: var(--color-gray-100);
   }
   .bg-gray-300 {
     background-color: var(--color-gray-300);
@@ -1591,10 +1615,62 @@
       }
     }
   }
+  .group-hover\:scale-110 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        --tw-scale-x: 110%;
+        --tw-scale-y: 110%;
+        --tw-scale-z: 110%;
+        scale: var(--tw-scale-x) var(--tw-scale-y);
+      }
+    }
+  }
+  .group-hover\:rotate-0 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        rotate: 0deg;
+      }
+    }
+  }
+  .group-hover\:rotate-1 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        rotate: 1deg;
+      }
+    }
+  }
+  .group-hover\:rotate-3 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        rotate: 3deg;
+      }
+    }
+  }
+  .group-hover\:rotate-12 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        rotate: 12deg;
+      }
+    }
+  }
+  .group-hover\:rotate-90 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        rotate: 90deg;
+      }
+    }
+  }
   .group-hover\:rotate-180 {
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
         rotate: 180deg;
+      }
+    }
+  }
+  .group-hover\:rotate-360 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        rotate: 360deg;
       }
     }
   }
@@ -1730,6 +1806,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-gray-50);
+      }
+    }
+  }
+  .hover\:bg-gray-100 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-gray-100);
       }
     }
   }
