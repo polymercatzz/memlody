@@ -9,8 +9,9 @@
     <link href="/static/css/app.css" rel="stylesheet">
     <style>
         :lang(en){
-          font-family: 'Huninn', sans-serif;
+          font-family: 'Huninn', 'Kanit';
         }
+
         .dot{
             display: inline-block;
             width: 15px;
@@ -25,16 +26,16 @@
         }
     </style>
 </head>
-<body class="m-0 font-[Kanit]">
+<body class="m-0" lang="en">
     <div class="bg-[#0E0E5D] flex justify-between h-[13vh]">
-        <div class="flex justify-center items-center text-white ml-[4%]"><h1 class="text-[40px]">MEMLODY</h1></div>
+        <div class="flex justify-center items-center text-white ml-[4%]"><a href="/home" class="text-[4vh] font-semibold">MEMLODY</a></div>
         <div class="flex justify-center items-center mr-[5%]">
             <label class="relative inline-block">
                 <input type="checkbox" class="hidden peer"/>
-                <div class="w-[50px] h-[50px] cursor-pointer rounded-full overflow-hidden border-none bg-none p-0" tabindex="0">
+                <div class="w-16 h-16 cursor-pointer rounded-full overflow-hidden border-none bg-none p-0 transition-shadow duration-200 ease-in-out transform hover:ring-2 hover:ring-white perr-checked:ring-2 peer-checked:ring-white">
                     <img src="/static/img/person_5.png" class="w-full h-full object-cover" />
                 </div>
-                <nav class="absolute right-0 top-[60px] w-[200px] bg-white border border-none rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.25)] invisible opacity-0 transition-all duration-200 ease-in-out z-10 peer-checked:visible peer-checked:opacity-100">
+                <nav class="absolute right-0 top-[70px] w-[200px] bg-white border border-none rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.25)] invisible opacity-0 transition-all duration-200 ease-in-out z-10 peer-checked:visible peer-checked:opacity-100">
                     <ul class="list-none p-2 m-0">
                         <li>
                             <a href="/home/my_info" class="block w-full px-4 py-2 text-left text-xl rounded-md hover:bg-blue-200 hover:text-white cursor-pointer transition-colors duration-150">ข้อมูลผู้ใช้</a>
@@ -49,53 +50,57 @@
     </div>
 
     <div class="flex justify-center items-center my-[20px]">
-        <button class="w-10 h-10 bg-black text-white text-xl flex items-center justify-center rounded-full mx-[15px] cursor-pointer" onclick="moveSlide(-1, true)"><</button>
-        <div class="relative w-[80%] overflow-hidden rounded-[10px] shadow-md">
-            <div class="flex transition-transform duration-500 ease-in-out w-full h-[400px]" id="slides">
-            <div class="flex-grow flex-shrink-0 basis-full relative">
-                <img src="/static/img/NSC-background1.jpg" class="w-full h-full object-cover">
-                <div class="absolute top-[20px] left-[55%] transform -translate-x-1/2 text-[35px] text-white pt-[10px] pb-0 px-[20px] rounded-[10px] font-bold">โรคอัลไซเมอร์เกิดจากอะไร?</div>
-                <div class="absolute top-[65px] left-[45%] w-[45%] text-[22px] text-white p-[15px]">
-                    โรคอัลไซเมอร์เป็นโรคความเสื่อมของสมองเกิดจากการสะสมของ <br> โปรตีนเบต้า-อะไมลอยด์ที่ทำลายเซลล์สมองและลดสารสื่อประสาท <br> อะซีติลโคลีน ทำให้สมองเริ่มเสื่อมทีละน้อย แบ่งออกเป็น 3 ระยะหลัก:<br>
+        <button class="hidden sm:flex w-10 h-10 bg-black text-white text-xl items-center justify-center rounded-full mx-[15px] cursor-pointer" onclick="moveSlide(-1, true)"><</button>
+        <div class="relative w-full rounded-none sm:w-[80%] sm:rounded-[10px] overflow-hidden shadow-md">
+            <div class="flex transition-transform duration-500 ease-in-out w-full h-[440px] sm:h-[400px]" id="slides">
+                <div class="flex-grow flex-shrink-0 basis-full relative">
+                    <img src="/static/img/NSC-background1.jpg" class="w-full h-full object-cover">
+                    <div class="absolute top-4 left-[15%] text-[2.6vh] text-white pt-[10px] pb-0 px-[20px] rounded-[10px] font-bold lg:top-4 lg:left-[40%] lg:text-[3.5vh] sm:left-[28%]">โรคอัลไซเมอร์เกิดจากอะไร?</div>
+                    <div class="flex flex-col absolute top-[55px] left-[28%] w-[70%] text-[1.5vh] text-white p-[15px] 
+                    2xl:top-[65px] 2xl:left-[43%] 2xl:w-[53%] 2xl:text-[2vh]
+                    lg:left-[43%] lg:w-[53%] md:w-[60%] sm:left-[35%] sm:w-[65%] sm:top-[65px]">
+                        <div>
+                            โรคอัลไซเมอร์เป็นโรคความเสื่อมของสมองเกิดจากการสะสมของโปรตีนเบต้า-อะไมลอยด์ที่ทำลายเซลล์สมอง และลดสารสื่อประสาทอะซีติลโคลีนทำให้สมองเริ่มเสื่อมทีละน้อย แบ่งออกเป็น 3 ระยะหลัก:<br>
+                        </div>
+                        <div class="ml-5">
+                            1. ระยะแรก: ลืมเรื่องที่เพิ่งทำ/พูด, เรียกชื่อสิ่งของไม่ถูก, สับสนทิศทาง แต่ยังจำความทรงจำเก่า ๆ ได้<br>
+                            2. ระยะกลาง: ช่วยเหลือตัวเองได้น้อยลง, ลืมขั้นตอนกิจวัตรประจำวัน, อารมณ์แปรปรวน, ใช้ภาษาผิด, อาจเห็นภาพหลอน<br>
+                            3. ระยะสุดท้าย: ช่วยตัวเองไม่ได้, จำคนใกล้ชิดไม่ได้, อารมณ์รุนแรงต้องมีผู้ดูแลตลอดเวลา
+                        </div>
+                    </div>
                 </div>
-                <div class="absolute top-[165px] left-[50%] w-[45%] text-[22px] text-white p-[15px]">
-                    1. ระยะแรก: ลืมเรื่องที่เพิ่งทำ/พูด, เรียกชื่อสิ่งของไม่ถูก, สับสนทิศทาง <br> แต่ยังจำความทรงจำเก่า ๆ ได้<br>
-                    2. ระยะกลาง: ช่วยเหลือตัวเองได้น้อยลง, ลืมขั้นตอนกิจวัตรประจำวัน,<br> อารมณ์แปรปรวน, ใช้ภาษาผิด, อาจเห็นภาพหลอน<br>
-                    3. ระยะสุดท้าย: ช่วยตัวเองไม่ได้, จำคนใกล้ชิดไม่ได้, อารมณ์รุนแรง, <br> ต้องมีผู้ดูแลตลอดเวลา
-                </div>
-            </div>
 
-            <div class="flex-grow flex-shrink-0 basis-full relative">
-                <img src="/static/img/NSC-background3.jpg" class="w-full h-full object-cover">
-                <div class="absolute top-[12%] left-[15%] text-white text-[35px] px-[16px] py-[8px] rounded-[10px] font-bold">แนวทางการรักษาของโรคอัลไซเมอร์</div>
-                <div class="absolute top-[25%] left-[20%] w-[40%] text-[24px] text-white p-[15px] rounded-[10px] leading-[1.5]">
-                    การรักษาแบบไม่ใช้ยา:<br>
-                    1.การทำกายภาพบำบัด<br>
-                    2.การฝึกสมอง<br>
-                    3.การเล่นเกมต่าง ๆ<br>
-                    4.การฝึกช่วยเหลือตัวเองให้มากที่สุดเท่าที่จะทำได้<br>
-                    5.การออกกำลังกาย, มีสุขอนามัยการนอนที่ดี,<br> รับประทานอาหาร ให้ครบ 5 หมู่, รักษา mbti ให้ปกติ
+                <div class="flex-grow flex-shrink-0 basis-full relative">
+                    <img src="/static/img/NSC-background3.jpg" class="w-full h-full object-cover">
+                    <div class="absolute top-2 left-0 text-white text-[2.5vh] px-[16px] py-[8px] rounded-[10px] font-bold lg:top-8 lg:left-[10%] lg:text-[3.5vh] sm:top-5 sm:left-2 sm:text-[3vh]">แนวทางการรักษาโรคอัลไซเมอร์</div>
+                    <div class="absolute top-13 left-3 w-[45%] text-[1.7vh] text-white p-[15px] rounded-[10px] leading-[1.5] lg:text-[2vh] lg:top-20 lg:left-[12%] lg:w-[40%] sm:text-[1.5vh] sm:top-20 sm:left-[5%] sm:w-[40%]">
+                        การรักษาแบบไม่ใช้ยา:<br>
+                        1.การทำกายภาพบำบัด<br>
+                        2.การฝึกสมอง<br>
+                        3.การเล่นเกมต่าง ๆ<br>
+                        4.การฝึกช่วยเหลือตัวเองให้มากที่สุดเท่าที่จะทำได้<br>
+                        5.การออกกำลังกาย, มีสุขอนามัยการนอนที่ดี, รับประทานอาหาร ให้ครบ 5 หมู่, รักษา mbti ให้ปกติ
+                    </div>
+                    <div class="absolute top-13 left-[50%] w-[45%] text-[1.7vh] text-white p-[15px] rounded-[10px] leading-[1.5] lg:text-[2vh] lg:top-20 lg:left-[55%] lg:w-[40%] sm:text-[1.5vh] sm:top-20 sm:left-[45%] sm:w-[40%]">
+                        การรักษาแบบใช้ยาต้องได้รับการประเมินโดยแพทย์เฉพาะทาง:<br>
+                        1.การใช้ยาชะลอไม่ให้สมองเสื่อมเพิ่มขึ้น<br>
+                        2.การใช้ยาปรับอาการทางพฤติกรรมต่าง ๆ เช่น อาการสับสน, อาการกระสับกระส่าย, อาการทางจิต, ภาวะนอนไม่หลับ เป็นต้น
+                    </div>
                 </div>
-                <div class="absolute top-[25%] left-[55%] w-[40%] text-[24px] text-white p-[15px] rounded-[10px] leading-[1.5]">
-                    การรักษาแบบใช้ยาต้องได้รับการประเมินโดยแพทย์เฉพาะทาง:<br>
-                    1.การใช้ยาชะลอไม่ให้สมองเสื่อมเพิ่มขึ้น<br>
-                    2.การใช้ยาปรับอาการทางพฤติกรรมต่าง ๆ เช่น <br> อาการสับสน, อาการกระสับกระส่าย, อาการทางจิต, <br> ภาวะนอนไม่หลับ เป็นต้น
-                </div>
-            </div>
 
-            <div class="flex-grow flex-shrink-0 basis-full relative">
-                <img src="/static/img/NSC-background4.jpg" class="w-full h-full object-cover">
-                <div class="absolute top-[40px] left-[10%] text-white text-[35px] px-[18px] py-[10px] rounded-[10px] font-bold"">MEMLODY คืออะไร</div>
-                <div class="absolute top-[90px] left-[12%] w-[45%] text-[24px] text-white p-[15px] rounded-[10px] leading-[1.6]">
-                    เป็นเว็บไซต์สำหรับช่วย ผู้ป่วยในระยะแรกและระยะที่สองโดยจะเป็น กิจกรรม Brain Exercise ที่ช่วยในส่วนของ Memory และในการพัฒนาเว็บไซต์นี้ทางผู้พัฒนาได้รับแรงบันดาลใจจากบทความของ <br> bbc news ที่กล่าวถึงเสียงมีส่วนช่วยกับผู้ป่วยโรคอัลไซเมอร์ ทางเราจึงมีฟังก์ชันเสริมในการหาเพลงที่อิงจากความชอบ และข้อมูลพื้นฐาน <br> ของผู้ป่วย
+                <div class="flex-grow flex-shrink-0 basis-full relative">
+                    <img src="/static/img/NSC-background4.jpg" class="w-full h-full object-cover">
+                    <div class="absolute top-2 left-0 text-white text-[3.5vh] px-[18px] py-[10px] rounded-[10px] font-bold sm:top-8 sm:left-[10%]">MEMLODY คืออะไร</div>
+                    <div class="absolute top-13 left-5 w-[85%] text-[2vh] text-white p-[15px] rounded-[10px] leading-[1.6] 2xl:text-[2.3vh] xl:w-[45%] lg:w-[55%] md:w-[80%] sm:w-[60%] sm:top-[90px] sm:left-[12%]">
+                        เป็นเว็บไซต์สำหรับช่วย ผู้ป่วยในระยะแรกและระยะที่สองโดยจะเป็น กิจกรรม Brain Exercise ที่ช่วยในส่วนของ Memory และในการพัฒนาเว็บไซต์นี้ทางผู้พัฒนาได้รับแรงบันดาลใจจากบทความของ bbc news ที่กล่าวถึงเสียงมีส่วนช่วยกับผู้ป่วยโรคอัลไซเมอร์ ทางเราจึงมีฟังก์ชันเสริมในการหาเพลงที่อิงจากความชอบ และข้อมูลพื้นฐานของผู้ป่วย
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
-        <button class="w-10 h-10 bg-black text-white text-xl flex items-center justify-center rounded-full mx-[15px] cursor-pointer" onclick="moveSlide(1, true)">></button>
+        <button class="hidden sm:flex w-10 h-10 bg-black text-white text-xl items-center justify-center rounded-full mx-[15px] cursor-pointer" onclick="moveSlide(1, true)">></button>
     </div>
 
-    <div class="text-center mt-[10px]" id="dots"></div>
+    <div class="flex justify-center flex-wrap gap-2 mt-4" id="dots"></div>
 
     <div>
         <div class="text-[40px] mx-[5%] my-0 font-bold">

@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Memlody</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/crown&star.css">
     <script src="/static/javascript/crown.js"></script>
     <style>
+        :lang(en){
+          font-family: 'Huninn', 'Kanit';
+        }
+
         .fancy{
             display: inline-block;
             position: relative;
@@ -75,18 +80,25 @@
             right: 0;
             width: 0;
         }
+
+        @media screen and (max-width:640px){
+            .crown-wrapper{
+                width: 50px;
+                height: 50px;
+            }
+        }
     </style>
 </head>
-<body class="m-0 font-[Kanit]">
-    <div class="bg-[#0E0E5D] flex justify-between h-[13vh]">
-        <div class="flex justify-center items-center text-white ml-[4%]"><h1 class="text-[40px]">MEMLODY</h1></div>
+<body class="m-0" lang="en">
+    <div class="bg-[#0E0E5D] flex justify-between h-[13vh]" lang="en">
+        <div class="flex justify-center items-center text-white ml-[4%]"><a href="/home" class="text-[4vh] font-semibold">MEMLODY</a></div>
         <div class="flex justify-center items-center mr-[5%]">
             <label class="relative inline-block">
                 <input type="checkbox" class="hidden peer"/>
                 <div class="w-16 h-16 cursor-pointer rounded-full overflow-hidden border-none bg-none p-0 transition-shadow duration-200 ease-in-out transform hover:ring-2 hover:ring-white perr-checked:ring-2 peer-checked:ring-white">
                     <img src="/static/img/person_5.png" class="w-full h-full object-cover" />
                 </div>
-                <nav class="absolute right-0 top-[60px] w-[200px] bg-white border border-none rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.25)] invisible opacity-0 transition-all duration-200 ease-in-out z-10 peer-checked:visible peer-checked:opacity-100">
+                <nav class="absolute right-0 top-[70px] w-[200px] bg-white border border-none rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.25)] invisible opacity-0 transition-all duration-200 ease-in-out z-10 peer-checked:visible peer-checked:opacity-100">
                     <ul class="list-none p-2 m-0">
                         <li>
                             <a href="./information.html" class="block w-full px-4 py-2 text-left text-xl rounded-md hover:bg-blue-200 hover:text-white cursor-pointer transition-colors duration-150">ข้อมูลผู้ใช้</a>
@@ -115,20 +127,20 @@
                     <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#FED843; stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#FABE2C; stop-opacity:1" />
+                                <stop offset="0%" style="stop-color:#FED843; stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:#FABE2C; stop-opacity:1"/>
                             </linearGradient>
                         </defs>
                         <polygon fill="none" stroke="black" stroke-width="2" points="256,56 312,144 288,172 304,216 320,232 352,240 384,224 400,192 384,160 512,112 456,384 256,384 56,384 0,112 128,160 112,192 128,224 160,240 192,232 208,216 224,172 200,144"/>
                         <polygon id="crown" points="256,56 312,144 288,172 304,216 320,232 352,240 384,224 400,192 384,160 512,112 456,384 256,384 56,384 0,112 128,160 112,192 128,224 160,240 192,232 208,216 224,172 200,144"/>
                     </svg>
                 </div>
-                <h1 class="flex justify-center text-6xl py-6">เกมทายของจากรูป</h1>
+                <h1 class="flex justify-center text-4xl py-6 sm:text-6xl">เกมทายของจากรูป</h1>
             </div>
             <p class="flex justify-center text-3xl pb-6">เลือกโหมด</p>
         </div>
         <div class="flex justify-center items-center">
-            <ul class="grid grid-cols-3 gap-3 px-10 py-4 bg-white text-2xl border-2 rounded-full">
+            <ul class="grid grid-cols-1 md:grid-cols-3 md:rounded-full gap-3 px-10 py-4 mx-5 bg-white text-2xl border-2 rounded-4xl">
                 <a href="/home/game_pic/todo_mode" class="flex justify-center items-center px-6 py-3 rounded-full text-center hover:bg-sky-100">โหมดเลือกคำตอบ</a>
                 <a href="/home/game_pic/what_you_see_mode" class="flex justify-center items-center px-6 py-3 rounded-full text-center hover:bg-sky-100">โหมดออกเสียง</a>
                 <a href="" class="flex justify-center items-center px-6 py-3 rounded-full text-center bg-sky-100">โหมดเรียงลำดับ</a>
@@ -137,7 +149,7 @@
         <div class="flex justify-center">
             <div class="mt-10 w-full max-w-5xl px-10">
                 <p class="flex justify-center text-2xl mb-5">เลือกด่าน</p>
-                <div class="grid grid-cols-3 gap-10 bg-white text-2xl px-10 py-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-10 bg-white text-2xl px-10 py-6">
                     {% for index, stage in all_stage %}
                         <a href="/home/game_pic/order_mode/{{ stage }}" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
                             <h4 class="text-3xl font-bold">ด่าน {{ stage }}</h4>

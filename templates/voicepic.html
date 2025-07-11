@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memlody</title>
     <link rel="stylesheet" href="/static/css/app.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-
     <link
         href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
 <style>
+    :lang(en){
+        font-family: 'Huninn', 'Kanit';
+    }
     .fancy {
         display: inline-block;
         position: relative;
@@ -97,11 +98,9 @@
     }
 </style>
 
-<body class="m-0 font-[Kanit]">
+<body class="m-0" lang="en">
     <div class="bg-[#0E0E5D] flex justify-between">
-        <div class="flex justify-center items-center text-white ml-[4%] m-[2vh]">
-            <h1 class="text-[4vh]">MEMLODY</h1>
-        </div>
+        <div class="flex justify-center items-center text-white ml-[4%]"><a href="/home" class="text-[4vh] font-semibold">MEMLODY</a></div>
         <div class="flex justify-center items-center mr-[2%] m-[1.5vh] gap-2">
             <p class="text-[2vh] text-[#0E0E5D] rounded-xl bg-[#DFE9FF] p-2">#สัตว์</p>
             <p class="text-[2vh] text-[#0E0E5D] rounded-xl bg-[#DFE9FF] p-2">#ธรรมชาติ</p>

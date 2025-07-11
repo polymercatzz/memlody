@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Memlody</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <style>
+        :lang(en){
+          font-family: 'Huninn', 'Kanit';
+        }
+
         .fancy{
             display: inline-block;
             position: relative;
@@ -77,14 +81,14 @@
         }
     </style>
 </head>
-<body class="m-0 font-[Kanit]">
+<body class="m-0" lang="en">
     <div class="bg-[#0E0E5D] flex justify-between">
-        <div class="flex justify-center items-center text-white ml-[4%] m-[1.5vh]"><h1 class="text-[3.5vh]">MEMLODY</h1></div>
+        <div class="flex justify-center items-center text-white ml-[4%]"><a href="/home" class="text-[4vh] font-semibold">MEMLODY</a></div>
         <div class="flex justify-center items-center mr-[2%] m-[1.5vh] gap-2">
             <p class="text-[2vh] text-[#0E0E5D] rounded-xl bg-[#DFE9FF] p-2">#สัตว์</p>
         </div>
     </div>
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-5">
         <a class="fancy" href="/home/game_pic/what_you_see_mode/">
             <span class="top-key"></span>
             <span class="text"><img src="/static/img/return.png" class="img">ย้อนกลับ</span>
@@ -92,53 +96,36 @@
             <span class="bottom-key-2"></span>
         </a>
         <div class="flex justify-center items-center mx-10 my-5 gap-2">
-            <img src="/static/img/clock.png" class="w-[4vh] ">
+            <img src="/static/img/clock.png" class="w-6 h-6 sm:w-10 sm:h-10">
             <p class="text-[2.3vh] whitespace-nowrap text-gray-500">เวลาที่ใช้ไป:</p>
             <p class="text-[2.3vh] whitespace-nowrap text-gray-500" id="timer">00:00</p>
         </div>
     </div>
-        <div class="flex justify-center items-center gap-3 ">
-        <p
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
-            1</p>
-        <p href="#voicepic_addmin copy.html"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
-            2</p>
-        <p
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
-            3</p>
-        <p
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
-            4</p>
-        <p
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">
-            5</p>
-
+    <div class="flex justify-center items-center gap-3 ">
+        <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">1</p>
+        <p href="#voicepic_addmin copy.html" class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</p>
+        <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</p>
+        <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</p>
+        <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</p>
     </div>
-
-    <label class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.7vh] text-[#0E0E5D] mt-4 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดพูดชื่อสิ่งที่เห็นในภาพ ?</label>
-    <div class=" flex flex-col justify-center px-5 py-10 mx-auto my-15 w-[60%] border-none rounded-4xl outline outline-2 outline-gray-200 shadow-xl">
+    <label class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.5vh] text-[#0E0E5D] mt-4 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดพูดชื่อสิ่งที่เห็นในภาพ ?</label>
+    <div class=" flex flex-col justify-center px-5 py-10 mx-auto my-15 w-[80%] md:w-[60%] border-none rounded-4xl outline outline-2 outline-gray-200 shadow-xl">
         <img src="/static/img/cat.webp" class="w-[40vh] h- mx-auto object-contain rounded-xl mb-4" id="current_img">
-        <div id="record_button" class="flex justify-center items-center px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer bg-blue-200 hover:bg-blue-400">
-            <img src="/static/img/mic.png" class="w-12 h-12 mr-3">
-            <p id="record" class="text-xl font-bold">กดเพื่อพูดตอบคำถาม</p>
+        <div id="record_button" class="flex justify-center items-center px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 bg-blue-200 hover:bg-blue-400">
+            <img src="/static/img/mic.png" class="w-10 h-10 sm:w-12 sm:h-12">
+            <p id="record" class="text-[2vh] font-semibold">กดเพื่อพูดตอบคำถาม</p>
         </div>
         <audio id="play_back" controls class="mx-auto mt-4 hidden"></audio>
         <p id="score"></p>
         <div class="flex justify-center mt-5">
-            <button id="nextBtn"
-            class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 hidden" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="CreateQuestion()">
+            <button id="nextBtn" class="group flex justify-center items-center bg-lime-400 px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 hidden" style="box-shadow: 2px 2px 0 2px #6BA530;" onclick="CreateQuestion()">
                 <p>ถัดไป</p>
                 <img src="/static/img/right-arrow.png" class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
             </button>
-            <button id="checkBtn"
-                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl"
-                onclick="CheckVoice()">
+            <button id="checkBtn" class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl" onclick="CheckVoice()">
                 <p>ตรวจ</p>
             </button>
-            <button id="submitBtn"
-                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
-                onclick="Tosubmit()">
+            <button id="submitBtn" class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden" onclick="Tosubmit()">
                 <p>เสร็จสิ้น</p>
             </button>
         </div>

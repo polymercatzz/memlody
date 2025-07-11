@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memlody</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
     <style>
-        .Btn {
+        :lang(en){
+            font-family: 'Huninn', 'Kanit';
+        }
+
+        /* ปุ่ม logout */
+        .Btn{
             display: flex;
             align-items: center;
             justify-content: flex-start;
@@ -25,24 +28,20 @@
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
             background-color: white;
         }
-
-        .sign {
+        .sign{
             width: 100%;
             transition-duration: 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .sign svg {
+        .sign svg{
             width: 17px;
         }
-
-        .sign svg path {
+        .sign svg path{
             fill: black;
         }
-
-        .text {
+        .text{
             position: absolute;
             right: 0%;
             width: 0%;
@@ -52,33 +51,29 @@
             font-weight: 600;
             transition-duration: 0.3s;
         }
-
-        .Btn:hover {
+        .Btn:hover{
             background-color: white;
             width: 125px;
             border-radius: 40px;
             transition-duration: 0.3s;
         }
-
-        .Btn:hover .sign {
+        .Btn:hover .sign{
             width: 30%;
             transition-duration: 0.3s;
             padding-left: 20px;
         }
-
-        .Btn:hover .text {
+        .Btn:hover .text{
             opacity: 1;
             width: 65%;
             transition-duration: 0.3s;
             color: black;
         }
-
-        .Btn:active {
+        .Btn:active{
             transform: translate(2px, 2px);
         }
 
         /* ปุ่ม return */
-        .fancy {
+        .fancy{
             display: inline-block;
             position: relative;
             height: 60px;
@@ -92,8 +87,7 @@
             cursor: pointer;
             transition: all 0.3s ease-in-out;
         }
-
-        .fancy .return {
+        .fancy .return{
             display: flex;
             align-items: center;
             gap: 0.5em;
@@ -102,65 +96,52 @@
             transition: all 0.3s ease-in-out;
             color: black;
         }
-
-        .img {
+        .img{
             width: 40px;
             height: 40px;
             object-fit: contain;
             margin-left: -1.5em;
         }
-
-        .fancy .top-key,
-        .fancy .bottom-key-1,
-        .fancy .bottom-key-2 {
+        .fancy .top-key, .fancy .bottom-key-1, .fancy .bottom-key-2{
             height: 2px;
             position: absolute;
             background: #e8e8e8;
             transition: width 0.5s ease-out, left 0.3s ease-out, right 0.3s ease-out;
         }
-
-        .fancy .top-key {
+        .fancy .top-key{
             width: 1.5625rem;
             top: -2px;
             left: 0.625rem;
         }
-
-        .fancy .bottom-key-1 {
+        .fancy .bottom-key-1{
             width: 1.5625rem;
             right: 1.875rem;
             bottom: -2px;
         }
-
-        .fancy .bottom-key-2 {
+        .fancy .bottom-key-2{
             width: 0.625rem;
             right: 0.625rem;
             bottom: -2px;
         }
-
-        .fancy:hover {
+        .fancy:hover{
             background: white;
             border-color: transparent;
             box-shadow: 1px 2px 5px 2px #BBBCBF;
         }
-
-        .fancy:hover .return {
+        .fancy:hover .return{
             padding-left: 1.5em;
         }
-
-        .fancy:hover .top-key {
+        .fancy:hover .top-key{
             left: -2px;
             width: 0px;
         }
-
-        .fancy:hover .bottom-key-1,
-        .fancy:hover .bottom-key-2 {
+        .fancy:hover .bottom-key-1, .fancy:hover .bottom-key-2{
             right: 0;
             width: 0;
         }
     </style>
 </head>
-
-<body class="m-0 font-[Kanit]">
+<body class="m-0" lang="en">
     <div class="bg-[#0E0E5D] flex justify-between ">
         <div class="flex justify-center items-center text-white ml-[4%] m-[2vh]">
             <h1 class="text-[4vh]">MEMLODY</h1>
@@ -168,11 +149,7 @@
         <div class="flex justify-center items-center gap-7 text-white mr-10">
             <a href="" class="Btn">
                 <div class="sign">
-                    <svg viewBox="0 0 512 512">
-                        <path
-                            d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z">
-                        </path>
-                    </svg>
+                    <svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg>
                 </div>
                 <div class="text">Logout</div>
             </a>
@@ -187,22 +164,15 @@
         </a>
     </div>
     <div class="flex justify-center items-center  gap-5 m-5 cursor-pointer" id="number">
-        <a onclick="Select_Option(0)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-blue-100 outline outline-2 outline-[#4A67BA]">1</a>
-        <a onclick="Select_Option(1)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</a>
-        <a onclick="Select_Option(2)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</a>
-        <a onclick="Select_Option(3)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</a>
-        <a onclick="Select_Option(4)"
-            class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</a>
+        <a onclick="Select_Option(0)" class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-blue-100 outline outline-2 outline-[#4A67BA]">1</a>
+        <a onclick="Select_Option(1)" class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</a>
+        <a onclick="Select_Option(2)" class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</a>
+        <a onclick="Select_Option(3)" class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</a>
+        <a onclick="Select_Option(4)" class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</a>
     </div>
 
     <div class="mb-10">
-        <label
-            class="flex text-[#0E0E5D] items-center justify-center p-[2.5vh] rounded-[16px] shadow-lg w-fit text-[2.5vh] outline-solid outline-2 outline-[#4A67BA] mx-auto whitespace-nowrap max-[480px]:text-[2.5vh]">เพิ่มเสียงที่จะเป็นโจทย์
-            พร้อมกับใส่เฉลย</label>
+        <label class="flex text-[#0E0E5D] items-center justify-center p-[2.5vh] rounded-[16px] shadow-lg w-fit text-[2.5vh] outline-solid outline-2 outline-[#4A67BA] mx-auto whitespace-nowrap max-[480px]:text-[2.5vh]">เพิ่มเสียงที่จะเป็นโจทย์ พร้อมกับใส่เฉลย</label>
         <div class=" flex justify-start items-center w-[60vh] mx-auto m-5 bg-white rounded-4xl max-[480px]:w-[43vh]">
             <select name="" id="" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
                 <option value="">#เพิ่มแท็ก</option>
@@ -211,32 +181,24 @@
                 <option value="">ชีวิตประจำวัน</option>
                 <option value="">ดนตรี</option>
                 <option value="">ครอบครัว</option>
-
             </select>
             <div class="flex items-center justify-end w-full">
-            <button
-                class="group p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] m-2 ml-auto flex cursor-pointer bg-[#D4F2E5] transition-all duration-300 cursor-pointer hover:bg-gray-100 shadow-lg hover:shadow-xlt"
-                onclick="sendData();">
-                <p>บันทึกข้อมูล</p>
-                <img src="/static/img/save.png" alt="" class="w-[3vh] object-contain ml-2">
-            </button>
-
+                <button class="group p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] m-2 ml-auto flex cursor-pointer bg-[#D4F2E5] transition-all duration-300 cursor-pointer hover:bg-gray-100 shadow-lg hover:shadow-xlt" onclick="sendData();">
+                    <p>บันทึกข้อมูล</p>
+                    <img src="/static/img/save.png" alt="" class="w-[3vh] object-contain ml-2">
+                </button>
             </div>
-
         </div>
-        <div
-            class=" flex flex-col justify-center px-5 py-10 mx-auto  w-[60vh] border-none rounded-4xl outline outline-2 outline-gray-200 shadow-xl max-[480px]:w-[40vh]">
+        <div class=" flex flex-col justify-center px-5 py-10 mx-auto  w-[60vh] border-none rounded-4xl outline outline-2 outline-gray-200 shadow-xl max-[480px]:w-[40vh]">
             <div class="flex flex-col items-center mx-auto mb-10">
                 <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] ">เพิ่มเสียง</p>
                 <form class="flex justify-center items-center w-fit h-fit">
-                    <label for="file"
-                        class="bg-blue-50 px-10 py-4 text-xl border-dashed border-2 rounded-4xl cursor-pointer">
+                    <label for="file" class="bg-blue-50 px-10 py-4 text-xl border-dashed border-2 rounded-4xl cursor-pointer">
                         <div class="flex flex-col justify-center items-center gap-[5px]">
                             <img src="/static/img/sound.png" class="h-16">
                             <p>วางไฟล์ที่ต้องการอัพโหลด</p>
                             <p>หรือ</p>
-                            <span
-                                class="text-white bg-blue-400 px-5 py-2 rounded-2xl transition-all duration-300 hover:bg-blue-500">อัพโหลดไฟล์</span>
+                            <span class="text-white bg-blue-400 px-5 py-2 rounded-2xl transition-all duration-300 hover:bg-blue-500">อัพโหลดไฟล์</span>
                             <p id="filename" class="mt-2 text-center text-xl text-gray-500"></p>
                         </div>
                         <input id="file" type="file" accept="audio/*" class="hidden" />
@@ -244,18 +206,14 @@
                 </form>
             </div>
             <p class="text-[2.7vh] text-[#0E0E5D] font-semibold mb-[1.5vh] mt-[1vh] mx-auto">เพิ่มคำตอบ</p>
-
             <div class="mx-auto">
                 <input id="text-input" type="text" class="w-fit text-[2.5vh] py-1 border-b-2 outline-none">
             </div>
         </div>
         <div class="flex justify-center mt-10">
-            <button
-                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-                onclick="Select_Option()">
+            <button class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600" onclick="Select_Option()">
                 <p>ถัดไป</p>
-                <img src="/static/img/right-arrow.png"
-                    class="w-[5vh] transform transition-transform duration-300 group-hover:translate-x-2">
+                <img src="/static/img/right-arrow.png" class="w-[5vh] transform transition-transform duration-300 group-hover:translate-x-2">
             </button>
             <!-- <button
                 class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
@@ -268,7 +226,6 @@
                 <p>บันทึกข้อมูล</p>
             </button> -->
         </div>
-
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
