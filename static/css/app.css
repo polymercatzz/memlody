@@ -552,6 +552,9 @@
   .mb-\[1\.7vh\] {
     margin-bottom: 1.7vh;
   }
+  .mb-\[1vh\] {
+    margin-bottom: 1vh;
+  }
   .mb-\[2\.5vh\] {
     margin-bottom: 2.5vh;
   }
@@ -705,6 +708,9 @@
   .w-60 {
     width: calc(var(--spacing) * 60);
   }
+  .w-\[0vh\] {
+    width: 0vh;
+  }
   .w-\[2\.5vh\] {
     width: 2.5vh;
   }
@@ -714,8 +720,14 @@
   .w-\[3\.5vh\] {
     width: 3.5vh;
   }
+  .w-\[3\] {
+    width: 3;
+  }
   .w-\[3vh\] {
     width: 3vh;
+  }
+  .w-\[4\] {
+    width: 4;
   }
   .w-\[4vh\] {
     width: 4vh;
@@ -767,6 +779,9 @@
   }
   .w-\[70\%\] {
     width: 70%;
+  }
+  .w-\[70vh\] {
+    width: 70vh;
   }
   .w-\[80\%\] {
     width: 80%;
@@ -1429,6 +1444,15 @@
   .text-\[1\.vh\] {
     color: 1.vh;
   }
+  .text-\[2\.\] {
+    color: 2.;
+  }
+  .text-\[2\] {
+    color: 2;
+  }
+  .text-\[_vh\] {
+    color:  vh;
+  }
   .text-black {
     color: var(--color-black);
   }
@@ -2040,6 +2064,11 @@
       margin-top: vh;
     }
   }
+  .max-\[480px\]\:w-\[30vh\] {
+    @media (width < 480px) {
+      width: 30vh;
+    }
+  }
   .max-\[480px\]\:w-\[40vh\] {
     @media (width < 480px) {
       width: 40vh;
@@ -2088,6 +2117,11 @@
   .max-\[480px\]\:text-\[2\.5vh\] {
     @media (width < 480px) {
       font-size: 2.5vh;
+    }
+  }
+  .max-\[480px\]\:text-\[2vh\] {
+    @media (width < 480px) {
+      font-size: 2vh;
     }
   }
   .sm\:grid-cols-2 {

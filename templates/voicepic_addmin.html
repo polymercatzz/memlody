@@ -94,7 +94,7 @@
         width: 0;
     }
 
-        .Btn {
+    .Btn {
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -160,7 +160,6 @@
     .Btn:active {
         transform: translate(2px, 2px);
     }
-
 </style>
 
 <body class="m-0 font-[Kanit]">
@@ -210,23 +209,32 @@
             class="text-[#0E0E5D] items-center justify-center p-[2.5vh] rounded-[16px] shadow-lg w-fit text-[2.7vh] outline-solid outline-2 outline-[#4A67BA] mx-auto  max-[480px]:text-[2.5vh]">
             โปรดจับคู่คำตอบให้ตรงกับเสียงที่ได้ยิน ?</p>
     </div>
-            <div class=" flex justify-start items-center w-[112vh] mx-auto mt-5 bg-white rounded-4xl max-[480px]:w-[42vh]">
-            <select name="" id="" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
-                <option value="">#เพิ่มแท็ก</option>
-                <option value="">สัตว์</option>
-                <option value="">ธรรมชาติ</option>
-                <option value="">ชีวิตประจำวัน</option>
-                <option value="">ดนตรี</option>
-                <option value="">ครอบครัว</option>
+    <div class=" flex justify-start items-center w-[112vh] mx-auto mt-5 bg-white rounded-4xl max-[480px]:w-[42vh]">
+        <select name="" id="" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
+            <option value="">#เพิ่มแท็ก</option>
+            <option value="">สัตว์</option>
+            <option value="">ธรรมชาติ</option>
+            <option value="">ชีวิตประจำวัน</option>
+            <option value="">ดนตรี</option>
+            <option value="">ครอบครัว</option>
 
-            </select>
+        </select>
+        <div class="flex items-center justify-end w-full">
+            <button
+                class="group p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] m-2 ml-auto flex cursor-pointer bg-[#D4F2E5] transition-all duration-300 cursor-pointer hover:bg-gray-100 shadow-lg hover:shadow-xlt"
+                onclick="sendData();">
+                <p>บันทึกข้อมูล</p>
+                <img src="/static/img/save.png" alt="" class="w-[3vh] object-contain ml-2">
+            </button>
 
         </div>
+    </div>
 
 
 
 
-    <div class="w-full flex justify-center   gap-[10vh] flex-wrap mt-[2vh] mb-[2.5vh] max-[480px]:gap-[5vh] max-[480px]:mt-[1vh]">
+    <div
+        class="w-full flex justify-center   gap-[10vh] flex-wrap mt-[2vh] mb-[2.5vh] max-[480px]:gap-[5vh] max-[480px]:mt-[1vh]">
         <div
             class="bg-[#FFFFFF] w-[50vh] h-[17vh] p-5 flex flex-col rounded-[16px] shadow-lg outline outline-[2px] outline-[#E8E8E8] hover:shadow-xl transition-shadow duration-300 ease-in-out max-[480px]:w-[40vh]">
             <div class="flex flex-row">
@@ -244,7 +252,8 @@
                     <label
                         class="p-[1vh] rounded-[12px] shadow-md bg-[#E8E8E8] hover:bg-[#D0D0D0] cursor-pointer flex justify-center items-center gap-[10px] w-full">
                         <span class="text-[2vh]">เพิ่มเสียงที่ 1</span>
-                        <input type="file" accept="audio/*" onchange="handleUpload(1, this)" class="hidden" id="input_sound">
+                        <input type="file" accept="audio/*" onchange="handleUpload(1, this)" class="hidden"
+                            id="input_sound">
                     </label>
 
                 </div>
@@ -307,7 +316,8 @@
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-1" src="/static/img/add-button.png"
                             class="w-[5vh] object-contain transition-all duration-300" />
-                        <input type="file" accept="image/*" onchange="picUpload(1, this)" class="hidden" id="input_img"/>
+                        <input type="file" accept="image/*" onchange="picUpload(1, this)" class="hidden"
+                            id="input_img" />
                     </label>
                 </div>
 
@@ -317,7 +327,8 @@
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-2" src="/static/img/add-button.png"
                             class="w-[5vh] object-contain transition-all duration-300" />
-                        <input type="file" accept="image/*" onchange="picUpload(2, this)" class="hidden" id="input_img"/>
+                        <input type="file" accept="image/*" onchange="picUpload(2, this)" class="hidden"
+                            id="input_img" />
                     </label>
                 </div>
 
@@ -327,7 +338,8 @@
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-3" src="/static/img/add-button.png"
                             class="w-[5vh] object-contain transition-all duration-300" />
-                        <input type="file" accept="image/*" onchange="picUpload(3, this)" class="hidden" id="input_img"/>
+                        <input type="file" accept="image/*" onchange="picUpload(3, this)" class="hidden"
+                            id="input_img" />
                     </label>
                 </div>
 
@@ -337,31 +349,32 @@
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-4" src="/static/img/add-button.png"
                             class="w-[5vh] object-contain transition-all duration-300" />
-                        <input type="file" accept="image/*" onchange="picUpload(4, this)" class="hidden" id="input_img"/>
+                        <input type="file" accept="image/*" onchange="picUpload(4, this)" class="hidden"
+                            id="input_img" />
                     </label>
                 </div>
             </div>
         </div>
     </div>
-        <div class="flex justify-center mt-10 mb-10">
-            <button
-                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-                onclick="Select_Option()">
-                <p>ถัดไป</p>
-                <img src="/static/img/right-arrow.png"
-                    class="w-[5vh] transform transition-transform duration-300 group-hover:translate-x-2">
-            </button>
-            <button
-                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-                onclick="Add_Data();">
-                <p>เพิ่มข้อมูล</p>
-            </button>
-            <button
-                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-                onclick="sendData();">
-                <p>บันทึกข้อมูล</p>
-            </button>
-        </div>
+    <div class="flex justify-center mt-10 mb-10">
+        <button
+            class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+            onclick="Select_Option()">
+            <p>ถัดไป</p>
+            <img src="/static/img/right-arrow.png"
+                class="w-[5vh] transform transition-transform duration-300 group-hover:translate-x-2">
+        </button>
+        <!-- <button
+            class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+            onclick="Add_Data();">
+            <p>เพิ่มข้อมูล</p>
+        </button>
+        <button
+            class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+            onclick="sendData();">
+            <p>บันทึกข้อมูล</p>
+        </button> -->
+    </div>
 
     <script>
 
@@ -423,16 +436,16 @@
         let current_index = 0;
         let data_all = [{}, {}, {}, {}, {}]
 
-        function Select_Option(select = current_index){
+        function Select_Option(select = current_index) {
             if (current_index === select) {
                 select++;
             }
             current_index = select;
             const buttons = document.querySelectorAll("#number a");
             buttons.forEach(b => {
-                    b.classList.remove("bg-blue-400", "text-white");
-                    b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
-                });
+                b.classList.remove("bg-blue-400", "text-white");
+                b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
+            });
             buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
             buttons[select].classList.add("bg-blue-100");
             console.log(data_all);
@@ -480,7 +493,7 @@
         }
         function sendData() {
             console.log(data_all);
-            if(input_data.size < 5){
+            if (input_data.size < 5) {
                 alert("กรอกให้ครบ");
                 return;
             }
@@ -500,7 +513,7 @@
                 fetch(`/admin/pairing_mode/create/{{ stage }}`, {
                     method: "POST",
                     body: formData
-        })
+                })
             });
         }
 
