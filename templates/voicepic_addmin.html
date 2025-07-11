@@ -437,6 +437,7 @@
         let data_all = [{}, {}, {}, {}, {}]
 
         function Select_Option(select = current_index) {
+            Add_Data()
             if (current_index === select) {
                 select++;
             }
@@ -464,6 +465,7 @@
         }
 
         function Add_Data() {
+            console.log("add")
             const selectedRadio = document.querySelector('input[name="answer"]:checked');
             const input_img = document.querySelectorAll("#input_img");
             const input_sound = document.querySelectorAll("#input_sound");

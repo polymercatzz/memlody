@@ -4,8 +4,8 @@ from fastapi.responses import RedirectResponse
 from faster_whisper import WhisperModel
 from database import Base, engine
 from sqlalchemy.orm import Session
-from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion
-import json
+from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion
+import ast
 import random
 import os
 import shutil
@@ -35,94 +35,49 @@ async def home(request: Request):
     return templates.TemplateResponse("index2.html", {"request": request})
 
 @router.get("/game_sound/pairing_mode")
-async def pairing_mode(request: Request):
+async def pairing_mode(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    return templates.TemplateResponse("main_sound1.html", {"request": request})
+    all_stage_raw = db.query(PairingQuestion.stage).group_by(PairingQuestion.stage).order_by(PairingQuestion.stage).all()
+    if not all_stage_raw:
+        all_stage_raw = []
+    all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
+    return templates.TemplateResponse("main_sound1.html", {"request": request, "all_stage":all_stage})
 
-@router.get("/game_sound/pairing_mode/{stage_id}")
-async def play_pairing(request: Request, stage_id: int):
+@router.get("/game_sound/pairing_mode/{stage}")
+async def play_pairing(request: Request, stage: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    questions_data_raw = db.query(PairingQuestion).filter(PairingQuestion.stage==stage).all()
     questions_data = [
     {
-        "stage": 1,
-        "path_img": [
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปน้ำตก.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปชายหาด.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฝนตก.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฟ้าผ่า.jpg"
-        ],
-        "path_sound": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/เสียงน้ำตก.mp3",
-        "answer": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปน้ำตก.jpg",
-        "category_id": 1
-    },
-    {
-        "stage": 2,
-        "path_img": [
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฝนตก.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปกองไฟ.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฟ้าผ่า.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปพายุ.jpg"
-        ],
-        "path_sound": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/เสียงฝนตก.mp3",
-        "answer": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฝนตก.jpg",
-        "category_id": 1
-    },
-    {
-        "stage": 3,
-        "path_img": [
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฟ้าผ่า.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปชายหาด.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฟ้าผ่า.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปพายุ.jpg"
-        ],
-        "path_sound": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/เสียงฟ้าผ่า.mp3",
-        "answer": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฟ้าผ่า.jpg",
-        "category_id": 1
-    },
-    {
-        "stage": 4,
-        "path_img": [
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปพายุ.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฝนตก.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฟ้าผ่า.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปชายหาด.jpg"
-        ],
-        "path_sound": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/เสียงลม.mp3",
-        "answer": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปชายหาด.jpg",
-        "category_id": 1
-    },
-    {
-        "stage": 5,
-        "path_img": [
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปชายหาด.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปก็อกน้ำ.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฟ้าผ่า.jpg",
-            "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปฝนตก.jpg"
-        ],
-        "path_sound": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/เสียงลม.mp3",
-        "answer": "/static/sounds/SoundGame/game1/เสียงธรรมชาติ/รูป/รูปชายหาด.jpg",
-        "category_id": 1
-    }
+        "stage": question.stage,
+        "path_img": ast.literal_eval(question.path_img),
+        "path_sound": question.path_sound,
+        "answer": question.answer,
+        "category_id": question.category_id
+    } for question in questions_data_raw
 ]
+    print(questions_data)
     return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data})
 
 @router.get("/game_sound/speaking_mode")
-async def speaking_mode(request: Request):
+async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    return templates.TemplateResponse("main_sound2.html", {"request": request})
+    all_stage_raw = db.query(SpeakingQuestion.stage).group_by(SpeakingQuestion.stage).order_by(SpeakingQuestion.stage).all()
+    all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
+    return templates.TemplateResponse("main_sound2.html", {"request": request, "all_stage":all_stage})
 
 @router.get("/game_sound/speaking_mode/{id}")
 async def play_speaking(request: Request, id: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    all_sounds_raw = db.query(SpeakingQuestion).filter(SpeakingQuestion.stage==id).all()
+    all_sounds_raw = db.query(SpeakingQuestion).filter(SpeakingQuestion.stage==id).order_by(SpeakingQuestion.speaking_id).all()
     all_sounds = [
     {
         "stage": question.stage,
@@ -262,23 +217,25 @@ def create_questions(cousins, num_questions=5, num_choices=4):
     return questions
 
 @router.get("/game_pic/todo_mode")
-async def todo_mode(request: Request):
+async def todo_mode(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    return templates.TemplateResponse("main_guess1.html", {"request": request})
+    all_stage_raw = db.query(TodoQuestion.stage).group_by(TodoQuestion.stage).order_by(TodoQuestion.stage).all()
+    all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
+    return templates.TemplateResponse("main_guess1.html", {"request": request, "all_stage":all_stage})
 
 @router.get("/game_pic/todo_mode/{id}")
 async def play_todo(request: Request, id: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    todo_list_raw = db.query(TodoQuestion).filter(TodoQuestion.stage==id).all()
+    todo_list_raw = db.query(TodoQuestion).filter(TodoQuestion.stage==id).order_by(TodoQuestion.todo_id).all()
     todo_list = [
         {
         "stage": question.stage,
         "path_img": question.path_img,
-        "choice_4": json.loads(question.choice_4),
+        "choice_4": ast.literal_eval(question.choice_4),
         "answer": question.answer,
         "category":question.category_id
         }
@@ -287,11 +244,13 @@ async def play_todo(request: Request, id: int, db: Session = Depends(get_db)):
     return templates.TemplateResponse("choosepic.html", {"request": request, "todo_list": todo_list})
 
 @router.get("/game_pic/what_you_see_mode")
-async def what_you_see_mode(request: Request):
+async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    return templates.TemplateResponse("main_guess2.html", {"request": request})
+    all_stage_raw = db.query(SeeQuestion.stage).group_by(SeeQuestion.stage).order_by(SeeQuestion.stage).all()
+    all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
+    return templates.TemplateResponse("main_guess2.html", {"request": request, "all_stage":all_stage})
 
 @router.get("/game_pic/what_you_see_mode/{id}")
 async def play_what_you_see(request: Request, id: int, db: Session = Depends(get_db)):
@@ -308,27 +267,28 @@ async def play_what_you_see(request: Request, id: int, db: Session = Depends(get
     }
     for question in what_you_see_raw
 ]
-    print(what_you_see)
     return templates.TemplateResponse("game_guess2.html", {"request": request, "what_you_see": what_you_see})
 
 @router.get("/game_pic/order_mode")
-async def order_mode(request: Request):
+async def order_mode(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    return templates.TemplateResponse("main_guess3.html", {"request": request})
+    all_stage_raw = db.query(OrderQuestion.stage).group_by(OrderQuestion.stage).order_by(OrderQuestion.stage).all()
+    all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
+    return templates.TemplateResponse("main_guess3.html", {"request": request, "all_stage":all_stage})
 
 @router.get("/game_pic/order_mode/{id}")
 async def play_order(request: Request, id: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    order_questions_raw = db.query(OrderQuestion).filter(OrderQuestion.stage==id).all()
+    order_questions_raw = db.query(OrderQuestion).filter(OrderQuestion.stage==id).order_by(OrderQuestion.order_id).all()
     order_questions = [
         {
         "order_id": question.order_id,
         "stage": question.stage,
-        "map_choice_4": json.loads(question.map_choice_4),
+        "map_choice_4": ast.literal_eval(question.map_choice_4),
         "category":question.category_id
          }
         for question in order_questions_raw

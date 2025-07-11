@@ -6,7 +6,6 @@ from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, P
 from typing import List
 import json
 import os
-import shutil
 
 router = APIRouter(prefix="/admin")
 
@@ -95,6 +94,7 @@ async def speaking_mode_edit(request: Request):
 async def speaking_create(stage:int, answer: str = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), category=1):
     upload_at = "./static/speaking/sounds"
     file_location = os.path.join(upload_at, file.filename)
+    os.makedirs(upload_at, exist_ok=True)
     with open(file_location, "wb") as f:
         content = await file.read()
         f.write(content)
@@ -126,6 +126,7 @@ async def todo_mode_create(request: Request, stage:int):
 async def todo_create(request: Request, stage:int, answer: str = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), l_order: str = Form(...), category=1):
     upload_at = "./static/todo/img"
     file_location = os.path.join(upload_at, file.filename)
+    os.makedirs(upload_at, exist_ok=True)
     with open(file_location, "wb") as f:
         content = await file.read()
         f.write(content)
@@ -163,6 +164,7 @@ async def what_you_see_mode_create(request: Request, stage:int):
 async def what_you_see_create(request: Request, stage:int, answer: str = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), category=1):
     upload_at = "./static/see/img"
     file_location = os.path.join(upload_at, file.filename)
+    os.makedirs(upload_at, exist_ok=True)
     with open(file_location, "wb") as f:
         content = await file.read()
         f.write(content)
