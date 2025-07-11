@@ -143,7 +143,6 @@ async def check_voice(request: Request, label: str = Form(...), file: UploadFile
     from pythainlp.tokenize import word_tokenize
     from pythainlp.util import normalize
     from pythainlp.corpus.common import thai_stopwords
-    from difflib import SequenceMatcher
     temp_path = f"uploads/{file.filename}"
     with open(temp_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
@@ -152,7 +151,7 @@ async def check_voice(request: Request, label: str = Form(...), file: UploadFile
     full_text = "".join([segment.text for segment in segments])
     print("ถอดได้:", full_text)
     os.remove(temp_path)
-    EXCLUDED_WORDS = {"เสียง"}
+    EXCLUDED_WORDS = {"เสียง", "รูป"}
     # 1. Normalize คำ (ลบวรรณยุกต์/สะกดให้เป็นมาตรฐาน)
     full_text_norm = normalize(full_text.strip())
     answer_norm = normalize(answer.strip())
@@ -299,7 +298,7 @@ async def play_what_you_see(request: Request, id: int, db: Session = Depends(get
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    what_you_see_raw = db.query(SeeQuestion).filter(SeeQuestion.stage==id).all()
+    what_you_see_raw = db.query(SeeQuestion).filter(SeeQuestion.stage==id).order_by(SeeQuestion.see_id).all()
     what_you_see = [
     {
         "stage": question.stage,
@@ -309,6 +308,7 @@ async def play_what_you_see(request: Request, id: int, db: Session = Depends(get
     }
     for question in what_you_see_raw
 ]
+    print(what_you_see)
     return templates.TemplateResponse("game_guess2.html", {"request": request, "what_you_see": what_you_see})
 
 @router.get("/game_pic/order_mode")

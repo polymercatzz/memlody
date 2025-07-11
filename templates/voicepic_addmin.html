@@ -192,17 +192,16 @@
     </div>
 
     <div class="flex justify-center items-center  gap-5 m-5 cursor-pointer" id="number">
-        <a
+        <a onclick="Select_Option(0)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-blue-100 outline outline-2 outline-[#4A67BA]">1</a>
-        <a
+        <a onclick="Select_Option(1)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</a>
-        <a
+        <a onclick="Select_Option(2)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</a>
-        <a
+        <a onclick="Select_Option(3)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</a>
-        <a
+        <a onclick="Select_Option(4)"
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</a>
-
     </div>
 
 
@@ -245,7 +244,7 @@
                     <label
                         class="p-[1vh] rounded-[12px] shadow-md bg-[#E8E8E8] hover:bg-[#D0D0D0] cursor-pointer flex justify-center items-center gap-[10px] w-full">
                         <span class="text-[2vh]">เพิ่มเสียงที่ 1</span>
-                        <input type="file" accept="audio/*" onchange="handleUpload(1, this)" class="hidden">
+                        <input type="file" accept="audio/*" onchange="handleUpload(1, this)" class="hidden" id="input_sound">
                     </label>
 
                 </div>
@@ -291,9 +290,9 @@
 
         <!-- เสียง -->
         <audio id="audio1" src="thunder.mp3"></audio>
-        <audio id="audio2" src="sound2.mp3"></audio>
+        <!-- <audio id="audio2" src="sound2.mp3"></audio>
         <audio id="audio3" src="sound3.mp3"></audio>
-        <audio id="audio4" src="sound4.mp3"></audio>
+        <audio id="audio4" src="sound4.mp3"></audio> -->
 
 
 
@@ -303,42 +302,42 @@
 
             <div class="grid grid-cols-2 gap-[2vh] p-2">
                 <div class="flex rounded-[12px] ">
-                    <input type="radio" name="answer" value="1" class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
+                    <input type="radio" name="answer" value=0 class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
                     <label
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-1" src="/static/img/add-button.png"
                             class="w-[5vh] object-contain transition-all duration-300" />
-                        <input type="file" accept="image/*" onchange="picUpload(1, this)" class="hidden" />
+                        <input type="file" accept="image/*" onchange="picUpload(1, this)" class="hidden" id="input_img"/>
                     </label>
                 </div>
 
                 <div class="flex rounded-[12px]">
-                    <input type="radio" name="answer" value="1" class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
+                    <input type="radio" name="answer" value=1 class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
                     <label
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-2" src="/static/img/add-button.png"
                             class="w-[5vh] object-contain transition-all duration-300" />
-                        <input type="file" accept="image/*" onchange="picUpload(2, this)" class="hidden" />
+                        <input type="file" accept="image/*" onchange="picUpload(2, this)" class="hidden" id="input_img"/>
                     </label>
                 </div>
 
                 <div class="flex rounded-[12px] ">
-                    <input type="radio" name="answer" value="1" class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
+                    <input type="radio" name="answer" value=2 class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
                     <label
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-3" src="/static/img/add-button.png"
                             class="w-[5vh] object-contain transition-all duration-300" />
-                        <input type="file" accept="image/*" onchange="picUpload(3, this)" class="hidden" />
+                        <input type="file" accept="image/*" onchange="picUpload(3, this)" class="hidden" id="input_img"/>
                     </label>
                 </div>
 
                 <div class="flex rounded-[12px] ">
-                    <input type="radio" name="answer" value="1" class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
+                    <input type="radio" name="answer" value=3 class="w-[4vh] h-[4vh] mt-[1vh] ml-2">
                     <label
                         class="w-full h-[18vh] rounded-[12px] outline outline-2 outline-[#E8E8E8] flex justify-center items-center ml-4 bg-[#DFE9FF] overflow-hidden relative cursor-pointer">
                         <img id="preview-img-4" src="/static/img/add-button.png"
                             class="w-[5vh] object-contain transition-all duration-300" />
-                        <input type="file" accept="image/*" onchange="picUpload(4, this)" class="hidden" />
+                        <input type="file" accept="image/*" onchange="picUpload(4, this)" class="hidden" id="input_img"/>
                     </label>
                 </div>
             </div>
@@ -346,27 +345,37 @@
     </div>
         <div class="flex justify-center mt-10 mb-10">
             <button
-                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
-                onclick="stop()">
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+                onclick="Select_Option()">
                 <p>ถัดไป</p>
                 <img src="/static/img/right-arrow.png"
                     class="w-[5vh] transform transition-transform duration-300 group-hover:translate-x-2">
+            </button>
+            <button
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+                onclick="Add_Data();">
+                <p>เพิ่มข้อมูล</p>
+            </button>
+            <button
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-3xl text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600"
+                onclick="sendData();">
+                <p>บันทึกข้อมูล</p>
             </button>
         </div>
 
     <script>
 
-        const buttons = document.querySelectorAll("#number a");
-        buttons.forEach(a => {
-            a.addEventListener("click", () => {
-                buttons.forEach(b => {
-                    b.classList.remove("bg-blue-400", "text-white");
-                    b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
-                });
-                a.classList.remove("bg-white", "hover:bg-gray-200");
-                a.classList.add("bg-blue-100");
-            });
-        });
+        // const buttons = document.querySelectorAll("#number a");
+        // buttons.forEach(a => {
+        //     a.addEventListener("click", () => {
+        //         buttons.forEach(b => {
+        //             b.classList.remove("bg-blue-400", "text-white");
+        //             b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
+        //         });
+        //         a.classList.remove("bg-white", "hover:bg-gray-200");
+        //         a.classList.add("bg-blue-100");
+        //     });
+        // });
 
 
 
@@ -383,7 +392,12 @@
         function playSound(index) {
             const audio = document.getElementById(`audio${index}`);
             if (audio && audio.src) {
-                audio.play();
+                if (audio.paused) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
             } else {
                 alert("ยังไม่ได้เพิ่มไฟล์เสียง");
             }
@@ -403,6 +417,91 @@
                 };
                 reader.readAsDataURL(file);
             }
+        }
+
+        let input_data = new Set();
+        let current_index = 0;
+        let data_all = [{}, {}, {}, {}, {}]
+
+        function Select_Option(select = current_index){
+            if (current_index === select) {
+                select++;
+            }
+            current_index = select;
+            const buttons = document.querySelectorAll("#number a");
+            buttons.forEach(b => {
+                    b.classList.remove("bg-blue-400", "text-white");
+                    b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
+                });
+            buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
+            buttons[select].classList.add("bg-blue-100");
+            console.log(data_all);
+            // const test = document.querySelectorAll("#input_img");
+            // test.forEach(t => console.log(t.files));
+            // const formData = new FormData();
+            //     test.forEach(input => {
+            //         Array.from(input.files).forEach(file => {
+            //             formData.append("files", file); // ✅ ใส่ชื่อเดียวกันได้หลายไฟล์
+            //         });
+            //     });
+            //     fetch("/admin/pairing_mode/create/{{ stage }}", {
+            //         method: "POST",
+            //         body: formData,
+            //         });
+        }
+
+        function Add_Data() {
+            const selectedRadio = document.querySelector('input[name="answer"]:checked');
+            const input_img = document.querySelectorAll("#input_img");
+            const input_sound = document.querySelectorAll("#input_sound");
+
+            // ตรวจสอบว่าเลือกคำตอบหรือยัง
+            if (!selectedRadio) {
+                alert("กรุณาเลือกคำตอบก่อน");
+                return;
+            }
+
+            // ตรวจสอบว่าใส่ไฟล์หรือยัง (สมมุติให้ต้องมีรูปและเสียงอย่างน้อย 1)
+            const hasImage = Array.from(input_img).some(input => input.files.length > 0);
+            const hasSound = Array.from(input_sound).some(input => input.files.length > 0);
+            if (!hasImage || !hasSound) {
+                alert("กรุณาเพิ่มไฟล์รูปภาพและไฟล์เสียงก่อน");
+                return;
+            }
+
+            // เก็บค่าทั้งหมด
+            data_all[current_index] = {
+                file_img: Array.from(input_img).map(input => input.files[0]),   // เก็บไฟล์ภาพแรกแต่ละช่อง
+                file_sound: Array.from(input_sound).map(input => input.files[0]), // เก็บไฟล์เสียงแรกแต่ละช่อง
+                answer: parseInt(selectedRadio.value) // เก็บคำตอบเป็นเลข
+            };
+            input_data.add(current_index);
+            console.log("ข้อมูลถูกเพิ่ม:", data_all[current_index]);
+        }
+        function sendData() {
+            console.log(data_all);
+            if(input_data.size < 5){
+                alert("กรอกให้ครบ");
+                return;
+            }
+            data_all.forEach(data => {
+                const formData = new FormData();
+                formData.append("answer", data.answer);
+                data.file_img.forEach((file, i) => {
+                    if (file) {
+                        formData.append("file_img", file);
+                    }
+                });
+                data.file_sound.forEach((file, i) => {
+                    if (file) {
+                        formData.append("file_sound", file);
+                    }
+                });
+                fetch(`/admin/pairing_mode/create/{{ stage }}`, {
+                    method: "POST",
+                    body: formData
+        })
+            });
         }
 
     </script>
