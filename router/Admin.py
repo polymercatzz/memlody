@@ -210,7 +210,7 @@ async def order_create(request: Request, stage:int, category: int = Form(...), a
     answer_n = json.loads(answer)
     order_question = OrderQuestion(
         stage=stage,
-        map_choice_4=answer_n,
+        map_choice_4=str(answer_n),
         category_id=category
     )
     db.add(order_question)

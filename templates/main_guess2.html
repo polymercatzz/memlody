@@ -149,8 +149,9 @@
         <div class="flex justify-center">
             <div class="mt-10 w-full max-w-5xl px-10">
                 <p class="flex justify-center text-2xl mb-5">เลือกด่าน</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-10 bg-white text-2xl px-10 py-6">
+                <div class="grid grid-cols-3 gap-10 bg-white text-2xl px-10 py-6">
                     {% for index, stage in all_stage %}
+                        {% if stage <= history_stage+1 %}
                         <a href="/home/game_pic/what_you_see_mode/{{ stage }}" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
                             <h4 class="text-3xl font-bold">ด่าน {{ stage }}</h4>
                             <p class="text-xl mb-2">จำนวน 5 ข้อ</p>
@@ -177,14 +178,18 @@
                             </label>
                             </div>
                         </a>
+                        {% else %}
+                        <a href="" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
+                            <img src="/static/img/lock.png" class="w-14 h-14">
+                        </a>
+                        {% endif %}
                     {% endfor %}
-                    <a href="#" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
-                        <img src="/static/img/lock.png" class="w-14 h-14">
-                    </a>
+                    {% if stage == history_stage+1 %}
                     <a href="#" class="flex flex-col justify-center items-center px-6 py-6 border-4 border-yellow-400 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-yellow-50">
                         <p class="text-3xl font-extrabold text-yellow-800 mb-2 mt-2">ด่านพิเศษ</p>
                         <p class="text-xl mb-2 text-yellow-700">โหมดท้าทาย</p>
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

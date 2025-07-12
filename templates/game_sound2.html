@@ -101,9 +101,9 @@
             <p class="text-[2.3vh] whitespace-nowrap text-gray-500" id="timer">00:00</p>
         </div>
     </div>
-    <div class="flex justify-center items-center gap-3 ">
+    <div class="flex justify-center items-center gap-3 " id="current_choice">
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">1</p>
-        <p href="#voicepic_addmin copy.html" class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</p>
+        <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</p>
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</p>
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</p>
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</p>
@@ -268,18 +268,52 @@
                 alert("กรุณาพูดก่อน");
                 return;
             }
+            document.getElementById("checkBtn").disabled = true;
+            Swal.fire({
+                title: 'กำลังตรวจคำตอบ...',
+                text: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
             const response = await fetch('/home/check_voice', {
                 method: 'POST',
                 body: formData
             })
             .then(res => res.json())
             .then(data => {
+                Swal.close();
                 if (data === "ถูกต้อง"){
+                    Swal.fire({
+                        icon: "success",
+                        title: "ถูกต้อง!",
+                        text: "เก่งมาก 👏",
+                        confirmButtonText: "เยี่ยม!",
+                        confirmButtonColor: "#4CAF50",
+                        customClass: {
+                            popup: 'text-[2vh]  rounded-2xl font-[Kanit] max-[600px]:w-[40vh] w-[50vh]', 
+                            title: 'text-[2.5vh] text-[#0E0E5D] font-bold',                     
+                            confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
+                        }
+                    });
                     corrected++;
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "ไม่ถูกต้อง",
+                        text: `คำตอบที่ถูกต้องคือ: ข้อที่ ${questions[currentQuestion-1].answer}`,
+                        confirmButtonText: "เข้าใจแล้ว",
+                        confirmButtonColor: "#EF4444",
+                        customClass: {
+                            popup: 'text-[2vh]  rounded-2xl font-[Kanit] max-[600px]:w-[40vh] w-[50vh]', 
+                            title: 'text-[2.5vh] text-[#0E0E5D] font-bold',                     
+                            confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
+                        }
+                    });
                 }
-                const score = document.getElementById('score');
-                score.textContent = `${data}`;
-            })
+            });
+            document.getElementById("checkBtn").disabled = false;
             if (currentQuestion >= questions.length){
                 document.getElementById("nextBtn").classList.add("hidden");
                 document.getElementById("checkBtn").classList.add("hidden");
@@ -345,7 +379,12 @@
         CreateQuestion()
         function CreateQuestion(){
             clearPage()
-            document.getElementById("sound").src = questions[currentQuestion].path_sound
+            document.getElementById("sound").src = questions[currentQuestion].path_sound;
+            document.querySelectorAll("#current_choice p").forEach((p, index) => {
+                const isActive = index === currentQuestion;
+                p.classList.toggle("bg-[#DFE9FF]", isActive);
+                p.classList.toggle("bg-[#FFFFFF]", !isActive);
+            });
             currentQuestion++;
         }
     </script>

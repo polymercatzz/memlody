@@ -122,7 +122,7 @@
         </div>
     </div>
 
-    <div class="flex justify-center items-center gap-3 ">
+    <div class="flex justify-center items-center gap-3 "  id="current_choice">
         <p
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
             1</p>
@@ -354,7 +354,12 @@
             document.getElementById("current_img").src = questions[currentQuestion].path_img
             document.querySelectorAll('.answer-btn').forEach((button, index) => {
                 button.textContent = questions[currentQuestion].choice_4[index];
-            })
+            });
+            document.querySelectorAll("#current_choice p").forEach((p, index) => {
+                const isActive = index === currentQuestion;
+                p.classList.toggle("bg-[#DFE9FF]", isActive);
+                p.classList.toggle("bg-[#FFFFFF]", !isActive);
+            });
             correctAnswer = questions[currentQuestion].answer;
             currentQuestion++;
         }
