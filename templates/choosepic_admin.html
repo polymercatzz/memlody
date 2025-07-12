@@ -9,6 +9,8 @@
         href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <style>
     :lang(en){
@@ -170,7 +172,7 @@
             <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
         <div class="flex justify-center items-center gap-7 text-white mr-10">
-            <a href="" class="Btn">
+            <a href="/logout" class="Btn">
                 <div class="sign">
                     <svg viewBox="0 0 512 512">
                         <path
@@ -186,7 +188,7 @@
 
     <div class="flex flex-row items-center m-[2.5vh]">
 
-        <a class="fancy" href="#">
+        <a class="fancy" href="/admin/todo_mode/">
             <span class="top-key"></span>
             <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
             <span class="bottom-key-1"></span>
@@ -214,13 +216,11 @@
             โปรดเลือกว่าของในภาพเอาไว้ทำอะไร ?</p>
     </div>
         <div class=" flex justify-start items-center w-[110vh] mx-auto mt-5 bg-white rounded-4xl max-[480px]:w-[42vh]">
-            <select name="" id="" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex cursor-pointer">
-                <option value="">#เพิ่มแท็ก</option>
-                <option value="">สัตว์</option>
-                <option value="">ธรรมชาติ</option>
-                <option value="">ชีวิตประจำวัน</option>
-                <option value="">ดนตรี</option>
-                <option value="">ครอบครัว</option>
+            <select name="" id="category" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
+            <option value="">#เพิ่มแท็ก</option>
+            {% for category in categories %}
+                <option value="{{category.category_id}}">{{ category.category_name }}</option>
+            {% endfor %}
             </select>
             <div class="flex items-center justify-end w-full">
             <button
@@ -263,21 +263,17 @@
                     break-words whitespace-normal cursor-pointer">ส่องทางไกล</button> -->
                     <div class="flex gap-[1vh]">
                         <div id="eventBox1" class="flex-1">
-                            <button onclick="showInput(1)"
-                                class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
-                                <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
-                            </button>
+                            <input type="text" id="order"
+                                class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC] text-[#0E0E5D] text-[2vh]"
+                                placeholder="พิมพ์ตัวเลือกที่ 1 ได้ที่นี่" />
                         </div>
                         <input type="radio" class="answer-btn w-6" name="answer" value=0>
-
-    
                     </div>
                     <div class="flex gap-[1vh]">
                         <div id="eventBox2" class="flex-1">
-                            <button onclick="showInput(2)"
-                                class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
-                                <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
-                            </button>
+                            <input type="text" id="order"
+                                class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC] text-[#0E0E5D] text-[2vh]"
+                                placeholder="พิมพ์ตัวเลือกที่ 2 ได้ที่นี่" />
                         </div>
                         <input type="radio" class="answer-btn w-6" name="answer" value=1>
 
@@ -285,10 +281,9 @@
                     </div>
                     <div class="flex gap-[1vh]">
                         <div id="eventBox3" class="flex-1">
-                            <button onclick="showInput(3)"
-                                class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
-                                <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
-                            </button>
+                            <input type="text" id="order"
+                                class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC] text-[#0E0E5D] text-[2vh]"
+                                placeholder="พิมพ์ตัวเลือกที่ 3 ได้ที่นี่" />
                         </div>
                         <input type="radio" class="answer-btn w-6" name="answer" value=2>
 
@@ -296,10 +291,9 @@
                     </div>
                     <div class="flex gap-[1vh]">
                         <div id="eventBox4" class="flex-1">
-                            <button onclick="showInput(4)"
-                                class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
-                                <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
-                            </button>
+                            <input type="text" id="order"
+                                class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC] text-[#0E0E5D] text-[2vh]"
+                                placeholder="พิมพ์ตัวเลือกที่ 4 ได้ที่นี่" />
                         </div>
                         <input type="radio" class="answer-btn w-6" name="answer" value=3>
 
@@ -337,14 +331,6 @@
             reader.readAsDataURL(file);
             }
         }
-        function showInput(index) {
-            const container = document.getElementById(`eventBox${index}`);
-            container.innerHTML = `
-                <input type="text" id="order"
-                    class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC] text-[#0E0E5D] text-[2vh]"
-                    placeholder="พิมพ์ตัวเลือกที่ ${index} ได้ที่นี่" />
-                `;
-            }
         let input_data = new Set();
         let current_index = 0;
         let data_all = [{}, {}, {}, {}, {}]
@@ -356,6 +342,9 @@
                 select++;
             }
             current_index = select;
+            clearData();
+            showData(select);
+            current_index = select;
             const buttons = document.querySelectorAll("#number a");
             buttons.forEach(b => {
                     b.classList.remove("bg-blue-400", "text-white");
@@ -363,46 +352,109 @@
                 });
             buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
             buttons[select].classList.add("bg-blue-100");
+        }
+        function showData(select) {
+            const current_question = data_all[select];
+            if (current_question && Object.keys(current_question).length !== 0) {
+                const selectedRadio = document.querySelectorAll('input[name="answer"]');
+                selectedRadio.forEach(radio => {
+                    radio.checked = false;
+                    if(radio.value == current_question.answer){
+                        radio.checked = true;
+                    }
+                });
+                const orderInputs = document.querySelectorAll("#order");
+                orderInputs.forEach((input, i) => {
+                    input.value = current_question.l_order[i] || "";
+                });
+                const reader = new FileReader();
+                const preview = document.getElementById("previewImage");
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    // ปรับคลาสตามที่คุณใช้
+                    preview.classList.remove("w-[5vh]");
+                    preview.classList.add("object-contain", "w-full", "h-full", "bg-white");
+                };
+                reader.readAsDataURL(current_question.file);
+            }
+        }
+        function Add_Data() {
+            const oldData = data_all[current_index] || {};
+            
+            // 1. เก็บลำดับจากช่อง #order (เช่น input หรือ select)
+            const l_order = [];
+            document.querySelectorAll("#order").forEach(order => {
+                l_order.push(order.value.trim());
+            });
+
+            // 2. ตรวจว่าเลือกคำตอบหรือยัง
+            const selectedRadio = document.querySelector('input[name="answer"]:checked');
+            
+            // 3. ตรวจไฟล์ภาพใหม่
+            const fileInput = document.getElementById("input_img");
+            const file = fileInput.files[0];
+
+            // 4. ใช้ข้อมูลเดิมถ้ายังไม่แก้
+            const new_order = l_order.every(item => item) ? l_order : oldData.l_order || [];
+            const new_file = file || oldData.file;
+            const new_answer = selectedRadio ? parseInt(selectedRadio.value) : oldData.answer;
+
+            // 5. ตรวจว่าครบหรือยัง (ครั้งแรกต้องมีครบ)
+            if ((!new_order.length || !new_file || !selectedRadio) && !oldData.file) {
+                return;
+            }
+
+            // 6. บันทึกข้อมูล
+            data_all[current_index] = {
+                l_order: new_order,
+                answer: new_answer,
+                file: new_file
+            };
+
+            input_data.add(current_index);
+            console.log("อัปเดตข้อมูล:", data_all[current_index]);
+        }
+        function clearData() {
             const preview = document.getElementById('previewImage');
             if (preview) {
                 preview.src = "/static/img/add-button.png";
                 preview.classList.remove("object-contain", "w-full", "h-full", "bg-white");
             }
-        }
-        function Add_Data(){
-            const l_order = []
-            document.querySelectorAll("#order").forEach(order => {
-                l_order.push(order.value)
+            document.getElementById("input_img").value = "";
+            const selectedRadio = document.querySelectorAll('input[name="answer"]');
+            selectedRadio.forEach(radio => {
+                radio.checked = false;
             });
-            const selectedRadio = document.querySelector('input[name="answer"]:checked');
-            const fileInput = document.getElementById("input_img");
-            const file = fileInput.files[0];
-            if (!l_order || !file || !selectedRadio) {
-                alert("กรุณากรอกข้อความและเลือกไฟล์เสียงก่อน");
-                return;
-            }
-            data_all[current_index] = {
-                l_order: JSON.stringify(l_order),
-                answer: l_order[selectedRadio.value],
-                file: file
-            };
-            input_data.add(current_index);
+            const orders = document.querySelectorAll("#order");
+            orders.forEach(order => {
+                order.value = ""
+            });
+
         }
         function sendData() {
-            if(input_data.size < 5){
+            const category = document.getElementById("category").value
+            if(input_data.size < 5 && !category){
                 alert("กรอกให้ครบ");
                 return;
             }
             data_all.forEach(data => {
                 const formData = new FormData();
-                formData.append("l_order", data.l_order);
+                formData.append("l_order", JSON.stringify(data.l_order));
                 formData.append("answer", data.answer);
                 formData.append("file", data.file);
+                formData.append("category", parseInt(category));
                 fetch("/admin/todo_mode/create/{{ stage }}", {
                     method: "POST",
                     body: formData,
                     });
             });
+            Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกข้อมูลแล้ว',
+                    confirmButtonText: 'ตกลง'
+                }).then(() => {
+                    window.location.href = "/admin/todo_mode/";
+                });
         }
     </script>
 

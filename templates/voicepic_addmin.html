@@ -10,6 +10,7 @@
         href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
     :lang(en){
@@ -170,7 +171,7 @@
             <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
         <div class="flex justify-center items-center gap-7 text-white mr-10">
-            <a href="" class="Btn">
+            <a href="/logout" class="Btn">
                 <div class="sign">
                     <svg viewBox="0 0 512 512">
                         <path
@@ -184,7 +185,7 @@
     </div>
 
     <div class="flex flex-row items-center m-[2.5vh]">
-        <a class="fancy" href="#">
+        <a class="fancy" href="/admin/pairing_mode/">
             <span class="top-key"></span>
             <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
             <span class="bottom-key-1"></span>
@@ -212,14 +213,11 @@
             โปรดจับคู่คำตอบให้ตรงกับเสียงที่ได้ยิน ?</p>
     </div>
     <div class=" flex justify-start items-center w-[112vh] mx-auto mt-5 bg-white rounded-4xl max-[480px]:w-[42vh]">
-        <select name="" id="" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
+        <select name="" id="category" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
             <option value="">#เพิ่มแท็ก</option>
-            <option value="">สัตว์</option>
-            <option value="">ธรรมชาติ</option>
-            <option value="">ชีวิตประจำวัน</option>
-            <option value="">ดนตรี</option>
-            <option value="">ครอบครัว</option>
-
+            {% for category in categories %}
+                <option value="{{category.category_id}}">{{ category.category_name }}</option>
+            {% endfor %}
         </select>
         <div class="flex items-center justify-end w-full">
             <button
@@ -253,7 +251,7 @@
                     </button>
                     <label
                         class="p-[1vh] rounded-[12px] shadow-md bg-[#E8E8E8] hover:bg-[#D0D0D0] cursor-pointer flex justify-center items-center gap-[10px] w-full">
-                        <span class="text-[2vh]">เพิ่มเสียงที่ 1</span>
+                        <span class="text-[2vh]" id="name_sound">เพิ่มเสียง</span>
                         <input type="file" accept="audio/*" onchange="handleUpload(1, this)" class="hidden"
                             id="input_sound">
                     </label>
@@ -300,7 +298,7 @@
         </div>
 
         <!-- เสียง -->
-        <audio id="audio1" src="thunder.mp3"></audio>
+        <audio id="audio1"></audio>
         <!-- <audio id="audio2" src="sound2.mp3"></audio>
         <audio id="audio3" src="sound3.mp3"></audio>
         <audio id="audio4" src="sound4.mp3"></audio> -->
@@ -380,27 +378,14 @@
 
     <script>
 
-        // const buttons = document.querySelectorAll("#number a");
-        // buttons.forEach(a => {
-        //     a.addEventListener("click", () => {
-        //         buttons.forEach(b => {
-        //             b.classList.remove("bg-blue-400", "text-white");
-        //             b.classList.add("bg-white", "text-black", "hover:bg-gray-200");
-        //         });
-        //         a.classList.remove("bg-white", "hover:bg-gray-200");
-        //         a.classList.add("bg-blue-100");
-        //     });
-        // });
-
-
 
         function handleUpload(index, input) {
             const file = input.files[0];
             if (file) {
                 const audio = document.getElementById(`audio${index}`);
+                document.getElementById("name_sound").textContent = file.name
                 audio.src = URL.createObjectURL(file);
                 audio.load();
-                alert(`เพิ่มไฟล์เสียงที่ ${index} เรียบร้อย`);
             }
         }
 
@@ -444,6 +429,8 @@
                 select++;
             }
             current_index = select;
+            clearData();
+            showData(select);
             const buttons = document.querySelectorAll("#number a");
             buttons.forEach(b => {
                 b.classList.remove("bg-blue-400", "text-white");
@@ -452,58 +439,116 @@
             buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
             buttons[select].classList.add("bg-blue-100");
             console.log(data_all);
-            // const test = document.querySelectorAll("#input_img");
-            // test.forEach(t => console.log(t.files));
-            // const formData = new FormData();
-            //     test.forEach(input => {
-            //         Array.from(input.files).forEach(file => {
-            //             formData.append("files", file); // ✅ ใส่ชื่อเดียวกันได้หลายไฟล์
-            //         });
-            //     });
-            //     fetch("/admin/pairing_mode/create/{{ stage }}", {
-            //         method: "POST",
-            //         body: formData,
-            //         });
         }
-
+        function showData (select) {
+            const current_question = data_all[select];
+            const selectedRadio = document.querySelectorAll('input[name="answer"]');
+            const input_img = document.querySelectorAll("#input_img");
+            const input_sound = document.querySelectorAll("#input_sound");
+            if (current_question && Object.keys(current_question).length !== 0) {
+                selectedRadio.forEach(radio => {
+                    radio.checked = false;
+                    if(radio.value == current_question.answer){
+                        radio.checked = true;
+                    }
+                });
+                for (let i = 0; i < current_question.file_img.length; i++) {
+                    const preview = document.getElementById(`preview-img-${i+1}`);
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.classList.remove("w-[5vh]");
+                        preview.classList.add("w-full", "h-full", "object-cover");
+                    };
+                    reader.readAsDataURL(current_question.file_img[i]);
+                    };
+                const audio = document.getElementById(`audio1`);
+                document.getElementById("name_sound").textContent = current_question.file_sound[0].name
+                audio.src = URL.createObjectURL(current_question.file_sound[0]);
+                audio.load();
+            }
+        }
         function Add_Data() {
-            console.log("add")
             const selectedRadio = document.querySelector('input[name="answer"]:checked');
             const input_img = document.querySelectorAll("#input_img");
             const input_sound = document.querySelectorAll("#input_sound");
-
-            // ตรวจสอบว่าเลือกคำตอบหรือยัง
-            if (!selectedRadio) {
-                alert("กรุณาเลือกคำตอบก่อน");
-                return;
+            const oldData = data_all[current_index] || {};
+            let new_img = Array();
+            let new_sound = Array();
+            if (oldData && Object.keys(oldData).length !== 0){
+                new_img = Array.from(input_img).map((input, i) =>
+                    input.files[i] ? input.files[i] : oldData.file_img?.[i]
+                );
+                new_sound = Array.from(input_sound).map((input, i) =>
+                    input.files[0] ? input.files[0] : oldData.file_sound?.[i]
+                );
+            }else{
+                // ตรวจสอบว่าใส่ไฟล์หรือยัง (สมมุติให้ต้องมีรูปและเสียงอย่างน้อย 1)
+                const hasImage = Array.from(input_img).every(input => input.files.length > 0);
+                const hasSound = Array.from(input_sound).some(input => input.files.length > 0);
+                if (!selectedRadio || !hasImage || !hasSound) {
+                    return false; // ใช้ในกรณีอยาก return จาก event handler
+                }
+                new_img = Array.from(input_img).map(input => input.files[0]);
+                new_sound = Array.from(input_sound).map(input => input.files[0]);
             }
-
-            // ตรวจสอบว่าใส่ไฟล์หรือยัง (สมมุติให้ต้องมีรูปและเสียงอย่างน้อย 1)
-            const hasImage = Array.from(input_img).some(input => input.files.length > 0);
-            const hasSound = Array.from(input_sound).some(input => input.files.length > 0);
-            if (!hasImage || !hasSound) {
-                alert("กรุณาเพิ่มไฟล์รูปภาพและไฟล์เสียงก่อน");
-                return;
-            }
-
-            // เก็บค่าทั้งหมด
             data_all[current_index] = {
-                file_img: Array.from(input_img).map(input => input.files[0]),   // เก็บไฟล์ภาพแรกแต่ละช่อง
-                file_sound: Array.from(input_sound).map(input => input.files[0]), // เก็บไฟล์เสียงแรกแต่ละช่อง
-                answer: parseInt(selectedRadio.value) // เก็บคำตอบเป็นเลข
+                file_img: new_img,
+                file_sound: new_sound,
+                answer: parseInt(selectedRadio.value)
             };
             input_data.add(current_index);
             console.log("ข้อมูลถูกเพิ่ม:", data_all[current_index]);
         }
+        function clearData() {
+            const selectedRadio = document.querySelectorAll('input[name="answer"]');
+            const input_img = document.querySelectorAll("#input_img");
+            const input_sound = document.querySelectorAll("#input_sound");
+
+            // ล้าง radio
+            selectedRadio.forEach(radio => {
+                radio.checked = false;
+            });
+
+            // ล้างรูปภาพ preview
+            for (let i = 1; i <= 4; i++) {
+                const previewImg = document.querySelector(`#preview-img-${i}`);
+                if (previewImg) {
+                    previewImg.src = "/static/img/add-button.png"; // ค่า default
+                    previewImg.classList.add("w-[5vh]");
+                    previewImg.classList.remove("w-full", "h-full", "object-cover");
+                }
+            }
+
+            // ล้างค่าใน input file
+            input_img.forEach(input => {
+                input.value = "";
+            });
+            input_sound.forEach(input => {
+                input.value = "";
+            });
+            const audio = document.getElementById(`audio1`);
+            if (audio) {
+                document.getElementById("name_sound").textContent = "เพิ่มเสียง"
+                audio.src = "";
+                audio.load();
+            }
+        }
         function sendData() {
             console.log(data_all);
-            if (input_data.size < 5) {
-                alert("กรอกให้ครบ");
+            const category = document.getElementById("category").value
+            if (input_data.size < 5 && !category) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'กรอกให้ครบ',
+                    confirmButtonText: 'ตกลง'
+                    });
                 return;
             }
             data_all.forEach(data => {
                 const formData = new FormData();
                 formData.append("answer", data.answer);
+                formData.append("category", parseInt(category))
                 data.file_img.forEach((file, i) => {
                     if (file) {
                         formData.append("file_img", file);
@@ -518,7 +563,14 @@
                     method: "POST",
                     body: formData
                 })
-            });
+            })
+                Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกข้อมูลแล้ว',
+                    confirmButtonText: 'ตกลง'
+                }).then(() => {
+                    window.location.href = "/admin/pairing_mode/";
+                });
         }
 
     </script>

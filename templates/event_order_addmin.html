@@ -9,6 +9,8 @@
         href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <style>
     :lang(en){
@@ -169,7 +171,7 @@
             <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
         <div class="flex justify-center items-center gap-7 text-white mr-10">
-            <a href="" class="Btn">
+            <a href="/logout" class="Btn">
                 <div class="sign">
                     <svg viewBox="0 0 512 512">
                         <path
@@ -184,7 +186,7 @@
 
 
     <div class="flex flex-row items-center m-[2.5vh]">
-        <a class="fancy" href="#">
+        <a class="fancy" href="/admin/order_mode/">
             <span class="top-key"></span>
             <span class="text"><img src="/static/img/return.png" class="img" alt="ย้อนกลับ">ย้อนกลับ</span>
             <span class="bottom-key-1"></span>
@@ -212,14 +214,11 @@
             โปรดเรียงลำดับขั้นตอนให้ถูกต้อง ?</p>
     </div>
         <div class=" flex justify-start items-center w-[60vh] mx-auto mt-5 bg-white rounded-4xl max-[480px]:w-[40vh]">
-            <select name="" id="" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
+            <select name="" id="category" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
                 <option value="">#เพิ่มแท็ก</option>
-                <option value="">สัตว์</option>
-                <option value="">ธรรมชาติ</option>
-                <option value="">ชีวิตประจำวัน</option>
-                <option value="">ดนตรี</option>
-                <option value="">ครอบครัว</option>
-
+            {% for category in categories %}
+                <option value="{{category.category_id}}">{{ category.category_name }}</option>
+            {% endfor %}
             </select>
             <div class="flex items-center justify-end w-full">
             <button
@@ -244,40 +243,36 @@
                 <div class="flex gap-[1vh]">
                     <p class="text-[2vh] text-[#0E0E5D] break-words whitespace-nowrap">เหตุการณ์ที่ 1 :</p>
                     <div id="eventBox1" class="flex-1">
-                        <button onclick="showInput(1)"
-                            class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
-                            <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
-                        </button>
+                        <input type="text" id="order"
+                            class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC]"
+                            placeholder="พิมพ์เหตุการณ์ที่ 1 ได้ที่นี่" />
                     </div>
 
                 </div>
                 <div class="flex gap-[1vh]">
                     <p class="text-[2vh] text-[#0E0E5D] break-words whitespace-nowrap">เหตุการณ์ที่ 2 :</p>
                     <div id="eventBox2" class="flex-1">
-                        <button onclick="showInput(2)"
-                            class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
-                            <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
-                        </button>
+                        <input type="text" id="order"
+                            class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC]"
+                            placeholder="พิมพ์เหตุการณ์ที่ 2 ได้ที่นี่" />
                     </div>
 
                 </div>
                 <div class="flex gap-[1vh]">
                     <p class="text-[2vh] text-[#0E0E5D] break-words whitespace-nowrap">เหตุการณ์ที่ 3 :</p>
                     <div id="eventBox3" class="flex-1">
-                        <button onclick="showInput(3)"
-                            class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
-                            <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
-                        </button>
+                        <input type="text" id="order"
+                            class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC]"
+                            placeholder="พิมพ์เหตุการณ์ที่ 3 ได้ที่นี่" />
                     </div>
 
                 </div>
                 <div class="flex gap-[1vh]">
                     <p class="text-[2vh] text-[#0E0E5D] break-words whitespace-nowrap">เหตุการณ์ที่ 4 :</p>
                     <div id="eventBox4" class="flex-1">
-                        <button onclick="showInput(4)"
-                            class="event-btn p-[10px] rounded-[12px] shadow-md w-full text-[2vh] bg-[#E8E8E8] hover:bg-[#D0D0D0] transition-colors cursor-pointer flex justify-center items-center">
-                            <img src="/static/img/add-button.png" alt="" class="w-[3vh] object-contain mr-[0.5vh]">
-                        </button>
+                        <input type="text" id="order"
+                            class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC]"
+                            placeholder="พิมพ์เหตุการณ์ที่ 4 ได้ที่นี่" />
                     </div>
 
                 </div>
@@ -322,15 +317,6 @@
 
     <script>
 
-        function showInput(index) {
-            const container = document.getElementById(`eventBox${index}`);
-            container.innerHTML = `
-      <input type="text" id="order"
-        class="w-full p-[10px] rounded-[12px] shadow-md text-[2vh] bg-[#FFFDFD] border border-[#CCC]"
-        placeholder="พิมพ์เหตุการณ์ที่ ${index} ได้ที่นี่" />
-    `;
-        }
-
 
         //         const buttons = document.querySelectorAll("#number a");
         // buttons.forEach(a => {
@@ -353,6 +339,8 @@
                 select++;
             }
             current_index = select;
+            clearData();
+            showData(select);
             const buttons = document.querySelectorAll("#number a");
             buttons.forEach(b => {
                     b.classList.remove("bg-blue-400", "text-white");
@@ -361,35 +349,59 @@
             buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
             buttons[select].classList.add("bg-blue-100");
         }
-
-        function Add_Data(){
-            const l_order = []
-            document.querySelectorAll("#order").forEach(order => {
-                l_order.push(order.value)
+        function clearData() {
+            const orders = document.querySelectorAll("#order");
+            orders.forEach(order => {
+                order.value = ""
             });
-            if (l_order.length === 0) {
-                alert("กรุณากรอกข้อความและเลือกไฟล์เสียงก่อน");
+        }
+        function showData(select) {
+            const current_question = data_all[select];
+            if (current_question && Object.keys(current_question).length !== 0) {
+                const orderInputs = document.querySelectorAll("#order");
+                orderInputs.forEach((input, i) => {
+                    input.value = current_question.answer[i] || "";
+                });
+            }
+        }
+        function Add_Data(){
+            console.log(data_all);
+            const l_order = []
+            const oldData = data_all[current_index] || {};
+            document.querySelectorAll("#order").forEach(order => {
+                l_order.push(order.value.trim())
+            });
+            const new_order = l_order.every(item => item) ? l_order : oldData.l_order || [];
+            if (!new_order.length) {
                 return;
             }
             data_all[current_index] = {
-                answer: JSON.stringify(l_order),
+                answer: new_order,
             };
             input_data.add(current_index);
         }
         function sendData() {
-            console.log(data_all);
-            if(input_data.size < 5){
+            const category = document.getElementById("category").value;
+            if(input_data.size < 5 && !category){
                 alert("กรอกให้ครบ");
                 return;
             }
             data_all.forEach(data => {
                 const formData = new FormData();
-                formData.append("answer", data.answer);
+                formData.append("answer", JSON.stringify(data.answer));
+                formData.append("category", parseInt(category));
                 fetch("/admin/order_mode/create/{{ stage }}", {
                     method: "POST",
                     body: formData,
                     });
             });
+            Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกข้อมูลแล้ว',
+                    confirmButtonText: 'ตกลง'
+                }).then(() => {
+                    window.location.href = "/admin/order_mode/";
+                });
         }
 
     </script>

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, UploadFile, File, Form, Depends
 from fastapi.templating import Jinja2Templates
 from database import Base, engine
 from sqlalchemy.orm import Session
-from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion
+from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion, Category
 from typing import List
 import json
 import os
@@ -11,16 +11,13 @@ router = APIRouter(prefix="/admin")
 
 templates = Jinja2Templates(directory="templates")
 
-
 Base.metadata.create_all(bind=engine)
 
 def get_db():
     db = Session(bind=engine)
     try:
-        print("connect")
         yield db
     finally:
-        print("close")
         db.close()
 
 @router.get("/pairing_mode")
@@ -33,11 +30,12 @@ async def pairing_mode(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("admin_sound1.html", {"request": request, "stage": stage})
 
 @router.get("/pairing_mode/create/{stage}")
-async def pairing_mode_create(request: Request, stage:int):
-    return templates.TemplateResponse("voicepic_addmin.html", {"request": request, "stage": stage})
+async def pairing_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    categories = db.query(Category).all()
+    return templates.TemplateResponse("voicepic_addmin.html", {"request": request, "stage": stage, "categories":categories})
 
 @router.post("/pairing_mode/create/{stage}")
-async def pairing_create(request: Request, stage:int, answer: int = Form(...), file_img: List[UploadFile] = File(...), file_sound: List[UploadFile] = File(...), db: Session = Depends(get_db), category=1):
+async def pairing_create(request: Request, stage:int, answer: int = Form(...), category: int = Form(...), file_img: List[UploadFile] = File(...), file_sound: List[UploadFile] = File(...), db: Session = Depends(get_db)):
     upload_at_s = "./static/pairing_mode/sounds"
     upload_at_i = "./static/pairing_mode/img"
     path_img = []
@@ -60,7 +58,7 @@ async def pairing_create(request: Request, stage:int, answer: int = Form(...), f
         path_sound = file_url
     pairing = PairingQuestion(
         stage=stage,
-        path_img=f"{path_img}",
+        all_path_img=f"{path_img}",
         path_sound=path_sound,
         answer=path_img[answer],
         category_id=category
@@ -83,15 +81,16 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("admin_sound2.html", {"request": request, "stage":stage})
 
 @router.get("/speaking_mode/create/{stage}")
-async def speaking_mode_create(request: Request, stage:int):
-    return templates.TemplateResponse("create_guess2.html", {"request": request, "stage":stage})
+async def speaking_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    categories = db.query(Category).all()
+    return templates.TemplateResponse("create_guess2.html", {"request": request, "stage":stage, "categories":categories})
 
 @router.get("/speaking_mode/edit/{stage}")
 async def speaking_mode_edit(request: Request):
     return templates.TemplateResponse("admin_sound1.html", {"request": request})
 
 @router.post("/speaking_mode/create/{stage}")
-async def speaking_create(stage:int, answer: str = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), category=1):
+async def speaking_create(stage:int, answer: str = Form(...), category: int = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db)):
     upload_at = "./static/speaking/sounds"
     file_location = os.path.join(upload_at, file.filename)
     os.makedirs(upload_at, exist_ok=True)
@@ -119,31 +118,39 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("admin_guess1.html", {"request": request, "stage":stage})
 
 @router.get("/todo_mode/create/{stage}")
-async def todo_mode_create(request: Request, stage:int):
-    return templates.TemplateResponse("choosepic_admin.html", {"request": request, "stage":stage})
+async def todo_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    categories = db.query(Category).all()
+    return templates.TemplateResponse("choosepic_admin.html", {"request": request, "stage":stage, "categories":categories})
 
 @router.post("/todo_mode/create/{stage}")
-async def todo_create(request: Request, stage:int, answer: str = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), l_order: str = Form(...), category=1):
+async def todo_create(request: Request, stage: int, answer: int = Form(...), category: int = Form(...), file: UploadFile = File(...), l_order: str = Form(...), db: Session = Depends(get_db)):
     upload_at = "./static/todo/img"
+    l_order_n = json.loads(l_order)
     file_location = os.path.join(upload_at, file.filename)
     os.makedirs(upload_at, exist_ok=True)
     with open(file_location, "wb") as f:
         content = await file.read()
         f.write(content)
     file_url = file_location.replace("\\", "/")[1:]
+    print(stage,
+        file_url,
+        str(l_order_n),
+        l_order_n[answer],
+category)
     todo_question = TodoQuestion(
         stage=stage,
         path_img=file_url,
-        choice_4= json.loads(l_order),
-        answer=answer,
+        choice_4= str(l_order_n),
+        answer=l_order_n[answer],
         category_id=category
     )
     db.add(todo_question)
     db.commit()
-    return {"filename": file.filename, "answer": answer}
+    return 0
  
 @router.get("/todo_mode/edit/{stage}")
 async def todo_mode_edit(request: Request, stage:int):
+    
     return templates.TemplateResponse("choosepic_admin.html", {"request": request, "stage":stage})
 
 
@@ -157,8 +164,9 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("admin_guess2.html", {"request": request, "stage":stage})
 
 @router.get("/what_you_see_mode/create/{stage}")
-async def what_you_see_mode_create(request: Request, stage:int):
-    return templates.TemplateResponse("create_sound2.html", {"request": request, "stage":stage})
+async def what_you_see_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    categories = db.query(Category).all()
+    return templates.TemplateResponse("create_sound2.html", {"request": request, "stage":stage, "categories":categories})
 
 @router.post("/what_you_see_mode/create/{stage}")
 async def what_you_see_create(request: Request, stage:int, answer: str = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), category=1):
@@ -193,14 +201,16 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse("admin_guess3.html", {"request": request, "stage":stage})
 
 @router.get("/order_mode/create/{stage}")
-async def order_mode_create(request: Request, stage:int):
-    return templates.TemplateResponse("event_order_addmin.html", {"request": request, "stage":stage})
+async def order_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    categories = db.query(Category).all()
+    return templates.TemplateResponse("event_order_addmin.html", {"request": request, "stage":stage, "categories":categories})
 
 @router.post("/order_mode/create/{stage}")
-async def order_create(request: Request, stage:int, answer: str = Form(...), db: Session = Depends(get_db), category=1):
+async def order_create(request: Request, stage:int, category: int = Form(...), answer: str = Form(...), db: Session = Depends(get_db)):
+    answer_n = json.loads(answer)
     order_question = OrderQuestion(
         stage=stage,
-        map_choice_4=answer,
+        map_choice_4=answer_n,
         category_id=category
     )
     db.add(order_question)

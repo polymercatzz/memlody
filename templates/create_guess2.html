@@ -147,7 +147,7 @@
             <h1 class="text-[4vh]">MEMLODY</h1>
         </div>
         <div class="flex justify-center items-center gap-7 text-white mr-10">
-            <a href="" class="Btn">
+            <a href="/logout" class="Btn">
                 <div class="sign">
                     <svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg>
                 </div>
@@ -156,7 +156,7 @@
         </div>
     </div>
     <div class="flex justify-between m-[2.5vh]">
-        <a class="fancy" href="./admin_guess2.html">
+        <a class="fancy" href="/admin/speaking_mode/">
             <span class="top-key"></span>
             <span class="return"><img src="/static/img/return.png" class="img ">ย้อนกลับ</span>
             <span class="bottom-key-1"></span>
@@ -174,13 +174,11 @@
     <div class="mb-10">
         <label class="flex text-[#0E0E5D] items-center justify-center p-[2.5vh] rounded-[16px] shadow-lg w-fit text-[2.5vh] outline-solid outline-2 outline-[#4A67BA] mx-auto whitespace-nowrap max-[480px]:text-[2.5vh]">เพิ่มเสียงที่จะเป็นโจทย์ พร้อมกับใส่เฉลย</label>
         <div class=" flex justify-start items-center w-[60vh] mx-auto m-5 bg-white rounded-4xl max-[480px]:w-[43vh]">
-            <select name="" id="" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
-                <option value="">#เพิ่มแท็ก</option>
-                <option value="">สัตว์</option>
-                <option value="">ธรรมชาติ</option>
-                <option value="">ชีวิตประจำวัน</option>
-                <option value="">ดนตรี</option>
-                <option value="">ครอบครัว</option>
+            <select name="" id="category" class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2 flex">
+            <option value="">#เพิ่มแท็ก</option>
+            {% for category in categories %}
+                <option value="{{category.category_id}}">{{ category.category_name }}</option>
+            {% endfor %}
             </select>
             <div class="flex items-center justify-end w-full">
                 <button class="group p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] m-2 ml-auto flex cursor-pointer bg-[#D4F2E5] transition-all duration-300 cursor-pointer hover:bg-gray-100 shadow-lg hover:shadow-xlt" onclick="sendData();">
@@ -246,13 +244,6 @@
             if (file) {
                 document.getElementById("filename").textContent = "ไฟล์ที่เลือก: " + file.name;
             }
-            if (event.target.files.length > 0) {
-                Swal.fire({
-                    title: "เพิ่มเสียงสำเร็จ!",
-                    icon: "success",
-                    confirmButtonText: "ตกลง"
-                });
-            }
         });
         let input_data = new Set();
         let current_index = 0;
@@ -264,6 +255,8 @@
                 select++;
             }
             current_index = select;
+            clearData();
+            showData(select);
             const buttons = document.querySelectorAll("#number a");
             buttons.forEach(b => {
                     b.classList.remove("bg-blue-400", "text-white");
@@ -271,40 +264,65 @@
                 });
             buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
             buttons[select].classList.add("bg-blue-100");
+        }
+        function showData (select) {
+            const current_question = data_all[select];
+            if (current_question && Object.keys(current_question).length !== 0) {
+                document.getElementById("filename").textContent = `ไฟล์ที่เลือก: ${current_question.file.name}`;
+                document.getElementById("text-input").value = current_question.text;
+            }
+        }
+
+        function clearData() {
             document.getElementById("filename").textContent = "";
             document.getElementById("text-input").value = "";
             document.getElementById("file").value = "";
         }
-
         function Add_Data(){
-            const text = document.getElementById("text-input").value;
+            console.log(data_all);
+
+            const text = document.getElementById("text-input").value.trim();
             const fileInput = document.getElementById("file");
             const file = fileInput.files[0];
-            if (!text || !file) {
-                alert("กรุณากรอกข้อความและเลือกไฟล์เสียงก่อน");
+
+            const oldData = data_all[current_index] || {};
+
+            // ใช้ค่าจากเก่า ถ้าไม่มีของใหม่
+            const newText = text || oldData.text;
+            const newFile = file || oldData.file;
+            if (!newText || !newFile) {
                 return;
             }
             data_all[current_index] = {
-                text: text,
-                file: file
+                text: newText,
+                file: newFile
             };
             input_data.add(current_index);
         }
         function sendData() {
             console.log(data_all);
-            if(input_data.size < 5){
+            const category = document.getElementById("category").value
+            if(input_data.size < 5 && !category){
                 alert("กรอกให้ครบ");
                 return;
             }
             data_all.forEach(data => {
                 const formData = new FormData();
                 formData.append("answer", data.text);
+                formData.append("category", parseInt(category))
                 formData.append("file", data.file);
                 fetch("/admin/speaking_mode/create/{{ stage }}", {
                     method: "POST",
                     body: formData,
                     });
             });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกข้อมูลแล้ว',
+                    confirmButtonText: 'ตกลง'
+                }).then(() => {
+                    window.location.href = "/admin/speaking_mode/";
+                });
         }
     </script>
 </body>

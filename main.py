@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from passlib.context import CryptContext
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.responses import RedirectResponse
-from models import User
+from models import User, Category
 from database import Base, engine
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
