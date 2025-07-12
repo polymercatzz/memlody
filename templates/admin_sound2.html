@@ -7,205 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/admin.css">
     <style>
         :lang(en){
             font-family: 'Huninn', 'Kanit';
-        }
-
-        /* ปุ่ม logout */
-        .Btn{
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            width: 45px;
-            height: 45px;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition-duration: 0.3s;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
-            background-color: white;
-        }
-        .sign{
-            width: 100%;
-            transition-duration: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .sign svg{
-            width: 17px;
-        }
-        .sign svg path{
-            fill: black;
-        }
-        .text{
-            position: absolute;
-            right: 0%;
-            width: 0%;
-            opacity: 0;
-            color: white;
-            font-size: 1.2em;
-            font-weight: 600;
-            transition-duration: 0.3s;
-        }
-        .Btn:hover{
-            background-color: white;
-            width: 125px;
-            border-radius: 40px;
-            transition-duration: 0.3s;
-        }
-        .Btn:hover .sign{
-            width: 30%;
-            transition-duration: 0.3s;
-            padding-left: 20px;
-        }
-        .Btn:hover .text{
-            opacity: 1;
-            width: 65%;
-            transition-duration: 0.3s;
-            color: black;
-        }
-        .Btn:active{
-            transform: translate(2px, 2px);
-        }
-
-        /* ปุ่มสร้างเกมใหม่ */
-        .buttons{
-            display: flex;
-        }
-        .buttons a{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 30%;
-            height: 10vh;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            font-size: 3vh;
-            letter-spacing: 1px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-            background-color: #22C55E;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin: 5% 0;
-            padding: 1.5rem;
-            transition: box-shadow 0.3s ease;
-        }
-        .buttons a:hover {
-            background-color: white;
-        }
-        .buttons a:before, .buttons a:after{
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: #44d8a4;
-            transition: all 0.3s cubic-bezier(0.35, 0.1, 0.25, 1);
-        }
-        .buttons a:before{
-            right: 0;
-            top: 0;
-            transition: all 0.5s cubic-bezier(0.35, 0.1, 0.25, 1);
-        }
-        .buttons a:after{
-            left: 0;
-            bottom: 0;
-        }
-        .buttons a span{
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            margin: 0;
-            padding: 0;
-            z-index: 1;
-        }
-        .buttons a span:before, .buttons a span:after{
-            content: "";
-            position: absolute;
-            width: 2px;
-            height: 0;
-            background-color: #44d8a4;
-            transition: all 0.3s cubic-bezier(0.35, 0.1, 0.25, 1);
-        }
-        .buttons a span:before{
-            right: 0;
-            top: 0;
-            transition: all 0.5s cubic-bezier(0.35, 0.1, 0.25, 1);
-        }
-        .buttons a span:after{
-            left: 0;
-            bottom: 0;
-        }
-        .buttons a p{
-            padding: 0;
-            margin: 0;
-            transition: all 0.4s cubic-bezier(0.35, 0.1, 0.25, 1);
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1;
-        }
-        .buttons a p:before, .buttons a p:after{
-            position: absolute;
-            width: 100%;
-            transition: all 0.4s cubic-bezier(0.35, 0.1, 0.25, 1);
-            z-index: 1;
-            left: 0;
-        }
-        .buttons a p:before{
-            content: attr(data-title);
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .buttons a p:after{
-            content: attr(data-text);
-            top: 150%;
-            color: #44d8a4;
-        }
-        .buttons a:hover:before, .buttons a:hover:after{
-            width: 100%;
-        }
-         .buttons a:hover span {
-           z-index: 1;
-         }
-        .buttons a:hover span:before, .buttons a:hover span:after{
-            height: 100%;
-        }
-        .buttons a:hover p:before{
-            top: -50%;
-            transform: rotate(5deg);
-        }
-        .buttons a:hover p:after{
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .buttons a:hover p:after{
-           content: "";
-        }
-        .buttons a p img{
-            max-height: 35px;
-            max-width: 35px;
-            display: block;
         }
     </style>
 </head>
 <body class="m-0" lang="en">
     <div class="bg-[#0E0E5D] flex justify-between ">
         <div class="flex justify-center items-center text-white ml-[4%] m-[2vh]"><h1 class="text-[4vh]">MEMLODY</h1></div>
-        <div class="flex justify-center items-center gap-7 text-white mr-10">
+        <div class="hidden md:flex justify-center items-center gap-7 text-white mr-10">
             <a href=""><p class="text-2xl border-b-4 hover:border-b-4 hover:border-white cursor-pointer">เกมนี่เสียงอะไร</p></a>
             <a href="/admin/todo_mode"><p class="text-gray-300 text-2xl hover:border-b-4 hover:border-white cursor-pointer">เกมทายของจากรูป</p></a>
             <a href="/logout" class="Btn">
@@ -217,14 +29,30 @@
                 <div class="text">Logout</div>
             </a>
         </div>
+        <div class="md:hidden flex items-center">
+            <button onclick="menu()" class="text-white text-3xl mx-7 cursor-pointer">☰</button>
+        </div>
     </div>
-    <div class="w-[60%] mx-auto my-10">
-        <div class="flex text-3xl my-10 gap-7">
+
+    <div id="menu" class="md:hidden hidden flex flex-col gap-5 text-white bg-[#0E0E5D] px-8 pb-6">
+        <a href="#" class="w-fit text-gray-300 text-2xl border-b-4 hover:border-white cursor-pointer">เกมนี่เสียงอะไร</a>
+        <a href="/admin/todo_mode" class="w-fit text-2xl hover:border-b-4 hover:border-white cursor-pointer">เกมทายของจากรูป</a>
+        <a href="/logout" class="w-fit text-2xl text-red-400 hover:text-red-600 hover:bg-red-100 px-3 py-1 rounded-md transition duration-300">Logout</a>
+    </div>
+
+    <div class="w-[95%] lg:w-[80%] 2xl:w-[60%] mx-auto my-10">
+        <div class="hidden md:flex text-[2.5vh] my-10 gap-">
             <a href="/admin/pairing_mode" class="flex justify-center items-center px-6 py-3 rounded-full text-center bg-gray-50 hover:bg-sky-100">โหมดจับคู่</a>
             <a href="" class="flex justify-center items-center px-6 py-3 rounded-full text-center bg-blue-400 text-white">โหมดออกเสียง</a>
         </div>
+
+        <select class="md:hidden px-5 py-3 border-2 border-gray-300 rounded-xl text-[3vh] shadow-lg my-5 flex cursor-pointer" onchange="window.location.href = this.value;">
+            <option value="/admin/pairing_mode" class="px-4 py-2 text-[2vh] cursor-pointer">โหมดจับคู่</option>
+            <option value="" class="px-4 py-2 text-[2vh] cursor-pointer">โหมดออกเสียง</option>
+        </select>
+
         <div class="flex flex-col mx-auto px-10 py-7 bg-white rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.2)]">
-            <h1 class="text-5xl font-semibold">โหมดออกเสียง</h1>
+            <h1 class="text-4xl sm:text-5xl font-semibold">โหมดออกเสียง</h1>
             <div class="flex text-2xl mt-3 space-x-1">
                 <p class="text-gray-400">จำนวนเกมทั้งหมด:</p>
                 <p>{{ stage }} เกม</p>
@@ -233,7 +61,7 @@
         <div class="buttons">
             <a href="/admin/speaking_mode/create/{{ stage+1 }}" class="btn">
                 <span></span>
-                <p data-text="start!" data-title="สร้างเกมใหม่"></p>
+                <p data-title="สร้างเกมใหม่"></p>
             </a>
         </div>
         <div>
@@ -241,7 +69,7 @@
                 <img src="/static/img/goal.png" class="w-16 h-16">
                 <p class="text-4xl">ด่านทั้งหมด</p>
             </div>
-            <div class="grid grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-">
                 {% for i in range(stage) %}
                     <a href="/admin/speaking_mode/edit/{{ stage }}" class="flex flex-col bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer mb-4">
                         <div class="flex flex-col justify-start">
@@ -298,6 +126,11 @@
         btn.addEventListener('mouseleave', () => {
           p.innerHTML = '';
         });
+
+        function menu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('hidden');
+        }
     </script>
 </body>
 </html>
