@@ -228,10 +228,12 @@
     </div>
     <h2 class="text-4xl w-[50%] mx-auto my-3">ข้อมูลญาติ</h2>
     <div class="relative-container hide-scrollbar" id="relative-container" style="box-shadow: 4px 4px 2px 5px #dddddd;">
-        <div class="flex-none w-60 rounded-2xl border-none shadow-sm hover:shadow-md transform transition duration-300">
-            <img src="/static/img/people1.jpg" class="w-full h-44 object-contain rounded-t-xl select-none pointer-events-none" draggable="false">
-            <p class="text-center text-gray-500 py-5 text-xl">เจมส์(ลูก)</p>
-        </div>
+        {% for cousin in cousins %}
+            <div class="flex-none w-60 rounded-2xl border-none shadow-sm hover:shadow-md transform transition duration-300">
+                <img src="{{ cousin.path_img }}" class="w-full h-44 object-contain rounded-t-xl select-none pointer-events-none" draggable="false">
+                <p class="text-center text-gray-500 py-5 text-xl">{{ cousin.nickname }}({{ cousin.relation }})</p>
+            </div>
+        {% endfor %}
         <!-- <div class="flex-none w-60 rounded-2xl border-none shadow-sm hover:shadow-md transform transition duration-300">
             <img src="/static/img/people2.jpg" class="w-full h-44 object-contain rounded-t-xl select-none pointer-events-none" draggable="false">
             <p class="text-center text-gray-500 py-5 text-xl">ไมเคิล(หลาน)</p>
@@ -261,7 +263,7 @@
     <div id="popup">
         <div id="popup_box">
             <button class="absolute top-[-10px] right-[-10px] bg-white rounded-full border-[#ccc] border w-10 h-10 font-bold cursor-pointer" onclick="close_popup()">X</button>
-            <form id="login" class="active" action="/home/cousin/create" method="POST">
+            <form id="login">
                 <div class="max-w relative flex flex-col px-5 py-3 rounded-md text-black bg-gray-50 h-fit">
                     <div class="text-4xl font-bold mt-3 mb-5 text-black text-center">เพิ่มข้อมูลญาติ</div>
                     <div class="flex flex-col">
@@ -279,11 +281,12 @@
                             <input id="file" type="file" accept="image/*" class="hidden"/>
                         </label>
                         <p class="text-xl mb-2">เพิ่มเสียงของญาติ</p>
-                        <label for="file_audio" class="peer w-full h-[45px] text-gray-500 border border-gray-300 rounded-xl px-3 py-2 mb-5 text-xl bg-white flex items-center cursor-pointer hover:border-blue-400 transition duration-200">
-                            <span id="audio_label_text">เลือกไฟล์เสียงในเครื่อง</span>
-                            <input id="file_audio" type="file" accept="audio/*" class="hidden"/>
-                        </label>
-                        <button type="submit" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl cursor-pointer hover:bg-sky-500">เพิ่มข้อมูล</button>
+                        <audio id="play_back" controls class="mx-auto mt-4 hidden"></audio>
+                         <div id="record_button" class="flex justify-center items-center px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 bg-blue-200 hover:bg-blue-400">
+                            <img src="/static/img/mic.png" class="w-10 h-10 sm:w-12 sm:h-12">
+                            <p id="record" class="text-[2vh] font-semibold">กดเพื่อพูด</p>
+                        </div>
+                        <button type="button" onclick="Tosubmit()" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl cursor-pointer hover:bg-sky-500">เพิ่มข้อมูล</button>
                     </div>
                 </div>
             </form>
@@ -307,21 +310,21 @@
         }
       });
 
-      document.getElementById("file_audio").addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            const label = document.getElementById("audio_label_text");
-            label.textContent = file.name;
-            label.classList.remove("text-gray-500");
-            label.classList.add("text-black");
+    //   document.getElementById("file_audio").addEventListener("change", function (event) {
+    //     const file = event.target.files[0];
+    //     if (file) {
+    //         const label = document.getElementById("audio_label_text");
+    //         label.textContent = file.name;
+    //         label.classList.remove("text-gray-500");
+    //         label.classList.add("text-black");
 
-            Swal.fire({
-              title: "เพิ่มเสียงสำเร็จ!",
-              icon: "success",
-              confirmButtonText: "ตกลง"
-            });
-        }
-      });
+    //         Swal.fire({
+    //           title: "เพิ่มเสียงสำเร็จ!",
+    //           icon: "success",
+    //           confirmButtonText: "ตกลง"
+    //         });
+    //     }
+    //   });
       
       document.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('relative-container');
@@ -359,6 +362,116 @@
           function close_popup(){
               popup.classList.remove('active');
           }
+
+        let voice= {};
+        let media_recorder;
+        let list_audio = [];
+        let is_recording = false;
+        const record_button = document.getElementById('record_button');
+        const record = document.getElementById('record');
+        const play_back = document.getElementById('play_back');
+        record_button.addEventListener('click', async () => {
+            if (!is_recording){
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                media_recorder = new MediaRecorder(stream);
+
+                list_audio = [];
+
+                media_recorder.ondataavailable = e => {
+                    list_audio.push(e.data);
+                };
+            
+                media_recorder.onstop = async () => {
+                    const audioBlob = new Blob(list_audio, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    play_back.src = audioUrl;
+                    play_back.classList.remove('hidden');
+
+                    const arrayBuffer = await audioBlob.arrayBuffer();
+                    const wavBlob = await convertWebmToWav(arrayBuffer);
+                    const wavFile = new File([wavBlob], "recorded.wav", { type: "audio/wav" });
+                    voice = wavFile;
+                };
+            
+                media_recorder.start();
+                is_recording = true;
+                record.textContent = 'กำลังบันทึก... (คลิกเพื่อหยุด)';
+                record_button.classList.remove('bg-blue-200', 'hover:bg-blue-400');
+                record_button.classList.add('bg-red-400', 'hover:bg-red-600');
+            }else{
+                media_recorder.stop();
+                is_recording = false;
+                record.textContent = 'กดเพื่อพูดตอบคำถาม';
+                record_button.classList.remove('bg-red-400', 'hover:bg-red-600');
+                record_button.classList.add('bg-blue-200', 'hover:bg-blue-400');
+            }
+        });
+        async function convertWebmToWav(arrayBuffer) {
+            const audioContext = new AudioContext({ sampleRate: 16000 });
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+            const numOfChan = audioBuffer.numberOfChannels;
+            const length = audioBuffer.length * numOfChan * 2 + 44;
+            const buffer = new ArrayBuffer(length);
+            const view = new DataView(buffer);
+
+            function writeUTFBytes(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            writeUTFBytes(view, 0, 'RIFF');
+            view.setUint32(4, 36 + audioBuffer.length * numOfChan * 2, true);
+            writeUTFBytes(view, 8, 'WAVE');
+            writeUTFBytes(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numOfChan, true);
+            view.setUint32(24, audioBuffer.sampleRate, true);
+            view.setUint32(28, audioBuffer.sampleRate * numOfChan * 2, true);
+            view.setUint16(32, numOfChan * 2, true);
+            view.setUint16(34, 16, true);
+            writeUTFBytes(view, 36, 'data');
+            view.setUint32(40, audioBuffer.length * numOfChan * 2, true);
+
+            let offset = 44;
+            for (let i = 0; i < audioBuffer.length; i++) {
+                for (let ch = 0; ch < numOfChan; ch++) {
+                    const sample = audioBuffer.getChannelData(ch)[i];
+                    const s = Math.max(-1, Math.min(1, sample));
+                    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+                    offset += 2;
+                }
+            }
+
+            return new Blob([view], { type: "audio/wav" });
+        }
+        function Tosubmit() {
+            const name = document.getElementById("Name").value;
+            const relation = document.getElementById("Relationship").value;
+            const input_img = document.getElementById("file").files[0];
+
+            const formData = new FormData();
+            formData.append("nickname", name);
+            formData.append("relation", relation);
+            formData.append("path_img", input_img);
+            formData.append("path_sound", voice);
+
+            fetch("/home/create/cousin", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("สำเร็จ:", data);
+                close_popup()
+                window.location.reload()
+            })
+            .catch(error => {
+                console.error("เกิดข้อผิดพลาด:", error);
+            });
+        }
     </script>
 
 </body>

@@ -14,6 +14,9 @@ class User(Base):
     date = Column(Date)
     email = Column(String, unique=True)
 
+    cousins = relationship("Cousin", back_populates="user")
+    game_stage_history = relationship("GameStageHistory", back_populates="user")
+
 class Category(Base):
     __tablename__ = "categories"
 
@@ -96,4 +99,17 @@ class GameStageHistory(Base):
     play_time = Column(DateTime)
     duration = Column(Float)  # วินาที
 
-    user = relationship("User")
+    user = relationship("User", back_populates="game_stage_history")
+
+class Cousin(Base):
+    __tablename__ = "cousin"
+
+    cousin_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    nickname = Column(String, nullable=True)
+    relation = Column(String, nullable=True)
+    path_sound = Column(String, nullable=True)
+    path_img = Column(String, nullable=True)
+
+    # หากต้องการเชื่อมกับ User model (optional)
+    user = relationship("User", back_populates="cousins")

@@ -101,9 +101,9 @@
             <p class="text-[2.3vh] whitespace-nowrap text-gray-500" id="timer">00:00</p>
         </div>
     </div>
-    <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]">
+    <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]" id="current_choice">
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">1</p>
-        <p href="#voicepic_addmin copy.html" class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</p>
+        <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">2</p>
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">3</p>
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</p>
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</p>
@@ -157,37 +157,81 @@
                 </div>
             </div>
         <div class="flex justify-center mt-5 mb-5">
-            <button id="nextBtn" class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden" onclick="generateQuestion()">
+            <button id="nextBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="CreateQuestion()">
                 <p>ถัดไป</p>
-                <img src="/static/img/right-arrow.png" class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
+                <img src="/static/img/right-arrow.png"
+                    class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-1">
             </button>
-            <button id="checkBtn" class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl" onclick="checkResult()">
+            <button id="checkBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl"
+                onclick="checkResult()">
                 <p>ตรวจ</p>
+            </button>
+            <button id="submitBtn"
+                class="group flex justify-center items-center bg-[#78C93C] px-5 py-3 rounded-2xl gap-3 text-[3vh] text-white font-bold transition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl hidden"
+                onclick="Tosubmit()">
+                <p>เสร็จสิ้น</p>
             </button>
         </div>
         </div>
     </div>
     <script>
         const questions = JSON.parse(`{{ questions_cosins | tojson}}`);
-        let check_answer = false;
         let currentquestion = 0;
-        let correct_answer = null
-        console.log(questions);
-        generateQuestion();
-        function generateQuestion(){
-            const question = questions[currentquestion];
 
+        let correctAnswerIndex = 0; // เปลี่ยนตามคำตอบจริง
+        let selectedIndex = null;
+        let hasChecked = false;
+
+        let corrected = 0;
+        console.log(questions);
+        CreateQuestion();
+        function CreateQuestion(){
+            clearPage()
+            const question = questions[currentquestion];
+            document.getElementById("sound").src = question.question_sound
             document.querySelectorAll('.select-box').forEach((box, index) => {
-                box.classList.remove('ring-4', 'ring-green-500', 'ring-red-500', 'bg-[#D7FFE6]', 'bg-[#FFDFDF]');
-                box.classList.add('hover:bg-gray-200');
                 box.querySelector('p').textContent = question.choices[index].nickname;
                 if (box.querySelector('p').textContent === question.correct_id){
                     correct_answer = box;
+                    correctAnswerIndex = index;
                 }
+                box.querySelector('img').src = question.choices[index].path_img
+                document.querySelectorAll("#current_choice p").forEach((p, index) => {
+                    const isActive = index === currentquestion;
+                    p.classList.toggle("bg-[#DFE9FF]", isActive);
+                    p.classList.toggle("bg-[#FFFFFF]", !isActive);
+            });
             })
             currentquestion++;
             check_answer = false
         }
+        function clearPage(){
+            Swal.fire({
+                title: 'กำลังโหลด...',
+                html: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                timer: 500,
+                timerProgressBar: true
+                })
+                .then(() => {
+                    document.querySelectorAll('.select-box').forEach(box => {
+                        box.classList.remove("ring-4", "ring-green-500", "ring-red-500");
+                        box.querySelector(".overlay-incorrect").classList.add('hidden');
+                        box.querySelector(".overlay-correct").classList.add('hidden');
+                    });
+                    document.getElementById("nextBtn").classList.add("hidden");
+                    document.getElementById("checkBtn").classList.remove("hidden");
+                    hasChecked = false;
+                    selectedIndex = null;
+                });
+        }
+
 
 
         // function checkanswer(selectedBox){
@@ -205,9 +249,6 @@
         //         correct_answer.classList.add('ring-4', 'ring-red-500', 'bg-[#FFDFDF]');
         //     }
         // }
-        const correctAnswerIndex = 2; // เปลี่ยนตามคำตอบจริง
-        let selectedIndex = null;
-        let hasChecked = false;
 
         function checkanswer(element) {
             if (hasChecked) return; // ถ้าเฉลยไปแล้วห้ามเปลี่ยน
@@ -246,11 +287,6 @@
                     box.classList.add("ring-4", "ring-red-500");
                 }
             });
-
-            // ซ่อนปุ่ม "ตรวจ" และแสดงปุ่ม "ถัดไป"
-            document.getElementById("checkBtn").classList.add("hidden");
-            document.getElementById("nextBtn").classList.remove("hidden");
-
             if (selectedIndex === correctAnswerIndex) {
                 Swal.fire({
                     icon: "success",
@@ -264,15 +300,14 @@
                         confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
                     }
                 });
+                corrected++;
             } else {
                 const correctBox = boxes[correctAnswerIndex];
-                const correctImg = correctBox.querySelector("img");
-                const correctAlt = correctImg?.alt || "น้องแพร(น้องสาว)";
 
                 Swal.fire({
                     icon: "error",
                     title: "ไม่ถูกต้อง",
-                    text: `คำตอบที่ถูกต้องคือ: ${correctAlt}`,
+                    text: `คำตอบที่ถูกต้องคือ: ${correctBox.textContent}`,
                     confirmButtonText: "เข้าใจแล้ว",
                     confirmButtonColor: "#EF4444",
                     customClass: {
@@ -281,6 +316,14 @@
                         confirmButton: 'text-[2vh] px-6 py-2 rounded-xl font-semibold'    
                     }
                 });
+            }
+            if (currentquestion >= questions.length){
+                document.getElementById("nextBtn").classList.add("hidden");
+                document.getElementById("checkBtn").classList.add("hidden");
+                document.getElementById("submitBtn").classList.remove("hidden");
+            }else{
+                document.getElementById("checkBtn").classList.add("hidden");
+                document.getElementById("nextBtn").classList.remove("hidden");
             }
         }
 
@@ -319,6 +362,37 @@
             time = null;
         }
         window.onload = start;
+
+        function Tosubmit() {
+            // สร้างฟอร์มส่ง POST ไปยัง /submit/...
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/home/submit/game_sound/my_voice_mode/1';
+
+            // สร้าง input สำหรับส่ง finished = true
+            const inputFinished = document.createElement('input');
+            inputFinished.type = 'hidden';
+            inputFinished.name = 'finished';
+            inputFinished.value = 'true';
+            form.appendChild(inputFinished);
+
+            // เพิ่ม input สำหรับส่ง corrected (เช่นจำนวนวินาทีหรือคะแนนที่ได้)
+            const inputCorrected = document.createElement('input');
+            inputCorrected.type = 'hidden';
+            inputCorrected.name = 'corrected';
+            inputCorrected.value = corrected;  // ต้องแน่ใจว่า corrected ถูกกำหนดไว้ก่อนหน้านี้
+            form.appendChild(inputCorrected);
+
+            const inputTime = document.createElement('input');
+            inputTime.type = 'hidden';
+            inputTime.name = 'time';
+            inputTime.value = second;// ต้องแน่ใจว่า corrected ถูกกำหนดไว้ก่อนหน้านี้
+            form.appendChild(inputTime);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+
     </script>
 </body>
 </html>

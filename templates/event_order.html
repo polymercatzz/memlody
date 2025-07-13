@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]">
+    <div class="flex justify-center items-center gap-3 mt-[-3vh]  max-[700px]:mt-[0vh]" id="current_choice">
         <p
             class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#DFE9FF] outline outline-2 outline-[#4A67BA]">
             1</p>
@@ -406,6 +406,11 @@
                         btn.textContent = all_map_choices[currentQuestion][index]
                     });
                     currentQuestion++;
+                });
+                document.querySelectorAll("#current_choice p").forEach((p, index) => {
+                    const isActive = index === currentQuestion;
+                    p.classList.toggle("bg-[#DFE9FF]", isActive);
+                    p.classList.toggle("bg-[#FFFFFF]", !isActive);
                 });
         }
         function Tosubmit() {

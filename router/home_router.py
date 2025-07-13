@@ -5,7 +5,7 @@ from faster_whisper import WhisperModel
 from database import Base, engine
 from datetime import datetime
 from sqlalchemy.orm import Session
-from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion, User, GameStageHistory, Category
+from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion, User, GameStageHistory, Category, Cousin
 from collections import defaultdict
 from statistics import mean
 import ast
@@ -44,7 +44,39 @@ async def my_info(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     user = db.query(User).filter(User.user_id==user_id).first()
     user_age = calculate_age(user.date)
-    return templates.TemplateResponse("information.html", {"request": request, "user":user, "user_age":user_age})
+    cousins = db.query(Cousin).filter(Cousin.user_id==user_id).all()
+    return templates.TemplateResponse("information.html", {"request": request, "user":user, "user_age":user_age, "cousins":cousins})
+
+@router.post("/create/cousin")
+async def create_cousin(request: Request, db: Session = Depends(get_db), nickname: str= Form(...), relation: str = Form(...), path_img: UploadFile = File(...), path_sound: UploadFile = File(...)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    print(nickname, relation, path_img.filename, path_sound.filename)
+    upload_at_s = "./static/cousin/sounds"
+    upload_at_i = "./static/cousin/img"
+    file_location = os.path.join(upload_at_s, f"{user_id}_{nickname}_{relation}_cousin_{path_sound.filename}")
+    os.makedirs(upload_at_s, exist_ok=True)
+    os.makedirs(upload_at_i, exist_ok=True)
+    with open(file_location, "wb") as f:
+        content = await path_sound.read()
+        f.write(content)
+    file_url_s = file_location.replace("\\", "/")[1:]
+    file_location = os.path.join(upload_at_i, f"{user_id}_{nickname}_{relation}_cousin_{path_img.filename}")
+    with open(file_location, "wb") as f:
+        content = await path_img.read()
+        f.write(content)
+    file_url_i = file_location.replace("\\", "/")[1:]
+    cousin = Cousin(
+        user_id=user_id,
+        nickname=nickname,
+        relation=relation,
+        path_sound=file_url_s,
+        path_img=file_url_i
+    )
+    db.add(cousin)
+    db.commit()
+    return 0
 
 def calculate_age(birthdate):
     from datetime import datetime
@@ -156,62 +188,36 @@ async def check_voice(request: Request, label: str = Form(...), file: UploadFile
     return "ไม่ถูกต้อง"
 
 @router.get("/game_sound/my_voice_mode")
-async def my_voice_mode(request: Request):
+async def my_voice_mode(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    return templates.TemplateResponse("main_sound3.html", {"request": request})
+    count_cousin = db.query(Cousin).filter(Cousin.user_id==user_id).count()
+    return templates.TemplateResponse("main_sound3.html", {"request": request, "count_cousin":count_cousin})
 
-@router.get("/game_sound/my_voice_mode/{stage}")
-async def play_my_voice(request: Request, stage: int):
+@router.get("/game_sound/my_voice_mode/play")
+async def play_my_voice(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    cousin_count = db.query(Cousin).filter(Cousin.user_id == user_id).count()
+    if cousin_count < 5:
+        return RedirectResponse(url="/home/my_info?msg=กรุณาเพิ่มข้อมูลญาติอย่างน้อย 5 คนก่อนเล่น", status_code=302)
+    cousins_raw = db.query(Cousin).filter(Cousin.user_id == user_id).all()
     cousins = [
     {
-        "cousin_id": 1,
-        "user_id": 101,
-        "nickname": "พี่บอย",
-        "relation": "พี่ชาย",
-        "path_sound": "/static/sounds/cousin1.mp3",
-        "path_img": "/static/img/cousin1.jpg"
-    },
-    {
-        "cousin_id": 2,
-        "user_id": 101,
-        "nickname": "น้องแพร",
-        "relation": "น้องสาว",
-        "path_sound": "/static/sounds/cousin2.mp3",
-        "path_img": "/static/img/cousin2.jpg"
-    },
-    {
-        "cousin_id": 3,
-        "user_id": 101,
-        "nickname": "อาแดง",
-        "relation": "อา",
-        "path_sound": "/static/sounds/cousin3.mp3",
-        "path_img": "/static/img/cousin3.jpg"
-    },
-    {
-        "cousin_id": 4,
-        "user_id": 101,
-        "nickname": "น้าเอ๋",
-        "relation": "น้า",
-        "path_sound": "/static/sounds/cousin4.mp3",
-        "path_img": "/static/img/cousin4.jpg"
-    },
-    {
-        "cousin_id": 5,
-        "user_id": 101,
-        "nickname": "ลุงหมู",
-        "relation": "ลุง",
-        "path_sound": "/static/sounds/cousin5.mp3",
-        "path_img": "/static/img/cousin5.jpg"
+        "cousin_id": cousin.cousin_id,
+        "user_id": cousin.user_id,
+        "nickname": cousin.nickname,
+        "relation": cousin.relation,
+        "path_sound": cousin.path_sound,
+        "path_img": cousin.path_img
     }
-]
+        for cousin in cousins_raw
+    ]
     random.shuffle(cousins)
     questions_cosins = create_questions(cousins)
-    return templates.TemplateResponse("game_sound3.html", {"request": request, "questions_cosins": questions_cosins, "stage":stage})
+    return templates.TemplateResponse("game_sound3.html", {"request": request, "questions_cosins": questions_cosins})
 
 def create_questions(cousins, num_questions=5, num_choices=4):
     questions = []
