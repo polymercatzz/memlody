@@ -5,7 +5,9 @@ from faster_whisper import WhisperModel
 from database import Base, engine
 from datetime import datetime
 from sqlalchemy.orm import Session
-from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion, User, GameStageHistory
+from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion, User, GameStageHistory, Category
+from collections import defaultdict
+from statistics import mean
 import ast
 import random
 import os
@@ -367,3 +369,193 @@ async def get_submit(request: Request, game: str, mode: str, stage: int, db: Ses
         db.commit()
         return templates.TemplateResponse("sum.html", {"request": request, "game": game, "mode": mode, "stage":stage, "corrected":corrected, "time":time})
     return RedirectResponse(url=f"/home/{game}/{mode}", status_code=302)
+
+def calculate_stat(all_history_raw=[],stage_category_raw=[]):
+    stage_to_category = {}
+    for stage, cat_name in stage_category_raw:
+        stage_to_category[stage] = cat_name
+    
+    grouped_data = defaultdict(lambda: {
+        "duration": [],
+        "correct_count": [],
+        "incorrect_count": [],
+        "total_questions": []
+    })
+    category_accuracy_data = defaultdict(list)
+
+    for history in all_history_raw:
+        stage = history.stage
+        grouped_data[stage]["duration"].append(history.duration)
+        grouped_data[stage]["correct_count"].append(history.correct_count)
+        grouped_data[stage]["incorrect_count"].append(history.incorrect_count)
+        grouped_data[stage]["total_questions"].append(history.total_questions)
+        if stage in stage_to_category:
+            accuracy_percent = (history.correct_count / history.total_questions) * 100
+            category = stage_to_category[stage]
+            category_accuracy_data[category].append(accuracy_percent)
+
+    # แปลงเป็นรูปแบบที่ frontend ต้องการ
+    stageData = {}
+    avg_duration = []
+    avg_accuracy = []
+    all_corrects = []
+    all_totals = []
+    for stage, data in grouped_data.items():
+        durations = data["duration"]
+        corrects = data["correct_count"]
+        totals = data["total_questions"]
+
+        # คำนวณ accuracy เป็นเปอร์เซ็นต์
+        accuracy = [
+            round((c / t) * 100) if t else 0
+            for c, t in zip(corrects, totals)
+        ]
+
+        all_corrects.extend(corrects)
+        all_totals.extend(totals)
+
+        stageData[str(stage)] = {
+            "time": durations,
+            "accuracy": accuracy
+        }
+        # คำนวณค่าเฉลี่ยเวลา และค่าเฉลี่ยความถูกต้อง (accuracy)
+        avg_duration.append(round(mean(durations), 2) if durations else 0)
+        avg_accuracy.append(round(mean(accuracy), 2) if accuracy else 0)
+        
+
+        stageData[str(stage)] = {
+            "time": durations,
+            "accuracy": accuracy,
+        }
+    category_avg_accuracy = {
+        category: round(mean(acc_list), 1) if acc_list else 0
+        for category, acc_list in category_accuracy_data.items()
+    }
+    print(category_avg_accuracy)
+    if all_totals:
+        overall_accuracy = round((sum(all_corrects) / sum(all_totals)) * 100, 2)
+    else:
+        overall_accuracy = 0
+    return {
+        "stages": list(stageData.keys()),
+        "stageData": stageData,
+        "avg_duration":avg_duration,
+        "avg_accuracy":avg_accuracy,
+        "overall_accuracy": overall_accuracy,
+        "category_avg_accuracy": list(category_avg_accuracy.values()),
+        "category": list(category_avg_accuracy.keys(),)
+    }
+@router.get("/stat/pairing_mode")
+async def stat_pairing_mode(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+
+    all_history_raw = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "pairing_mode"
+    ).all()
+    stage_category_raw  = db.query(PairingQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==PairingQuestion.category_id).distinct(Category.category_name, PairingQuestion.stage).order_by(PairingQuestion.stage).all()
+    calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    return templates.TemplateResponse("stat_sound.html", {
+        "request": request,
+        "stages": calculate_data["stages"],
+        "stageData": calculate_data["stageData"],
+        "avg_duration": calculate_data["avg_duration"],
+        "avg_accuracy": calculate_data["avg_accuracy"],
+        "overall_accuracy": calculate_data["overall_accuracy"],
+        "category_avg_accuracy": calculate_data["category_avg_accuracy"],
+        "category": calculate_data["category"]
+    })
+
+@router.get("/stat/speaking_mode")
+async def stat_speaking_mode(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+
+    all_history_raw = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "speaking_mode"
+    ).all()
+    stage_category_raw  = db.query(SpeakingQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SpeakingQuestion.category_id).distinct(Category.category_name, SpeakingQuestion.stage).order_by(SpeakingQuestion.stage).all()
+    calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    return templates.TemplateResponse("stat_sound1.html", {
+        "request": request,
+        "stages": calculate_data["stages"],
+        "stageData": calculate_data["stageData"],
+        "avg_duration": calculate_data["avg_duration"],
+        "avg_accuracy": calculate_data["avg_accuracy"],
+        "overall_accuracy": calculate_data["overall_accuracy"],
+        "category_avg_accuracy": calculate_data["category_avg_accuracy"],
+        "category": calculate_data["category"]
+    })
+
+@router.get("/stat/todo_mode")
+async def stat_todo_mode(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+
+    all_history_raw = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "todo_mode"
+    ).all()
+    stage_category_raw  = db.query(TodoQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==TodoQuestion.category_id).distinct(Category.category_name, TodoQuestion.stage).order_by(TodoQuestion.stage).all()
+    calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    return templates.TemplateResponse("stat_pic.html", {
+        "request": request,
+        "stages": calculate_data["stages"],
+        "stageData": calculate_data["stageData"],
+        "avg_duration": calculate_data["avg_duration"],
+        "avg_accuracy": calculate_data["avg_accuracy"],
+        "overall_accuracy": calculate_data["overall_accuracy"],
+        "category_avg_accuracy": calculate_data["category_avg_accuracy"],
+        "category": calculate_data["category"]
+    })
+
+@router.get("/stat/what_you_see_mode")
+async def stat_what_you_see_mode(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+
+    all_history_raw = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "what_you_see_mode"
+    ).all()
+    stage_category_raw  = db.query(SeeQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SeeQuestion.category_id).distinct(Category.category_name, SeeQuestion.stage).order_by(SeeQuestion.stage).all()
+    calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    return templates.TemplateResponse("stat_pic1.html", {
+        "request": request,
+        "stages": calculate_data["stages"],
+        "stageData": calculate_data["stageData"],
+        "avg_duration": calculate_data["avg_duration"],
+        "avg_accuracy": calculate_data["avg_accuracy"],
+        "overall_accuracy": calculate_data["overall_accuracy"],
+        "category_avg_accuracy": calculate_data["category_avg_accuracy"],
+        "category": calculate_data["category"]
+    })
+
+@router.get("/stat/order_mode")
+async def stat_order_mode(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+
+    all_history_raw = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "order_mode"
+    ).all()
+    stage_category_raw  = db.query(OrderQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==OrderQuestion.category_id).distinct(Category.category_name, OrderQuestion.stage).order_by(OrderQuestion.stage).all()
+    calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    return templates.TemplateResponse("stat_pic2.html", {
+        "request": request,
+        "stages": calculate_data["stages"],
+        "stageData": calculate_data["stageData"],
+        "avg_duration": calculate_data["avg_duration"],
+        "avg_accuracy": calculate_data["avg_accuracy"],
+        "overall_accuracy": calculate_data["overall_accuracy"],
+        "category_avg_accuracy": calculate_data["category_avg_accuracy"],
+        "category": calculate_data["category"]
+    })
