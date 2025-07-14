@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion, User, GameStageHistory, Category, Cousin
 from collections import defaultdict
 from statistics import mean
+from sqlalchemy import func
 import ast
 import random
 import os
@@ -94,7 +95,15 @@ async def pairing_mode(request: Request, db: Session = Depends(get_db)):
         all_stage_raw = []
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    return templates.TemplateResponse("main_sound1.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage})
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "pairing_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point = [ point[0] for point in stage_max_point_raw]
+    max_stage_row = db.query(func.max(PairingQuestion.stage)).first()
+    if max_stage_row:
+        max_stage = max_stage_row[0]
+    else:
+        max_stage = 0
+    all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
+    return templates.TemplateResponse("main_sound1.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
 @router.get("/game_sound/pairing_mode/{stage}")
 async def play_pairing(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -124,7 +133,15 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="speaking_mode").order_by(GameStageHistory.stage.desc()).first()
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    return templates.TemplateResponse("main_sound2.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage})
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point = [ point[0] for point in stage_max_point_raw]
+    max_stage_row = db.query(func.max(SpeakingQuestion.stage)).first()
+    if max_stage_row:
+        max_stage = max_stage_row[0]
+    else:
+        max_stage = 0
+    all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
+    return templates.TemplateResponse("main_sound2.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
 @router.get("/game_sound/speaking_mode/{stage}")
 async def play_speaking(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -255,7 +272,15 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="todo_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    return templates.TemplateResponse("main_guess1.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage})
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point = [ point[0] for point in stage_max_point_raw]
+    max_stage_row = db.query(func.max(TodoQuestion.stage)).first()
+    if max_stage_row:
+        max_stage = max_stage_row[0]
+    else:
+        max_stage = 0
+    all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
+    return templates.TemplateResponse("main_guess1.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
 @router.get("/game_pic/todo_mode/{stage}")
 async def play_todo(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -286,7 +311,15 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    return templates.TemplateResponse("main_guess2.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage})
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "what_you_see_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point = [ point[0] for point in stage_max_point_raw]
+    max_stage_row = db.query(func.max(SeeQuestion.stage)).first()
+    if max_stage_row:
+        max_stage = max_stage_row[0]
+    else:
+        max_stage = 0
+    all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
+    return templates.TemplateResponse("main_guess2.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
 @router.get("/game_pic/what_you_see_mode/{stage}")
 async def play_what_you_see(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -316,7 +349,16 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    return templates.TemplateResponse("main_guess3.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage})
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "order_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point = [ point[0] for point in stage_max_point_raw]
+    max_stage_row = db.query(func.max(OrderQuestion.stage)).first()
+    if max_stage_row:
+        max_stage = max_stage_row[0]
+    else:
+        max_stage = 0
+    all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
+    print(all_point)
+    return templates.TemplateResponse("main_guess3.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
 @router.get("/game_pic/order_mode/{stage}")
 async def play_order(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -437,7 +479,6 @@ def calculate_stat(all_history_raw=[],stage_category_raw=[]):
         category: round(mean(acc_list), 1) if acc_list else 0
         for category, acc_list in category_accuracy_data.items()
     }
-    print(category_avg_accuracy)
     if all_totals:
         overall_accuracy = round((sum(all_corrects) / sum(all_totals)) * 100, 2)
     else:
