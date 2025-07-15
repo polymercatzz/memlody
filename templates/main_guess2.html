@@ -9,6 +9,7 @@
     <link href="/static/css/app.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/crown&star.css">
     <script src="/static/javascript/crown.js"></script>
+    <script src="/static/javascript/tutorial-main.js"></script>
     <style>
         :lang(en){
           font-family: 'Huninn', 'Kanit';
@@ -111,9 +112,6 @@
             </label>
         </div>
     </div>
-    <button onclick="open_popup('')" class="fixed bottom-6 right-6 z-50">
-        <img src="/static/img/info.png" class="w-12 h-12">
-    </button>
     <a class="fancy" href="/home">
         <span class="top-key"></span>
         <span class="text"><img src="/static/img/return.png" class="img">ย้อนกลับ</span>
@@ -153,7 +151,7 @@
         <div class="flex justify-center">
             <div class="mt-10 w-full max-w-5xl px-10">
                 <p class="flex justify-center text-2xl mb-5">เลือกด่าน</p>
-                <div class="grid grid-cols-3 gap-10 bg-white text-2xl px-10 py-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 auto-rows-fr gap-10 bg-white text-2xl px-10 py-6">
                     {% for index, stage in all_stage %}
                         {% if stage <= history_stage+1 %}
                         <a href="/home/game_pic/what_you_see_mode/{{ stage }}" class="flex flex-col justify-center items-center px-6 py-6 border border-gray-200 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-sky-50">
@@ -194,6 +192,21 @@
                     {% endif %}
                 </div>
             </div>
+        </div>
+    </div>
+
+    <button onclick="openTutorial(true)" class="fixed bottom-6 right-6 z-50 cursor-pointer">
+        <img src="/static/img/info.png" class="w-[40px] h-[40px]">
+    </button>
+    <div id="tutorialModal" class="fixed inset-0 z-50 flex justify-center items-center w-screen h-screen backdrop-blur-md bg-black/30" style="display: none;">
+        <div class="bg-white rounded-xl p-6 w-[90%] max-w-[600px] shadow-xl relative text-center">
+          <h2 class="text-xl font-bold mb-4">แนะนำการใช้งาน</h2>
+          <div class="w-full h-[300px] mb-4 overflow-hidden flex justify-center items-center">
+                <img id="tutorialImage" src="" class="w-full h-full object-contain rounded-lg">
+          </div>
+          <div id="dots" class="flex justify-center gap-2 mb-4"></div>
+          <button onclick="nextSlide()" class="px-4 py-2 bg-blue-600 text-white rounded mb-2 hover:bg-blue-700 transition">ถัดไป</button><br>
+          <button onclick="closeTutorial()" class="absolute top-2 right-4 text-gray-500 text-2xl leading-none hover:text-red-500">X</button>
         </div>
     </div>
 </body>
