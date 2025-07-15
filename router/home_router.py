@@ -12,7 +12,7 @@ from pythainlp.tokenize import word_tokenize
 from pythainlp.util import normalize
 from pythainlp.corpus.common import thai_stopwords
 from collections import defaultdict
-from statistics import mean
+from statistics import mean, stdev
 from sqlalchemy import func
 from prophet import Prophet
 import pandas as pd
@@ -125,7 +125,7 @@ async def pairing_mode(request: Request, db: Session = Depends(get_db)):
         all_stage_raw = []
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "pairing_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "pairing_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
     max_stage_row = db.query(func.max(PairingQuestion.stage)).first()
     if max_stage_row:
@@ -194,7 +194,7 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="speaking_mode").order_by(GameStageHistory.stage.desc()).first()
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
     max_stage_row = db.query(func.max(SpeakingQuestion.stage)).first()
     if max_stage_row:
@@ -360,7 +360,7 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="todo_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
     max_stage_row = db.query(func.max(TodoQuestion.stage)).first()
     if max_stage_row:
@@ -430,7 +430,7 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "what_you_see_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "what_you_see_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
     max_stage_row = db.query(func.max(SeeQuestion.stage)).first()
     if max_stage_row:
@@ -499,7 +499,7 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "order_mode").group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "order_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
     max_stage_row = db.query(func.max(OrderQuestion.stage)).first()
     if max_stage_row:
@@ -692,12 +692,10 @@ def calculate_stat(all_history_raw=[],stage_category_raw=[]):
         "least_skilled_category_avg": least_skilled_category_avg
     }
 
+
 def analyze_accuracy_trend_with_prophet(history_list):
-    """
-    รับรายการ GameStageHistory แล้วคืนข้อความแนวโน้ม accuracy
-    โดยใช้ Prophet วิเคราะห์
-    """
     ts_data = []
+
     for h in history_list:
         if h.total_questions > 0 and hasattr(h, "play_time"):
             accuracy = (h.correct_count / h.total_questions) * 100
@@ -705,31 +703,60 @@ def analyze_accuracy_trend_with_prophet(history_list):
                 "ds": h.play_time,
                 "y": round(accuracy, 2)
             })
+
     if len(ts_data) < 10:
-        return "ไม่มีข้อมูลเพียงพอสำหรับการวิเคราะห์แนวโน้มต้องมีข้อมูลอย่างน้อย 10 รายการ"
+        return "ไม่มีข้อมูลเพียงพอสำหรับการวิเคราะห์แนวโน้ม (ต้องมีอย่างน้อย 10 รายการ)"
 
     df = pd.DataFrame(ts_data)
     df.sort_values("ds", inplace=True)
 
     model_prophet = Prophet()
     model_prophet.fit(df)
-
     future = model_prophet.make_future_dataframe(periods=3)
     forecast = model_prophet.predict(future)
 
     last_actual = df["y"].iloc[-1]
     avg_future = round(forecast["yhat"].iloc[-3:].mean(), 2)
 
+    # แนวโน้ม
     if avg_future > last_actual + 3:
         trend = "เพิ่มขึ้น"
+        message = (
+            "🎉 เยี่ยมมากเลย! ความแม่นยำของคุณกำลัง **พัฒนาดีขึ้นอย่างต่อเนื่อง** "
+            "แสดงถึงความตั้งใจและความก้าวหน้า รักษาความสม่ำเสมอแบบนี้ต่อไปนะคะ คุณทำได้ดีมากจริง ๆ ❤️"
+        )
     elif avg_future < last_actual - 3:
         trend = "ลดลง"
+        message = (
+            "🫂 อย่าเพิ่งหมดกำลังใจนะคะ แม้ความแม่นยำจะลดลงบ้าง "
+            "แต่ทุกก้าวคือการเรียนรู้ ลองพักแล้วกลับมาสู้ใหม่นะ คุณยังไปต่อได้แน่นอน ✨"
+        )
     else:
         trend = "ทรงตัว"
+        message = (
+            "📈 คุณรักษาความเสถียรได้ดีมากเลย! ความแม่นยำคงที่แสดงถึงการควบคุมตัวเองได้ดี "
+            "ลองต่อยอดอีกนิด แล้วจะเก่งขึ้นอีกแน่นอนนะคะ 😊"
+        )
+
+    # วิเคราะห์จุดเด่น
+    accuracy_list = [d["y"] for d in ts_data]
+    avg_accuracy = round(mean(accuracy_list), 2)
+    accuracy_std = round(stdev(accuracy_list), 2) if len(accuracy_list) > 1 else 0
+
+    highlights = []
+    if avg_accuracy >= 80:
+        highlights.append(f"- ความแม่นยำเฉลี่ยสูง ({avg_accuracy}%) — เยี่ยมมากเลย!")
+    if accuracy_std < 10:
+        highlights.append("- รักษาความสม่ำเสมอได้ดีมาก (ค่าความแปรปรวนน้อย)")
+
+    highlights = highlights[:2]  # จำกัดแค่ 2 ข้อ
 
     return (
-        f"แนวโน้มความแม่นยำของคุณกำลัง \"{trend}\" "
-        f"(จาก {last_actual}% เป็นเฉลี่ย {avg_future}% ในอีก 3 วัน)"
+        "✅ จุดที่คุณทำได้ดี\n"
+        + "\n".join(highlights) + "\n\n"
+        + f"🔮 แนวโน้ม: ความแม่นยำของคุณกำลัง **{trend}** "
+        + f"(จาก {last_actual}% → เฉลี่ย {avg_future}%)\n"
+        + message
     )
 
 @router.get("/stat/pairing_mode")
@@ -776,6 +803,36 @@ async def stat_speaking_mode(request: Request, db: Session = Depends(get_db)):
     calculate_data = calculate_stat(all_history_raw, stage_category_raw)
     prophet_text_summary = analyze_accuracy_trend_with_prophet(all_history_raw)
     return templates.TemplateResponse("stat_sound1.html", {
+        "request": request,
+        "stages": calculate_data["stages"],
+        "stageData": calculate_data["stageData"],
+        "avg_duration": calculate_data["avg_duration"],
+        "avg_accuracy": calculate_data["avg_accuracy"],
+        "overall_accuracy": calculate_data["overall_accuracy"],
+        "category_avg_accuracy": calculate_data["category_avg_accuracy"],
+        "category": calculate_data["category"],
+        "overall_avg_time": calculate_data["overall_avg_time"],
+        "most_skilled_category": calculate_data["most_skilled_category"],
+        "least_skilled_category": calculate_data["least_skilled_category"],
+        "most_skilled_category_avg": calculate_data["most_skilled_category_avg"],
+        "least_skilled_category_avg": calculate_data["least_skilled_category_avg"],
+        "prophet_text_summary": prophet_text_summary
+    })
+
+@router.get("/stat/my_voice_mode")
+async def stat_my_voice_mode(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+
+    all_history_raw = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "my_voice_mode"
+    ).all()
+    stage_category_raw  = [(1, "ครอบครัว")]
+    calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    prophet_text_summary = analyze_accuracy_trend_with_prophet(all_history_raw)
+    return templates.TemplateResponse("stat_sound2.html", {
         "request": request,
         "stages": calculate_data["stages"],
         "stageData": calculate_data["stageData"],
