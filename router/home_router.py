@@ -18,7 +18,7 @@ router = APIRouter(prefix="/home")
 
 templates = Jinja2Templates(directory="templates")
 
-model = WhisperModel("base", compute_type="int8", device="cpu")
+model = WhisperModel("medium", compute_type="int8", device="cpu")
 
 Base.metadata.create_all(bind=engine)
 
