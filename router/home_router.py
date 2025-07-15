@@ -6,9 +6,17 @@ from database import Base, engine
 from datetime import datetime
 from sqlalchemy.orm import Session
 from models import OrderQuestion, TodoQuestion, SeeQuestion, SpeakingQuestion, PairingQuestion, User, GameStageHistory, Category, Cousin
+from datetime import datetime
+from difflib import SequenceMatcher
+from pythainlp.tokenize import word_tokenize
+from pythainlp.util import normalize
+from pythainlp.corpus.common import thai_stopwords
 from collections import defaultdict
 from statistics import mean
 from sqlalchemy import func
+from prophet import Prophet
+import pandas as pd
+import torch
 import ast
 import random
 import os
@@ -19,7 +27,6 @@ router = APIRouter(prefix="/home")
 templates = Jinja2Templates(directory="templates")
 
 model = WhisperModel("medium", compute_type="int8", device="cpu")
-
 Base.metadata.create_all(bind=engine)
 
 def get_db():
@@ -80,9 +87,32 @@ async def create_cousin(request: Request, db: Session = Depends(get_db), nicknam
     return 0
 
 def calculate_age(birthdate):
-    from datetime import datetime
     today = datetime.today()
     return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+
+def weakness_list(user_data):
+    weakness_by_stage = defaultdict(lambda: {"total": 0, "correct": 0, "incorrect": 0})
+
+    for record in user_data:
+        key = (record.game_type, record.stage)
+        weakness_by_stage[key]["total"] += record.total_questions
+        weakness_by_stage[key]["correct"] += record.correct_count
+        weakness_by_stage[key]["incorrect"] += record.incorrect_count
+
+    # คำนวณอัตราความผิดพลาด
+    weakness_score = []
+    for (game_type, stage), stats in weakness_by_stage.items():
+        incorrect_rate = stats["incorrect"] / stats["total"] if stats["total"] > 0 else 0
+        if stats["total"] >= 5:  # มีข้อมูลพอสมควร
+            weakness_score.append({
+                "game_type": game_type,
+                "stage": stage,
+                "incorrect_rate": incorrect_rate
+        })
+
+    # เรียงลำดับจากจุดที่อ่อนที่สุด
+    weakness_score.sort(key=lambda x: x["incorrect_rate"], reverse=True)
+    return weakness_score
 
 @router.get("/game_sound/pairing_mode")
 async def pairing_mode(request: Request, db: Session = Depends(get_db)):
@@ -104,6 +134,37 @@ async def pairing_mode(request: Request, db: Session = Depends(get_db)):
         max_stage = 0
     all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
     return templates.TemplateResponse("main_sound1.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
+
+@router.get("/game_sound/pairing_mode/special")
+async def pairing_special(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    user_data = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "pairing_mode"
+        ).all()
+    weakness = weakness_list(user_data)
+    print(weakness)
+    weak_pairings = [
+        w for w in weakness
+        if w["game_type"] == "pairing_mode" and w["incorrect_rate"] > 0.5
+    ]
+    if not weak_pairings:
+        return {"msg": "ไม่มีด่าน pairing_mode ที่ผิดเกิน 70%"}
+    weak_stages = [w["stage"] for w in weak_pairings]
+    all_questions = db.query(PairingQuestion).filter(
+        PairingQuestion.stage.in_(weak_stages)).all()
+    sample_questions = random.sample(all_questions, min(5, len(all_questions)))
+    questions_data = [{
+        "stage": q.stage,
+        "path_img": ast.literal_eval(q.all_path_img),
+        "path_sound": q.path_sound,
+        "answer": q.answer,
+        "category_id": q.category_id
+        } for q in sample_questions
+    ]
+    return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data, "stage": "special"})
 
 @router.get("/game_sound/pairing_mode/{stage}")
 async def play_pairing(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -143,6 +204,37 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
     return templates.TemplateResponse("main_sound2.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
+@router.get("/game_sound/speaking_mode/special")
+async def speaking_special(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    user_data = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "speaking_mode"
+        ).all()
+    weakness = weakness_list(user_data)
+    print(weakness)
+    weak_pairings = [
+        w for w in weakness
+        if w["game_type"] == "speaking_mode" and w["incorrect_rate"] > 0.5
+    ]
+    if not weak_pairings:
+        return {"msg": "ไม่มีด่าน speaking_mode ที่ผิดเกิน 70%"}
+    weak_stages = [w["stage"] for w in weak_pairings]
+    all_questions = db.query(SpeakingQuestion).filter(
+        SpeakingQuestion.stage.in_(weak_stages)).all()
+    sample_questions = random.sample(all_questions, min(5, len(all_questions)))
+    questions_data = [{
+        "stage": q.stage,
+        "path_img": ast.literal_eval(q.all_path_img),
+        "path_sound": q.path_sound,
+        "answer": q.answer,
+        "category_id": q.category_id
+        } for q in sample_questions
+    ]
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special"})
+
 @router.get("/game_sound/speaking_mode/{stage}")
 async def play_speaking(request: Request, stage: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
@@ -163,14 +255,10 @@ async def play_speaking(request: Request, stage: int, db: Session = Depends(get_
     return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds, "stage":stage})
 
 def is_similar(a, b, threshold=0.7):
-    from difflib import SequenceMatcher
     return SequenceMatcher(None, a, b).ratio() >= threshold
 
 @router.post("/check_voice")
 async def check_voice(request: Request, label: str = Form(...), file: UploadFile = File(...), answer: str = Form(...)):
-    from pythainlp.tokenize import word_tokenize
-    from pythainlp.util import normalize
-    from pythainlp.corpus.common import thai_stopwords
     temp_path = f"uploads/{file.filename}"
     with open(temp_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
@@ -282,6 +370,37 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
     all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
     return templates.TemplateResponse("main_guess1.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
+@router.get("/game_sound/todo_mode/special")
+async def todo_special(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    user_data = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "todo_mode"
+        ).all()
+    weakness = weakness_list(user_data)
+    print(weakness)
+    weak_pairings = [
+        w for w in weakness
+        if w["game_type"] == "todo_mode" and w["incorrect_rate"] > 0.5
+    ]
+    if not weak_pairings:
+        return {"msg": "ไม่มีด่าน todo_mode ที่ผิดเกิน 70%"}
+    weak_stages = [w["stage"] for w in weak_pairings]
+    all_questions = db.query(TodoQuestion).filter(
+        TodoQuestion.stage.in_(weak_stages)).all()
+    sample_questions = random.sample(all_questions, min(5, len(all_questions)))
+    questions_data = [{
+        "stage": q.stage,
+        "path_img": ast.literal_eval(q.all_path_img),
+        "path_sound": q.path_sound,
+        "answer": q.answer,
+        "category_id": q.category_id
+        } for q in sample_questions
+    ]
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special"})
+
 @router.get("/game_pic/todo_mode/{stage}")
 async def play_todo(request: Request, stage: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
@@ -320,6 +439,37 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
         max_stage = 0
     all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
     return templates.TemplateResponse("main_guess2.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
+
+@router.get("/game_sound/what_you_see_mode/special")
+async def what_you_see_special(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    user_data = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "what_you_see_mode"
+        ).all()
+    weakness = weakness_list(user_data)
+    print(weakness)
+    weak_pairings = [
+        w for w in weakness
+        if w["game_type"] == "what_you_see_mode" and w["incorrect_rate"] > 0.5
+    ]
+    if not weak_pairings:
+        return {"msg": "ไม่มีด่าน what_you_see_mode ที่ผิดเกิน 70%"}
+    weak_stages = [w["stage"] for w in weak_pairings]
+    all_questions = db.query(SeeQuestion).filter(
+        SeeQuestion.stage.in_(weak_stages)).all()
+    sample_questions = random.sample(all_questions, min(5, len(all_questions)))
+    questions_data = [{
+        "stage": q.stage,
+        "path_img": ast.literal_eval(q.all_path_img),
+        "path_sound": q.path_sound,
+        "answer": q.answer,
+        "category_id": q.category_id
+        } for q in sample_questions
+    ]
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special"})
 
 @router.get("/game_pic/what_you_see_mode/{stage}")
 async def play_what_you_see(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -360,6 +510,37 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
     print(all_point)
     return templates.TemplateResponse("main_guess3.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
+@router.get("/game_sound/order_mode/special")
+async def order_special(request: Request, db: Session = Depends(get_db)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
+    user_data = db.query(GameStageHistory).filter(
+        GameStageHistory.user_id == user_id,
+        GameStageHistory.game_type == "order_mode"
+        ).all()
+    weakness = weakness_list(user_data)
+    print(weakness)
+    weak_pairings = [
+        w for w in weakness
+        if w["game_type"] == "order_mode" and w["incorrect_rate"] > 0.5
+    ]
+    if not weak_pairings:
+        return {"msg": "ไม่มีด่าน order_mode ที่ผิดเกิน 70%"}
+    weak_stages = [w["stage"] for w in weak_pairings]
+    all_questions = db.query(OrderQuestion).filter(
+        OrderQuestion.stage.in_(weak_stages)).all()
+    sample_questions = random.sample(all_questions, min(5, len(all_questions)))
+    questions_data = [{
+        "stage": q.stage,
+        "path_img": ast.literal_eval(q.all_path_img),
+        "path_sound": q.path_sound,
+        "answer": q.answer,
+        "category_id": q.category_id
+        } for q in sample_questions
+    ]
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special"})
+
 @router.get("/game_pic/order_mode/{stage}")
 async def play_order(request: Request, stage: int, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
@@ -385,7 +566,7 @@ async def play_order(request: Request, stage: int, db: Session = Depends(get_db)
     return templates.TemplateResponse("event_order.html", {"request": request, "order_questions": order_questions, "all_map_choices": all_map_choices, "stage":stage})
 
 @router.post("/submit/{game}/{mode}/{stage}")
-async def post_submit(request: Request, game: str, mode: str, stage: int, finished: str = Form(...), corrected: int = Form(...), time: int = Form(...)):
+async def post_submit(request: Request, game: str, mode: str, stage: str, finished: str = Form(...), corrected: int = Form(...), time: int = Form(...)):
     if finished == "true":
         # ตั้งค่า session ว่าเล่นเกมจบแล้ว
         request.session[f"{game}_{mode}_{stage}_finished"] = True
@@ -394,7 +575,7 @@ async def post_submit(request: Request, game: str, mode: str, stage: int, finish
 
 # GET: แสดงผลเฉพาะถ้าเกมจบ
 @router.get("/submit/{game}/{mode}/{stage}")
-async def get_submit(request: Request, game: str, mode: str, stage: int, db: Session = Depends(get_db)):
+async def get_submit(request: Request, game: str, mode: str, stage: str, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
@@ -403,10 +584,12 @@ async def get_submit(request: Request, game: str, mode: str, stage: int, db: Ses
         del request.session[key]
         corrected = int(request.query_params.get('corrected', 0))
         time = float(request.query_params.get('time', 0))
+        if stage == "special":
+            stage = 0
         history = GameStageHistory(
             user_id=user_id,
             game_type=mode,
-            stage=stage,
+            stage=int(stage),
             total_questions=5,
             correct_count=corrected,
             incorrect_count=5-corrected,
@@ -466,23 +649,34 @@ def calculate_stat(all_history_raw=[],stage_category_raw=[]):
             "time": durations,
             "accuracy": accuracy
         }
+        
         # คำนวณค่าเฉลี่ยเวลา และค่าเฉลี่ยความถูกต้อง (accuracy)
         avg_duration.append(round(mean(durations), 2) if durations else 0)
         avg_accuracy.append(round(mean(accuracy), 2) if accuracy else 0)
-        
 
-        stageData[str(stage)] = {
-            "time": durations,
-            "accuracy": accuracy,
-        }
     category_avg_accuracy = {
         category: round(mean(acc_list), 1) if acc_list else 0
         for category, acc_list in category_accuracy_data.items()
     }
+    # สรุปความแม่นยำมาและะน้อยสุดของแต่ละ category
+    if category_avg_accuracy:
+        most_skilled_category = max(category_avg_accuracy, key=category_avg_accuracy.get)
+        least_skilled_category = min(category_avg_accuracy, key=category_avg_accuracy.get)
+        
+        most_skilled_category_avg = category_avg_accuracy[most_skilled_category]
+        least_skilled_category_avg = category_avg_accuracy[least_skilled_category]
+    else:
+        most_skilled_category = "-"
+        least_skilled_category = "-"
+        most_skilled_category_avg = 0
+        least_skilled_category_avg = 0
+
     if all_totals:
         overall_accuracy = round((sum(all_corrects) / sum(all_totals)) * 100, 2)
     else:
         overall_accuracy = 0
+    all_durations = [d for data in grouped_data.values() for d in data["duration"]]
+    overall_avg_time = round(mean(all_durations), 2) if all_durations else 0
     return {
         "stages": list(stageData.keys()),
         "stageData": stageData,
@@ -490,8 +684,54 @@ def calculate_stat(all_history_raw=[],stage_category_raw=[]):
         "avg_accuracy":avg_accuracy,
         "overall_accuracy": overall_accuracy,
         "category_avg_accuracy": list(category_avg_accuracy.values()),
-        "category": list(category_avg_accuracy.keys(),)
+        "category": list(category_avg_accuracy.keys(),),
+        "overall_avg_time": overall_avg_time,
+        "most_skilled_category": most_skilled_category,
+        "least_skilled_category": least_skilled_category,
+        "most_skilled_category_avg": most_skilled_category_avg,
+        "least_skilled_category_avg": least_skilled_category_avg
     }
+
+def analyze_accuracy_trend_with_prophet(history_list):
+    """
+    รับรายการ GameStageHistory แล้วคืนข้อความแนวโน้ม accuracy
+    โดยใช้ Prophet วิเคราะห์
+    """
+    ts_data = []
+    for h in history_list:
+        if h.total_questions > 0 and hasattr(h, "play_time"):
+            accuracy = (h.correct_count / h.total_questions) * 100
+            ts_data.append({
+                "ds": h.play_time,
+                "y": round(accuracy, 2)
+            })
+    if len(ts_data) < 10:
+        return "ไม่มีข้อมูลเพียงพอสำหรับการวิเคราะห์แนวโน้มต้องมีข้อมูลอย่างน้อย 10 รายการ"
+
+    df = pd.DataFrame(ts_data)
+    df.sort_values("ds", inplace=True)
+
+    model_prophet = Prophet()
+    model_prophet.fit(df)
+
+    future = model_prophet.make_future_dataframe(periods=3)
+    forecast = model_prophet.predict(future)
+
+    last_actual = df["y"].iloc[-1]
+    avg_future = round(forecast["yhat"].iloc[-3:].mean(), 2)
+
+    if avg_future > last_actual + 3:
+        trend = "เพิ่มขึ้น"
+    elif avg_future < last_actual - 3:
+        trend = "ลดลง"
+    else:
+        trend = "ทรงตัว"
+
+    return (
+        f"แนวโน้มความแม่นยำของคุณกำลัง \"{trend}\" "
+        f"(จาก {last_actual}% เป็นเฉลี่ย {avg_future}% ในอีก 3 วัน)"
+    )
+
 @router.get("/stat/pairing_mode")
 async def stat_pairing_mode(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
@@ -504,6 +744,7 @@ async def stat_pairing_mode(request: Request, db: Session = Depends(get_db)):
     ).all()
     stage_category_raw  = db.query(PairingQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==PairingQuestion.category_id).distinct(Category.category_name, PairingQuestion.stage).order_by(PairingQuestion.stage).all()
     calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    prophet_text_summary = analyze_accuracy_trend_with_prophet(all_history_raw)
     return templates.TemplateResponse("stat_sound.html", {
         "request": request,
         "stages": calculate_data["stages"],
@@ -512,7 +753,13 @@ async def stat_pairing_mode(request: Request, db: Session = Depends(get_db)):
         "avg_accuracy": calculate_data["avg_accuracy"],
         "overall_accuracy": calculate_data["overall_accuracy"],
         "category_avg_accuracy": calculate_data["category_avg_accuracy"],
-        "category": calculate_data["category"]
+        "category": calculate_data["category"],
+        "overall_avg_time": calculate_data["overall_avg_time"],
+        "most_skilled_category": calculate_data["most_skilled_category"],
+        "least_skilled_category": calculate_data["least_skilled_category"],
+        "most_skilled_category_avg": calculate_data["most_skilled_category_avg"],
+        "least_skilled_category_avg": calculate_data["least_skilled_category_avg"],
+        "prophet_text_summary": prophet_text_summary
     })
 
 @router.get("/stat/speaking_mode")
@@ -527,6 +774,7 @@ async def stat_speaking_mode(request: Request, db: Session = Depends(get_db)):
     ).all()
     stage_category_raw  = db.query(SpeakingQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SpeakingQuestion.category_id).distinct(Category.category_name, SpeakingQuestion.stage).order_by(SpeakingQuestion.stage).all()
     calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    prophet_text_summary = analyze_accuracy_trend_with_prophet(all_history_raw)
     return templates.TemplateResponse("stat_sound1.html", {
         "request": request,
         "stages": calculate_data["stages"],
@@ -535,7 +783,13 @@ async def stat_speaking_mode(request: Request, db: Session = Depends(get_db)):
         "avg_accuracy": calculate_data["avg_accuracy"],
         "overall_accuracy": calculate_data["overall_accuracy"],
         "category_avg_accuracy": calculate_data["category_avg_accuracy"],
-        "category": calculate_data["category"]
+        "category": calculate_data["category"],
+        "overall_avg_time": calculate_data["overall_avg_time"],
+        "most_skilled_category": calculate_data["most_skilled_category"],
+        "least_skilled_category": calculate_data["least_skilled_category"],
+        "most_skilled_category_avg": calculate_data["most_skilled_category_avg"],
+        "least_skilled_category_avg": calculate_data["least_skilled_category_avg"],
+        "prophet_text_summary": prophet_text_summary
     })
 
 @router.get("/stat/todo_mode")
@@ -550,6 +804,7 @@ async def stat_todo_mode(request: Request, db: Session = Depends(get_db)):
     ).all()
     stage_category_raw  = db.query(TodoQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==TodoQuestion.category_id).distinct(Category.category_name, TodoQuestion.stage).order_by(TodoQuestion.stage).all()
     calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    prophet_text_summary = analyze_accuracy_trend_with_prophet(all_history_raw)
     return templates.TemplateResponse("stat_pic.html", {
         "request": request,
         "stages": calculate_data["stages"],
@@ -558,7 +813,13 @@ async def stat_todo_mode(request: Request, db: Session = Depends(get_db)):
         "avg_accuracy": calculate_data["avg_accuracy"],
         "overall_accuracy": calculate_data["overall_accuracy"],
         "category_avg_accuracy": calculate_data["category_avg_accuracy"],
-        "category": calculate_data["category"]
+        "category": calculate_data["category"],
+        "overall_avg_time": calculate_data["overall_avg_time"],
+        "most_skilled_category": calculate_data["most_skilled_category"],
+        "least_skilled_category": calculate_data["least_skilled_category"],
+        "most_skilled_category_avg": calculate_data["most_skilled_category_avg"],
+        "least_skilled_category_avg": calculate_data["least_skilled_category_avg"],
+        "prophet_text_summary": prophet_text_summary
     })
 
 @router.get("/stat/what_you_see_mode")
@@ -573,6 +834,7 @@ async def stat_what_you_see_mode(request: Request, db: Session = Depends(get_db)
     ).all()
     stage_category_raw  = db.query(SeeQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SeeQuestion.category_id).distinct(Category.category_name, SeeQuestion.stage).order_by(SeeQuestion.stage).all()
     calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    prophet_text_summary = analyze_accuracy_trend_with_prophet(all_history_raw)
     return templates.TemplateResponse("stat_pic1.html", {
         "request": request,
         "stages": calculate_data["stages"],
@@ -581,7 +843,13 @@ async def stat_what_you_see_mode(request: Request, db: Session = Depends(get_db)
         "avg_accuracy": calculate_data["avg_accuracy"],
         "overall_accuracy": calculate_data["overall_accuracy"],
         "category_avg_accuracy": calculate_data["category_avg_accuracy"],
-        "category": calculate_data["category"]
+        "category": calculate_data["category"],
+        "overall_avg_time": calculate_data["overall_avg_time"],
+        "most_skilled_category": calculate_data["most_skilled_category"],
+        "least_skilled_category": calculate_data["least_skilled_category"],
+        "most_skilled_category_avg": calculate_data["most_skilled_category_avg"],
+        "least_skilled_category_avg": calculate_data["least_skilled_category_avg"],
+        "prophet_text_summary": prophet_text_summary
     })
 
 @router.get("/stat/order_mode")
@@ -596,6 +864,7 @@ async def stat_order_mode(request: Request, db: Session = Depends(get_db)):
     ).all()
     stage_category_raw  = db.query(OrderQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==OrderQuestion.category_id).distinct(Category.category_name, OrderQuestion.stage).order_by(OrderQuestion.stage).all()
     calculate_data = calculate_stat(all_history_raw, stage_category_raw)
+    prophet_text_summary = analyze_accuracy_trend_with_prophet(all_history_raw)
     return templates.TemplateResponse("stat_pic2.html", {
         "request": request,
         "stages": calculate_data["stages"],
@@ -604,5 +873,11 @@ async def stat_order_mode(request: Request, db: Session = Depends(get_db)):
         "avg_accuracy": calculate_data["avg_accuracy"],
         "overall_accuracy": calculate_data["overall_accuracy"],
         "category_avg_accuracy": calculate_data["category_avg_accuracy"],
-        "category": calculate_data["category"]
+        "category": calculate_data["category"],
+        "overall_avg_time": calculate_data["overall_avg_time"],
+        "most_skilled_category": calculate_data["most_skilled_category"],
+        "least_skilled_category": calculate_data["least_skilled_category"],
+        "most_skilled_category_avg": calculate_data["most_skilled_category_avg"],
+        "least_skilled_category_avg": calculate_data["least_skilled_category_avg"],
+        "prophet_text_summary": prophet_text_summary
     })

@@ -162,7 +162,12 @@
                 class="p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] shadow-lg m-2">
                 {% for stage in stages %}
                     <option value="{{ stage }}">
-                        ด่านที่ {{ "พิเศษ" if stage == "special" else stage }}
+                        ด่านที่ 
+                        {% if stage == "0" %}
+                            พิเศษ
+                        {% else %}
+                            {{ stage }}
+                        {% endif %}
                     </option>
                 {% endfor %}
             </select>
@@ -194,21 +199,23 @@
             <div class="flex flex-col m-[2vh] bg-sky-100 p-[2vh] rounded-lg shadow-md  text-[2vh]">
                 <div class="flex cl">
                     <p>- เวลาที่ใช้ในการทำเฉลี่ย:</p>
-                    <p class="ml-2">10 นาที</p>
+                    <p class="ml-2">{{ overall_avg_time }} นาที</p>
                 </div>
                 <div class="flex">
-                    <p>- ด่านที่ถนัดที่สุด:</p>
-                    <p class="ml-2">ด่านที่ 1 (90%): เกี่ยวกับสัตว์</p>
+                    <p>- ประเภทที่ถนัดที่สุด:</p>
+                    <p class="ml-2">
+                        {{ most_skilled_category }}({{ most_skilled_category_avg }}%)
+                    </p>
                 </div>
                 <div class="flex">
-                    <p>- ด่านที่ไม่ค่อยถนัด:</p>
-                    <p class="ml-2">ด่านที่ 7 (20%): เกี่ยวกับธรรมชาติ</p>
+                    <p>- ประเภทที่ไม่ค่อยถนัด:</p>
+                    <p class="ml-2">
+                        {{ least_skilled_category }}({{ least_skilled_category_avg }}%)
+                    </p>
                 </div>
             </div>
             <div class="flex">
-                <p class="mx-[2vh] mb-[2vh]  text-[2vh]  ">แนวโน้ม: ยิ่งใช้เวลานาน ความถูกต้องมักจะลดลง
-                    อาจมีปัญหาในการทำความเข้าใจโจทย์ที่ยากขึ้นอาจต้องเรียนรู้เรื่องธรรมชาติเพิ่ม.</p>
-
+                <p class="mx-[2vh] mb-[2vh]  text-[2vh]  ">แนวโน้ม: {{ prophet_text_summary }}</p>
             </div>
         </div>
 
@@ -370,7 +377,7 @@
             // อัปเดตข้อความหัวกราฟ
             document.getElementById("chartTitle").textContent =
                 "เปรียบเทียบเวลาและความถูกต้อง" +
-                (selectedStage === "special" ? "ด่านพิเศษ" : `ด่านที่ ${selectedStage}`);
+                (selectedStage === "0" ? "ด่านพิเศษ" : `ด่านที่ ${selectedStage}`);
         }
 
 
