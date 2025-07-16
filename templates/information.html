@@ -17,7 +17,7 @@
             position: relative;
             border-radius: 20px;
             font-size: 18px;
-            margin: 20px 0 0 88%;
+            margin: 20px 0 0 4%;
             padding: 8px 20px;
             color: #fff;
             border: 2px solid #BBBCBF;
@@ -40,7 +40,6 @@
             height: 40px;
             object-fit: contain;
             margin-left: -1.5em;
-            transform: scaleX(-1);
         }
         .fancy .top-key, .fancy .bottom-key-1, .fancy .bottom-key-2{
             height: 2px;
@@ -136,9 +135,6 @@
         }
 
         @media screen and (max-width:1440px){
-            .fancy{
-                margin: 20px 0 0 80%;
-            }
             #popup_box{
                 width: 50%;
             }
@@ -148,34 +144,14 @@
                 width: 80%;
             }
         }
-        @media screen and (max-width:1150px){
-            .fancy{
-                margin: 20px 0 0 75%;
-            }
-        }
-        @media screen and (max-width:840px){
-            .fancy{
-                margin: 20px 0 0 70%;
-            }
-        }
         @media screen and (max-width:768px){
             #popup_box{
                 width: 60%;
             }
         }
-        @media screen and (max-width:700px){
-            .fancy{
-                margin: 20px 0 0 60%;
-            }
-        }
         @media screen and (max-width:640px){
             #popup_box{
                 width: 80%;
-            }
-        }
-        @media screen and (max-width:500px){
-            .fancy{
-                margin: 20px 0 0 50%;
             }
         }
     </style>
@@ -192,7 +168,7 @@
                 <nav class="absolute right-0 top-[60px] w-[200px] bg-white border border-none rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.25)] invisible opacity-0 transition-all duration-200 ease-in-out z-10 peer-checked:visible peer-checked:opacity-100">
                     <ul class="list-none p-2 m-0">
                         <li>
-                            <a href="./information.html" class="block w-full px-4 py-2 text-left text-xl rounded-md hover:bg-blue-200 hover:text-white cursor-pointer transition-colors duration-150">ข้อมูลผู้ใช้</a>
+                            <a href="" class="block w-full px-4 py-2 text-left text-xl rounded-md hover:bg-blue-200 hover:text-white cursor-pointer transition-colors duration-150">ข้อมูลผู้ใช้</a>
                         </li>
                         <li>
                             <a href="/logout" class="block w-full px-4 py-2 text-left text-xl rounded-md hover:bg-blue-200 hover:text-white cursor-pointer transition-colors duration-150">ออกจากระบบ</a>
@@ -208,25 +184,24 @@
         <span class="bottom-key-1"></span>
         <span class="bottom-key-2"></span>
     </a>
-    <div class="mb-5">
-        <p class="flex flex-col justify-center mx-auto text-left text-4xl w-[50%] mb-3">ข้อมูลส่วนตัว</p>
-        <div class="flex flex-col justify-center mx-auto border-none rounded-2xl text-2xl bg-white w-[50%] px-5 py-3">
-            <div class="flex w-full mb-3">
-                <p class="w-[50%]">ชื่อ: {{ user.first_name }} {{ user.last_name }}</p>
-                <p class="w-[50%]">Username: {{ user.username }}</p>
+    <div class="my-5">
+        <p class="flex flex-col justify-center mx-auto text-left text-4xl w-[80%] xl:w-[50%] mb-3">ข้อมูลส่วนตัว</p>
+        <div class="flex flex-col justify-center mx-auto border-none rounded-2xl text-[2.5vh] bg-white w-[80%] xl:w-[50%] px-5 py-3">
+            <div class="flex flex-col xl:flex-row w-full">
+                <p class="w-full xl:w-[50%] mb-3 xl:mb-0">ชื่อ: {{ user.first_name }} {{ user.last_name }}</p>
+                <p class="w-full xl:w-[50%] mb-3 xl:mb-0">Username: {{ user.username }}</p>
             </div>
             <div class="flex justify-between mb-3">
                 <p class="w-[50%]">เพศ: {{ user.gender }}</p>
             </div>
             <p class="mb-3">อายุ: {{ user_age }}</p>
-            <p>วันเกิด: {{ user.date }}</p>
+            <p class="mb-3">วันเกิด: {{ user.date }}</p>
             <div class="flex justify-between items-center">
                 <p>Email: {{ user.email }}</p>
-                <button class="px-7 py-3 border rounded-2xl cursor-pointer hover:shadow-xl hover: transform transition duration-300">แก้ไขข้อมูล</button>
             </div>
         </div>
     </div>
-    <h2 class="text-4xl w-[50%] mx-auto my-3">ข้อมูลญาติ</h2>
+    <h2 class="text-4xl w-[80%] xl:w-[50%] mx-auto my-3">ข้อมูลญาติ</h2>
     <div class="relative-container hide-scrollbar" id="relative-container" style="box-shadow: 4px 4px 2px 5px #dddddd;">
         {% for cousin in cousins %}
             <div class="flex-none w-60 rounded-2xl border-none shadow-sm hover:shadow-md transform transition duration-300">

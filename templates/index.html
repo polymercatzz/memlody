@@ -96,13 +96,13 @@
                             <input type="text" id="Username" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
                             <label for="Username" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Username</label>
                         </div>
-                        <div class="relative w-full mb-2">
+                        <div class="relative w-full mb-5">
                             <input type="password" id="Password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
                             <label for="Password" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Password</label>
                         </div>
-                        <div class="mx-1 mb-5 cursor-pointer" onclick="switch_popup('forgot')">
+                        <!-- <div class="mx-1 mb-5 cursor-pointer" onclick="switch_popup('forgot')">
                             <span class="text-xl text-blue-300 hover:underline">Forgot your password?</span>
-                        </div>
+                        </div> -->
                         <button type="button" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl cursor-pointer hover:bg-sky-500" onclick="Submit_Login();">Login</button>
                     </div>
                     <div class="text-xl text-center my-5">Don't have a MEMLODY account?<label class="text-xl text-blue-300 cursor-pointer hover:underline" onclick="switch_popup('register')"> Sign up for Memlody</label></div>
@@ -110,7 +110,7 @@
             </form>
 
             <!-- popup forgot -->
-            <form id="forgot" class="active">
+            <!-- <form id="forgot" class="active">
                 <div class="max-w relative flex flex-col px-2 rounded-md text-black bg-gray-50 h-fit sm:px-10">
                     <div class="text-4xl font-bold my-3 text-black text-center">Forgot Your Password?</div>
                     <div class="text-xl mb-4 text-center text-black">กรุณาใส่ E-mail ที่ลงทะเบียน</div>
@@ -127,7 +127,7 @@
                     </div>
                     <div class="text-xl text-center my-5 text-blue-300 cursor-pointer hover:underline" onclick="switch_popup('login')">return to login</div>
                 </div>
-            </form>
+            </form> -->
 
             <!-- popup register -->
             <form id="register">
