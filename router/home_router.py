@@ -16,7 +16,6 @@ from statistics import mean, stdev
 from sqlalchemy import func
 from prophet import Prophet
 import pandas as pd
-import torch
 import ast
 import random
 import os
@@ -120,7 +119,7 @@ async def pairing_mode(request: Request, db: Session = Depends(get_db)):
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     all_stage_raw = db.query(PairingQuestion.stage).group_by(PairingQuestion.stage).order_by(PairingQuestion.stage).all()
-    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="pairing_mode").order_by(GameStageHistory.stage.desc()).first()
+    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type=="pairing_mode").order_by(GameStageHistory.stage.desc()).first()
     if not all_stage_raw:
         all_stage_raw = []
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
@@ -164,7 +163,7 @@ async def pairing_special(request: Request, db: Session = Depends(get_db)):
         "category_id": q.category_id
         } for q in sample_questions
     ]
-    return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data, "stage": "special"})
+    return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data, "stage": "special", "category": "special"})
 
 @router.get("/game_sound/pairing_mode/{stage}")
 async def play_pairing(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -174,6 +173,7 @@ async def play_pairing(request: Request, stage: int, db: Session = Depends(get_d
     questions_data_raw = db.query(PairingQuestion).filter(PairingQuestion.stage==stage).all()
     if not questions_data_raw:
         return RedirectResponse(url="/home/game_sound/pairing_mode/")
+    stg, category = db.query(PairingQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==PairingQuestion.category_id).filter(PairingQuestion.stage==stage).first()
     questions_data = [
     {
         "stage": question.stage,
@@ -183,7 +183,7 @@ async def play_pairing(request: Request, stage: int, db: Session = Depends(get_d
         "category_id": question.category_id
     } for question in questions_data_raw
 ]
-    return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data, "stage":stage})
+    return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data, "stage":stage, "category":category})
 
 @router.get("/game_sound/speaking_mode")
 async def speaking_mode(request: Request, db: Session = Depends(get_db)):
@@ -191,7 +191,7 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     all_stage_raw = db.query(SpeakingQuestion.stage).group_by(SpeakingQuestion.stage).order_by(SpeakingQuestion.stage).all()
-    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="speaking_mode").order_by(GameStageHistory.stage.desc()).first()
+    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type=="speaking_mode").order_by(GameStageHistory.stage.desc()).first()
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
@@ -233,7 +233,7 @@ async def speaking_special(request: Request, db: Session = Depends(get_db)):
         "category_id": q.category_id
         } for q in sample_questions
     ]
-    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special"})
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special", "category": "special"})
 
 @router.get("/game_sound/speaking_mode/{stage}")
 async def play_speaking(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -241,6 +241,7 @@ async def play_speaking(request: Request, stage: int, db: Session = Depends(get_
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     all_sounds_raw = db.query(SpeakingQuestion).filter(SpeakingQuestion.stage==stage).order_by(SpeakingQuestion.speaking_id).all()
+    stg, category = db.query(SpeakingQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SpeakingQuestion.category_id).filter(SpeakingQuestion.stage==stage).first()
     if not all_sounds_raw:
         return RedirectResponse(url="/home/game_sound/speaking_mode/")
     all_sounds = [
@@ -252,7 +253,7 @@ async def play_speaking(request: Request, stage: int, db: Session = Depends(get_
     for question in all_sounds_raw
 ]
     # random.shuffle(all_sounds)
-    return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds, "stage":stage})
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds, "stage":stage, "category": category})
 
 def is_similar(a, b, threshold=0.7):
     return SequenceMatcher(None, a, b).ratio() >= threshold
@@ -322,7 +323,7 @@ async def play_my_voice(request: Request, db: Session = Depends(get_db)):
     ]
     random.shuffle(cousins)
     questions_cosins = create_questions(cousins)
-    return templates.TemplateResponse("game_sound3.html", {"request": request, "questions_cosins": questions_cosins})
+    return templates.TemplateResponse("game_sound3.html", {"request": request, "questions_cosins": questions_cosins, "category": "ครอบครัว"})
 
 def create_questions(cousins, num_questions=5, num_choices=4):
     questions = []
@@ -358,7 +359,7 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     all_stage_raw = db.query(TodoQuestion.stage).group_by(TodoQuestion.stage).order_by(TodoQuestion.stage).all()
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
-    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="todo_mode").order_by(GameStageHistory.stage.desc()).first()
+    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type=="todo_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
@@ -399,7 +400,7 @@ async def todo_special(request: Request, db: Session = Depends(get_db)):
         "category_id": q.category_id
         } for q in sample_questions
     ]
-    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special"})
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special", "category": "special"})
 
 @router.get("/game_pic/todo_mode/{stage}")
 async def play_todo(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -419,7 +420,8 @@ async def play_todo(request: Request, stage: int, db: Session = Depends(get_db))
         }
         for question in todo_list_raw
 ]
-    return templates.TemplateResponse("choosepic.html", {"request": request, "todo_list": todo_list, "stage":stage})
+    stg, category = db.query(TodoQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==TodoQuestion.category_id).filter(TodoQuestion.stage==stage).first()
+    return templates.TemplateResponse("choosepic.html", {"request": request, "todo_list": todo_list, "stage":stage, "category": category})
 
 @router.get("/game_pic/what_you_see_mode")
 async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
@@ -428,7 +430,7 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     all_stage_raw = db.query(SeeQuestion.stage).group_by(SeeQuestion.stage).order_by(SeeQuestion.stage).all()
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
-    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
+    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "what_you_see_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
@@ -469,7 +471,7 @@ async def what_you_see_special(request: Request, db: Session = Depends(get_db)):
         "category_id": q.category_id
         } for q in sample_questions
     ]
-    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special"})
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special", "category": "special"})
 
 @router.get("/game_pic/what_you_see_mode/{stage}")
 async def play_what_you_see(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -488,7 +490,8 @@ async def play_what_you_see(request: Request, stage: int, db: Session = Depends(
     }
     for question in what_you_see_raw
 ]
-    return templates.TemplateResponse("game_guess2.html", {"request": request, "what_you_see": what_you_see, "stage":stage})
+    stg, category = db.query(SeeQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SeeQuestion.category_id).filter(SeeQuestion.stage==stage).first()
+    return templates.TemplateResponse("game_guess2.html", {"request": request, "what_you_see": what_you_see, "stage":stage, "category":category})
 
 @router.get("/game_pic/order_mode")
 async def order_mode(request: Request, db: Session = Depends(get_db)):
@@ -497,7 +500,7 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     all_stage_raw = db.query(OrderQuestion.stage).group_by(OrderQuestion.stage).order_by(OrderQuestion.stage).all()
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
-    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
+    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "order_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
@@ -539,7 +542,7 @@ async def order_special(request: Request, db: Session = Depends(get_db)):
         "category_id": q.category_id
         } for q in sample_questions
     ]
-    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special"})
+    return templates.TemplateResponse("game_sound2.html", {"request": request, "questions": questions_data, "stage": "special", "category": "special"})
 
 @router.get("/game_pic/order_mode/{stage}")
 async def play_order(request: Request, stage: int, db: Session = Depends(get_db)):
@@ -563,7 +566,8 @@ async def play_order(request: Request, stage: int, db: Session = Depends(get_db)
         choices = list(q['map_choice_4'])
         random.shuffle(choices)
         all_map_choices.append(choices)
-    return templates.TemplateResponse("event_order.html", {"request": request, "order_questions": order_questions, "all_map_choices": all_map_choices, "stage":stage})
+    stg, category = db.query(SeeQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SeeQuestion.category_id).filter(SeeQuestion.stage==stage).first()
+    return templates.TemplateResponse("event_order.html", {"request": request, "order_questions": order_questions, "all_map_choices": all_map_choices, "stage":stage, "category":category})
 
 @router.post("/submit/{game}/{mode}/{stage}")
 async def post_submit(request: Request, game: str, mode: str, stage: str, finished: str = Form(...), corrected: int = Form(...), time: int = Form(...)):

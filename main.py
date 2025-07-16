@@ -57,6 +57,7 @@ async def login(request: Request,
                   db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == username).first()
     if user.user_id == ADMIN_ID:
+        request.session["admin_id"] = user.user_id
         return {"message": "admin"}
     elif user and verify_password(password, user.password):
         request.session["user_id"] = user.user_id

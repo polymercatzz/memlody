@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Request, UploadFile, File, Form, Depends
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from database import Base, engine
 from sqlalchemy.orm import Session
@@ -22,6 +23,9 @@ def get_db():
 
 @router.get("/pairing_mode")
 async def pairing_mode(request: Request, db: Session = Depends(get_db)):
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     pairing = db.query(PairingQuestion).order_by(PairingQuestion.stage.desc()).first()
     if not pairing:
         stage = 0
@@ -31,6 +35,9 @@ async def pairing_mode(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/pairing_mode/create/{stage}")
 async def pairing_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     categories = db.query(Category).all()
     return templates.TemplateResponse("voicepic_addmin.html", {"request": request, "stage": stage, "categories":categories})
 
@@ -67,12 +74,11 @@ async def pairing_create(request: Request, stage:int, answer: int = Form(...), c
     db.commit()
     return 0
 
-@router.get("/pairing_mode/edit/{stage}")
-async def pairing_mode_edit(request: Request):
-    return templates.TemplateResponse("admin_sound1.html", {"request": request})
-
 @router.get("/speaking_mode")
 async def speaking_mode(request: Request, db: Session = Depends(get_db)):
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     speaking = db.query(SpeakingQuestion).order_by(SpeakingQuestion.stage.desc()).first()
     if not speaking:
         stage = 0
@@ -82,12 +88,11 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/speaking_mode/create/{stage}")
 async def speaking_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     categories = db.query(Category).all()
     return templates.TemplateResponse("create_guess2.html", {"request": request, "stage":stage, "categories":categories})
-
-@router.get("/speaking_mode/edit/{stage}")
-async def speaking_mode_edit(request: Request):
-    return templates.TemplateResponse("admin_sound1.html", {"request": request})
 
 @router.post("/speaking_mode/create/{stage}")
 async def speaking_create(stage:int, answer: str = Form(...), category: int = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db)):
@@ -110,6 +115,9 @@ async def speaking_create(stage:int, answer: str = Form(...), category: int = Fo
 
 @router.get("/todo_mode")
 async def todo_mode(request: Request, db: Session = Depends(get_db)):
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     todo = db.query(TodoQuestion).order_by(TodoQuestion.stage.desc()).first()
     if not todo:
         stage = 0
@@ -119,6 +127,9 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/todo_mode/create/{stage}")
 async def todo_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     categories = db.query(Category).all()
     return templates.TemplateResponse("choosepic_admin.html", {"request": request, "stage":stage, "categories":categories})
 
@@ -147,16 +158,13 @@ category)
     db.add(todo_question)
     db.commit()
     return 0
- 
-@router.get("/todo_mode/edit/{stage}")
-async def todo_mode_edit(request: Request, stage:int):
-    
-    return templates.TemplateResponse("choosepic_admin.html", {"request": request, "stage":stage})
-
 
 @router.get("/what_you_see_mode")
 async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     see = db.query(SeeQuestion).order_by(SeeQuestion.stage.desc()).first()
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     if not see:
         stage = 0
     else:
@@ -165,6 +173,9 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/what_you_see_mode/create/{stage}")
 async def what_you_see_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     categories = db.query(Category).all()
     return templates.TemplateResponse("create_sound2.html", {"request": request, "stage":stage, "categories":categories})
 
@@ -187,13 +198,12 @@ async def what_you_see_create(request: Request, stage:int, answer: str = Form(..
     db.commit()
     return 0
 
-@router.get("/what_you_see_mode/edit/{stage}")
-async def what_you_see_edit(request: Request, stage:int):
-    return templates.TemplateResponse("create_sound2.html", {"request": request, "stage":stage})
-
 @router.get("/order_mode")
 async def order_mode(request: Request, db: Session = Depends(get_db)):
     order = db.query(OrderQuestion).order_by(OrderQuestion.stage.desc()).first()
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     if not order:
         stage = 0
     else:
@@ -202,6 +212,9 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/order_mode/create/{stage}")
 async def order_mode_create(request: Request, stage:int, db: Session = Depends(get_db)):
+    admin_id = request.session.get("admin_id")
+    if not admin_id:
+        return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     categories = db.query(Category).all()
     return templates.TemplateResponse("event_order_addmin.html", {"request": request, "stage":stage, "categories":categories})
 
@@ -216,7 +229,3 @@ async def order_create(request: Request, stage:int, category: int = Form(...), a
     db.add(order_question)
     db.commit()
     return 0
-
-@router.get("/order_mode/edit/{stage}")
-async def order_mode_edit(request: Request, stage:int):
-    return templates.TemplateResponse("event_order_addmin.html", {"request": request, "stage":stage})
