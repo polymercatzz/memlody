@@ -38,7 +38,7 @@ async def pairing_mode_create(request: Request, stage:int, db: Session = Depends
     admin_id = request.session.get("admin_id")
     if not admin_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    categories = db.query(Category).all()
+    categories = db.query(Category).filter(Category.category_namea != 6).all()
     return templates.TemplateResponse("voicepic_addmin.html", {"request": request, "stage": stage, "categories":categories})
 
 @router.post("/pairing_mode/create/{stage}")
@@ -91,7 +91,7 @@ async def speaking_mode_create(request: Request, stage:int, db: Session = Depend
     admin_id = request.session.get("admin_id")
     if not admin_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    categories = db.query(Category).all()
+    categories = db.query(Category).filter(Category.category_id != 6).all()
     return templates.TemplateResponse("create_guess2.html", {"request": request, "stage":stage, "categories":categories})
 
 @router.post("/speaking_mode/create/{stage}")
@@ -130,7 +130,7 @@ async def todo_mode_create(request: Request, stage:int, db: Session = Depends(ge
     admin_id = request.session.get("admin_id")
     if not admin_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    categories = db.query(Category).all()
+    categories = db.query(Category).filter(Category.category_id != 6).all()
     return templates.TemplateResponse("choosepic_admin.html", {"request": request, "stage":stage, "categories":categories})
 
 @router.post("/todo_mode/create/{stage}")
@@ -176,7 +176,7 @@ async def what_you_see_mode_create(request: Request, stage:int, db: Session = De
     admin_id = request.session.get("admin_id")
     if not admin_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    categories = db.query(Category).all()
+    categories = db.query(Category).filter(Category.category_id != 6).all()
     return templates.TemplateResponse("create_sound2.html", {"request": request, "stage":stage, "categories":categories})
 
 @router.post("/what_you_see_mode/create/{stage}")
@@ -215,7 +215,7 @@ async def order_mode_create(request: Request, stage:int, db: Session = Depends(g
     admin_id = request.session.get("admin_id")
     if not admin_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    categories = db.query(Category).all()
+    categories = db.query(Category).filter(Category.category_id != 6).all()
     return templates.TemplateResponse("event_order_addmin.html", {"request": request, "stage":stage, "categories":categories})
 
 @router.post("/order_mode/create/{stage}")
