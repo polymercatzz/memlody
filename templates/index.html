@@ -97,8 +97,8 @@
                             <label for="Username" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Username</label>
                         </div>
                         <div class="relative w-full mb-5">
-                            <input type="password" id="Password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
-                            <label for="Password" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Password</label>
+                            <input type="password" id="Password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-[2vh] outline-none focus:border-blue-500"/>
+                            <label for="Password" class="absolute left-3 top-[10px] text-gray-500 leading-none text-[2vh] bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Password</label>
                         </div>
                         <!-- <div class="mx-1 mb-5 cursor-pointer" onclick="switch_popup('forgot')">
                             <span class="text-xl text-blue-300 hover:underline">Forgot your password?</span>
@@ -172,11 +172,11 @@
                             <label for="Username" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Username</label>
                         </div>
                         <div class="relative w-full mb-3">
-                            <input type="password" id="password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <input type="password" id="password" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-[2vh] outline-none focus:border-blue-500"/>
                             <label for="Password" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Password</label>
                         </div>
                         <div class="relative w-full mb-3">
-                            <input type="password" id="ConfirmPassword" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-xl outline-none focus:border-blue-500"/>
+                            <input type="password" id="ConfirmPassword" required placeholder=" " class="peer w-full h-[45px] border border-gray-300 rounded-xl px-3 py-4 text-[2vh] outline-none focus:border-blue-500"/>
                             <label for="ConfirmPassword" class="absolute left-3 top-[10px] text-gray-500 leading-none text-xl bg-gray-50 transition-all peer-placeholder-shown:top-[12px] peer-placeholder-shown:text-gray-400 peer-focus:top-[-8px] peer-focus:text-xs peer-not-placeholder-shown:top-[-8px] peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:text-gray-500 px-1">Confirm Password</label>
                         </div>
                         <button type="button" class="bg-sky-300 w-full m-auto px-6 py-2 rounded-xl text-white text-2xl hover:bg-sky-500" onclick="Submit_Register();">Submit</button>
@@ -270,18 +270,15 @@
         
         const popup = document.getElementById('popup');
         const login = document.getElementById('login');
-        const forgot = document.getElementById('forgot');
         const register = document.getElementById('register');
         function open_popup(name){
             popup.classList.add('active');
             if (name === 'login'){
                 login.classList.add('active');
-                forgot.classList.remove('active');
                 register.classList.remove('active');
             }else{
                 register.classList.add('active');
                 login.classList.remove('active');
-                forgot.classList.remove('active');
             }
         }
         function close_popup(){
@@ -290,16 +287,10 @@
         function switch_popup(name){
             if (name === 'login'){
                 login.classList.add('active');
-                forgot.classList.remove('active');
                 register.classList.remove('active');
             }else if (name === 'register'){
                 register.classList.add('active');
                 login.classList.remove('active');
-                forgot.classList.remove('active');
-            }else if (name === 'forgot'){
-                forgot.classList.add('active');
-                login.classList.remove('active');
-                register.classList.remove('active');
             }
         }
         const birthday = document.getElementById('Birth');
