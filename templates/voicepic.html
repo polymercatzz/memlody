@@ -151,7 +151,7 @@
             <div class="flex justify-center items-center bg-gray-300 px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 hover:bg-sky-200 hover:-translate-y-1 transform transition duration-300"
                 onclick="sound()">
                 <img src="/static/img/volume-up-black.png" class="w-12 h-12">
-                <p class="text-[2vh] font-bold whitespace-nowrap max-[500px]:text-[2.7vh]">กดเพื่อฟังเสียง</p>
+                <p class="text-[2vh] font-bold whitespace-nowrap max-[500px]:text-[2.7vh]" id="text_sound">กดเพื่อฟังเสียง</p>
                 <audio id="sound" src="/static/img/thunder.mp3"></audio>
             </div>
             <div>
@@ -332,11 +332,14 @@
         let play = false;
         function sound() {
             const audio = document.getElementById("sound");
+            const textSound = document.getElementById("text_sound");
             if (play) {
                 audio.pause();
+                textSound.textContent = "กดเพื่อฟังเสียง";
             } else {
                 audio.time = 0;
                 audio.play();
+                textSound.textContent = "กำลังเล่นเสียง...";
             }
             play = !play;
             audio.onended = function () {
@@ -408,7 +411,11 @@
 
         function checkResult() {
             if (selected === null) {
-                alert("กรุณาเลือกคำตอบก่อนตรวจ");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'กรุณาเลือกคำตอบก่อนตรวจ',
+                    confirmButtonText: 'ตกลง',
+                    });
                 return;
             }
             const compliments = [
@@ -500,6 +507,9 @@
                     });
                     document.getElementById("nextBtn").classList.add("hidden");
                     document.getElementById("checkBtn").classList.remove("hidden");
+                    const audio = document.getElementById("sound").pause();
+                    document.getElementById("text_sound").textContent = "กดเพื่อฟังเสียง";
+                    play = false;
                     hasChecked = false;
                     selected = null;
                 });
