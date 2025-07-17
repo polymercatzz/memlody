@@ -526,6 +526,9 @@
   .mb-\[3vh\] {
     margin-bottom: 3vh;
   }
+  .mb-\[5vh\] {
+    margin-bottom: 5vh;
+  }
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
   }
