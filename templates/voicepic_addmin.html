@@ -221,8 +221,8 @@
         </select>
         <div class="flex items-center justify-end w-full">
             <button
-                class="group p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] m-2 ml-auto flex cursor-pointer bg-[#D4F2E5] transition-all duration-300 cursor-pointer hover:bg-gray-100 shadow-lg hover:shadow-xlt"
-                onclick="sendData();">
+                class="group p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] m-2 ml-auto flex cursor-pointer bg-[#D4F2E5] transition-all duration-300 cursor-pointer hover:bg-gray-100 shadow-lg hover:shadow-xlt hidden"
+                onclick="sendData();" id="bnt_save">
                 <p>บันทึกข้อมูล</p>
                 <img src="/static/img/save.png" alt="" class="w-[3vh] object-contain ml-2">
             </button>
@@ -399,7 +399,12 @@
                     audio.currentTime = 0;
                 }
             } else {
-                alert("ยังไม่ได้เพิ่มไฟล์เสียง");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'ยังไม่ได้เพิ่มไฟล์เสียง',
+                    text: 'กรุณาเพิ่มไฟล์เสียงก่อนดำเนินการต่อ',
+                    confirmButtonText: 'ตกลง'
+                });
             }
         }
 
@@ -438,6 +443,11 @@
             });
             buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
             buttons[select].classList.add("bg-blue-100");
+            if (select === 4){
+                document.getElementById("bnt_save").classList.remove("hidden");
+            }else{
+                document.getElementById("bnt_save").classList.add("hidden");
+            }
             console.log(data_all);
         }
         function showData (select) {
@@ -487,7 +497,13 @@
                 const hasImage = Array.from(input_img).every(input => input.files.length > 0);
                 const hasSound = Array.from(input_sound).some(input => input.files.length > 0);
                 if (!selectedRadio || !hasImage || !hasSound) {
-                    return false; // ใช้ในกรณีอยาก return จาก event handler
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'กรอกให้ครบ',
+                        text: 'ถ้ากรอกข้อมูลไม่ครบ จะไม่สามารถบันทึกได้',
+                        confirmButtonText: 'ตกลง'
+                    });
+                    return false;
                 }
                 new_img = Array.from(input_img).map(input => input.files[0]);
                 new_sound = Array.from(input_sound).map(input => input.files[0]);
@@ -535,6 +551,7 @@
             }
         }
         function sendData() {
+            Add_Data();
             console.log(data_all);
             const category = document.getElementById("category").value
             if (input_data.size < 5 && !category) {

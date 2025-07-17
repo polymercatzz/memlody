@@ -181,7 +181,9 @@
             {% endfor %}
             </select>
             <div class="flex items-center justify-end w-full">
-                <button class="group p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] m-2 ml-auto flex cursor-pointer bg-[#D4F2E5] transition-all duration-300 cursor-pointer hover:bg-gray-100 shadow-lg hover:shadow-xlt" onclick="sendData();">
+                <button
+                    class="group p-2 border-2 border-gray-300 rounded-xl text-[1.7vh] m-2 ml-auto flex cursor-pointer bg-[#D4F2E5] transition-all duration-300 cursor-pointer hover:bg-gray-100 shadow-lg hover:shadow-xlt hidden"
+                    onclick="sendData();" id="bnt_save">
                     <p>บันทึกข้อมูล</p>
                     <img src="/static/img/save.png" alt="" class="w-[3vh] object-contain ml-2">
                 </button>
@@ -264,6 +266,11 @@
                 });
             buttons[select].classList.remove("bg-white", "hover:bg-gray-200");
             buttons[select].classList.add("bg-blue-100");
+            if (select === 4){
+                document.getElementById("bnt_save").classList.remove("hidden");
+            }else{
+                document.getElementById("bnt_save").classList.add("hidden");
+            }
         }
         function showData (select) {
             const current_question = data_all[select];
@@ -291,6 +298,12 @@
             const newText = text || oldData.text;
             const newFile = file || oldData.file;
             if (!newText || !newFile) {
+                Swal.fire({
+                        icon: 'warning',
+                        title: 'กรอกให้ครบ',
+                        text: 'ถ้ากรอกข้อมูลไม่ครบ จะไม่สามารถบันทึกได้',
+                        confirmButtonText: 'ตกลง'
+                    });
                 return;
             }
             data_all[current_index] = {
@@ -300,10 +313,14 @@
             input_data.add(current_index);
         }
         function sendData() {
-            console.log(data_all);
+            Add_Data();
             const category = document.getElementById("category").value
             if(input_data.size < 5 && !category){
-                alert("กรอกให้ครบ");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'กรอกให้ครบ',
+                    confirmButtonText: 'ตกลง'
+                    })
                 return;
             }
             data_all.forEach(data => {

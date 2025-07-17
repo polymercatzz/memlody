@@ -25,7 +25,7 @@ router = APIRouter(prefix="/home")
 
 templates = Jinja2Templates(directory="templates")
 
-model = WhisperModel("base", compute_type="int8", device="cpu")
+model = WhisperModel("medium", compute_type="int8", device="cpu")
 Base.metadata.create_all(bind=engine)
 
 def get_db():
@@ -126,6 +126,7 @@ async def pairing_mode(request: Request, db: Session = Depends(get_db)):
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "pairing_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
+    print(stage_max_point)
     max_stage_row = db.query(func.max(PairingQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -196,6 +197,7 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
+    print(stage_max_point)
     max_stage_row = db.query(func.max(SpeakingQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -361,8 +363,9 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
     history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type=="todo_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
-    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
+    stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "todo_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
+    print(stage_max_point)
     max_stage_row = db.query(func.max(TodoQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -434,6 +437,7 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "what_you_see_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
+    print(stage_max_point)
     max_stage_row = db.query(func.max(SeeQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -500,10 +504,11 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
     all_stage_raw = db.query(OrderQuestion.stage).group_by(OrderQuestion.stage).order_by(OrderQuestion.stage).all()
     all_stage = [(index, stage[0]) for index, stage in enumerate(all_stage_raw)]
-    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type=="what_you_see_mode").order_by(GameStageHistory.stage.desc()).first()
+    history_stage_raw = db.query(GameStageHistory).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type=="order_mode").order_by(GameStageHistory.stage.desc()).first()
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "order_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
+    print(stage_max_point)
     max_stage_row = db.query(func.max(OrderQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -566,7 +571,7 @@ async def play_order(request: Request, stage: int, db: Session = Depends(get_db)
         choices = list(q['map_choice_4'])
         random.shuffle(choices)
         all_map_choices.append(choices)
-    stg, category = db.query(SeeQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SeeQuestion.category_id).filter(SeeQuestion.stage==stage).first()
+    stg, category = db.query(OrderQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==OrderQuestion.category_id).filter(OrderQuestion.stage==stage).first()
     return templates.TemplateResponse("event_order.html", {"request": request, "order_questions": order_questions, "all_map_choices": all_map_choices, "stage":stage, "category":category})
 
 @router.post("/submit/{game}/{mode}/{stage}")

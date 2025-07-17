@@ -122,7 +122,11 @@
                 <img src="/static/img/game-controller.png" alt="" class="w-10">
                 <p>ชื่อเกม</p>
             </div>
-            <p>นี่คือเสียงอะไร</p>
+            {% if game == "game_sound" %}
+                <p>นี่คือเสียงอะไร</p>
+            {% elif game == "game_pic" %}
+                <p>นี่คือภาพอะไร</p>
+            {% endif %}
         </div>
 
         <div class="flex justify-between items-center border-b-2 border-gray-300 pb-2 ">
@@ -130,7 +134,19 @@
                 <img src="/static/img/app.png" alt="" class="w-10">
                 <p>โหมด</p>
             </div>
-            <p>โหมดจับคู่</p>
+            {% if mode == 'pairing_mode' %}
+                <p>โหมดจับคู่</p>
+            {% elif mode == 'speaking_mode' %}
+                <p>โหมดออกเสียง</p>
+            {% elif mode == 'my_voice_mode' %}
+                <p>โหมดเสียงของฉัน</p>
+            {% elif mode == 'todo_mode' %}
+                <p>โหมดเลือกคำตอบ</p>
+            {% elif mode == 'what_you_see_mode' %}
+                <p>โหมดทายภาพ</p>
+            {% elif mode == 'order_mode' %}
+                <p>โหมดเรียงลำดับ</p>
+            {% endif %}
         </div>
         <div class="flex justify-between items-center border-b-2 border-gray-300 pb-2">
             <div class="flex items-center gap-2 m-2 mt-5">
@@ -173,26 +189,36 @@
     </div>
 
     <div class="flex justify-center items-center mt-[2vh] max-[480px]:m-[5vh] gap-4 flex-wrap mb-[5vh]">
-        <a href="/home/game_sound/speaking_mode"
+        {% if mode != 'pairing_mode' %}
+            <a href="/home/game_sound/pairing_mode"
             class="bg-[#DFE9FF] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer hover:bg-sky-200">
-            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดออกเสียง</p>
-        </a>
-        <a href="/home/game_sound/my_voice_mode"
+            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดจับคู่</p></a>
+        {% endif %}
+        {% if mode != 'speaking_mode' %}
+            <a href="/home/game_sound/speaking_mode"
             class="bg-[#DFE9FF] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer hover:bg-sky-200">
-            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดเสียงของฉัน</p>
-        </a>
-        <a href="/home/game_pic/todo_mode"
+            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดออกเสียง</p></a>
+        {% endif %}
+        {% if mode != 'my_voice_mode' %}
+            <a href="/home/game_sound/my_voice_mode"
             class="bg-[#DFE9FF] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer hover:bg-sky-200">
-            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดเลือกคำตอบ</p>
-        </a>
-        <a href="/home/game_pic/order_mode"
+            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดเสียงของฉัน</p></a>
+        {% endif %}
+        {% if mode != 'todo_mode' %}
+            <a href="/home/game_pic/todo_mode"
             class="bg-[#DFE9FF] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer hover:bg-sky-200">
-            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดทายภาพ</p>
-        </a>
-        <a href="/home/game_pic/order_mode"
+            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดเลือกคำตอบ</p></a>
+        {% endif %}
+        {% if mode != 'what_you_see_mode' %}
+            <a href="/home/game_pic/what_you_see_mode"
             class="bg-[#DFE9FF] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer hover:bg-sky-200">
-            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดเรียงลำดับ</p>
-        </a>
+            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดทายภาพ</p></a>
+        {% endif %}
+        {% if mode != 'order_mode' %}
+           <a href="/home/game_pic/order_mode"
+            class="bg-[#DFE9FF] flex flex-row items-center w-fit px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer hover:bg-sky-200">
+            <p class="text-[2.4vh] text-[#0E0E5D] whitespace-nowrap">โหมดเรียงลำดับ</p></a>
+        {% endif %}
     </div>
 
 
