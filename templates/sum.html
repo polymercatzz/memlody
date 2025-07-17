@@ -157,14 +157,15 @@
                 class="w-10 h-10 transform transition-transform duration-500 ease-in-out group-hover:rotate-180 ">
 
         </a>
+        {% if stage != 0 %}
         <a href="/home/{{ game }}/{{ mode }}/{{ stage+1 }}"
             class="group bg-[#78C93C] flex flex-row items-center w-fit gap-2 px-[2.3vh] py-[1vh] rounded-[16px] shadow-lg htransition-all duration-300 cursor-pointer hover:bg-lime-600 shadow-lg hover:shadow-xl">
 
             <p class="text-[2.4vh] text-[#FFFFFF] whitespace-nowrap">ด่านถัดไป</p>
             <img src="/static/img/right-arrow.png"
                 class="w-10 h-10 transform transition-transform duration-300 group-hover:translate-x-2">
-
         </a>
+        {% endif %}
 
     </div>
     <div class="flex justify-center items-center mt-[4vh]">
