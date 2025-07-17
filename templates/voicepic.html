@@ -432,7 +432,6 @@
                 const overlayIncorrect = box.querySelector(".overlay-incorrect");
                 const current_box_img = clean(decodeURIComponent(box.querySelector("img").src));
                 const correct_path_img = questions[currentQuestion-1].answer
-                console.log(current_box_img, correct_path_img)
                 if (current_box_img === correct_path_img) {
                     if (overlayCorrect) overlayCorrect.classList.remove("hidden");
                     box.classList.add("ring-4", "ring-green-500");
@@ -501,8 +500,8 @@
                     });
                     document.getElementById("nextBtn").classList.add("hidden");
                     document.getElementById("checkBtn").classList.remove("hidden");
-                    selectedIndex = null;
                     hasChecked = false;
+                    selected = null;
                 });
         }
         CreateQuestion()

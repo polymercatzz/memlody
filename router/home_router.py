@@ -589,11 +589,13 @@ async def get_submit(request: Request, game: str, mode: str, stage: str, db: Ses
         corrected = int(request.query_params.get('corrected', 0))
         time = float(request.query_params.get('time', 0))
         if stage == "special":
-            stage = 0
+            stage_value = 0
+        else:
+            stage_value = int(stage)
         history = GameStageHistory(
             user_id=user_id,
             game_type=mode,
-            stage=int(stage),
+            stage=stage_value,
             total_questions=5,
             correct_count=corrected,
             incorrect_count=5-corrected,
@@ -602,7 +604,8 @@ async def get_submit(request: Request, game: str, mode: str, stage: str, db: Ses
         )
         db.add(history)
         db.commit()
-        return templates.TemplateResponse("sum.html", {"request": request, "game": game, "mode": mode, "stage":stage, "corrected":corrected, "time":time})
+        print(stage_value)
+        return templates.TemplateResponse("sum.html", {"request": request, "game": game, "mode": mode, "stage":stage_value, "corrected":corrected, "time":time})
     return RedirectResponse(url=f"/home/{game}/{mode}", status_code=302)
 
 def calculate_stat(all_history_raw=[],stage_category_raw=[]):
