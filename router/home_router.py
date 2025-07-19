@@ -31,10 +31,8 @@ Base.metadata.create_all(bind=engine)
 def get_db():
     db = Session(bind=engine)
     try:
-        print("connect")
         yield db
     finally:
-        print("close")
         db.close()
 
 @router.get("/")
@@ -59,7 +57,6 @@ async def create_cousin(request: Request, db: Session = Depends(get_db), nicknam
     user_id = request.session.get("user_id")
     if not user_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    print(nickname, relation, path_img.filename, path_sound.filename)
     upload_at_s = "./static/cousin/sounds"
     upload_at_i = "./static/cousin/img"
     file_location = os.path.join(upload_at_s, f"{user_id}_{nickname}_{relation}_cousin_{path_sound.filename}")
@@ -126,7 +123,6 @@ async def pairing_mode(request: Request, db: Session = Depends(get_db)):
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "pairing_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
-    print(stage_max_point)
     max_stage_row = db.query(func.max(PairingQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -145,7 +141,6 @@ async def pairing_special(request: Request, db: Session = Depends(get_db)):
         GameStageHistory.game_type == "pairing_mode"
         ).all()
     weakness = weakness_list(user_data)
-    print(weakness)
     weak_pairings = [
         w for w in weakness
         if w["game_type"] == "pairing_mode" and w["incorrect_rate"] > 0.5
@@ -184,6 +179,11 @@ async def play_pairing(request: Request, stage: int, db: Session = Depends(get_d
         "category_id": question.category_id
     } for question in questions_data_raw
 ]
+    random.shuffle(questions_data)
+    for question in questions_data:
+        temp_img = question["path_img"]
+        random.shuffle(temp_img)
+        question["path_img"] = temp_img
     return templates.TemplateResponse("voicepic.html", {"request": request, "questions": questions_data, "stage":stage, "category":category})
 
 @router.get("/game_sound/speaking_mode")
@@ -197,7 +197,6 @@ async def speaking_mode(request: Request, db: Session = Depends(get_db)):
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "speaking_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
-    print(stage_max_point)
     max_stage_row = db.query(func.max(SpeakingQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -216,7 +215,6 @@ async def speaking_special(request: Request, db: Session = Depends(get_db)):
         GameStageHistory.game_type == "speaking_mode"
         ).all()
     weakness = weakness_list(user_data)
-    print(weakness)
     weak_pairings = [
         w for w in weakness
         if w["game_type"] == "speaking_mode" and w["incorrect_rate"] > 0.5
@@ -254,7 +252,7 @@ async def play_speaking(request: Request, stage: int, db: Session = Depends(get_
     }
     for question in all_sounds_raw
 ]
-    # random.shuffle(all_sounds)
+    random.shuffle(all_sounds)
     return templates.TemplateResponse("game_sound2.html", {"request": request, "all_sounds": all_sounds, "stage":stage, "category": category})
 
 def is_similar(a, b, threshold=0.7):
@@ -268,7 +266,6 @@ async def check_voice(request: Request, label: str = Form(...), file: UploadFile
 
     segments, _ = model.transcribe(temp_path, language="th")
     full_text = "".join([segment.text for segment in segments])
-    print("ถอดได้:", full_text)
     os.remove(temp_path)
     EXCLUDED_WORDS = {"เสียง", "รูป"}
     # 1. Normalize คำ (ลบวรรณยุกต์/สะกดให้เป็นมาตรฐาน)
@@ -283,9 +280,6 @@ async def check_voice(request: Request, label: str = Form(...), file: UploadFile
     stopwords = thai_stopwords()
     filtered_text = [w for w in words_in_text if w not in stopwords and w not in EXCLUDED_WORDS]
     filtered_answer = [w for w in words_in_answer if w not in stopwords and w not in EXCLUDED_WORDS]
-
-    print("คำที่พูด:", filtered_text)
-    print("คำเฉลย:", filtered_answer)
 
     # 4. ตรวจสอบว่าคำเฉลยอย่างน้อย 1 คำ อยู่ในคำพูด หรือคล้ายกัน
     for ans_word in filtered_answer:
@@ -329,10 +323,11 @@ async def play_my_voice(request: Request, db: Session = Depends(get_db)):
 
 def create_questions(cousins, num_questions=5, num_choices=4):
     questions = []
-
+    cousins_temp = cousins.copy()
     for _ in range(num_questions):
-        answer = random.choice(cousins)
+        answer = random.choice(cousins_temp)
         others = [c for c in cousins if c["cousin_id"] != answer["cousin_id"]]
+        cousins_temp.remove(answer)
         random.shuffle(others)
 
         choices = others[:num_choices - 1] + [answer]
@@ -365,7 +360,6 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "todo_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
-    print(stage_max_point)
     max_stage_row = db.query(func.max(TodoQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -384,7 +378,6 @@ async def todo_special(request: Request, db: Session = Depends(get_db)):
         GameStageHistory.game_type == "todo_mode"
         ).all()
     weakness = weakness_list(user_data)
-    print(weakness)
     weak_pairings = [
         w for w in weakness
         if w["game_type"] == "todo_mode" and w["incorrect_rate"] > 0.5
@@ -424,6 +417,11 @@ async def play_todo(request: Request, stage: int, db: Session = Depends(get_db))
         for question in todo_list_raw
 ]
     stg, category = db.query(TodoQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==TodoQuestion.category_id).filter(TodoQuestion.stage==stage).first()
+    random.shuffle(todo_list)
+    for question in todo_list:
+        temp = question["choice_4"]
+        random.shuffle(temp)
+        question["choice_4"] = temp
     return templates.TemplateResponse("choosepic.html", {"request": request, "todo_list": todo_list, "stage":stage, "category": category})
 
 @router.get("/game_pic/what_you_see_mode")
@@ -437,7 +435,6 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "what_you_see_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
-    print(stage_max_point)
     max_stage_row = db.query(func.max(SeeQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
@@ -456,7 +453,6 @@ async def what_you_see_special(request: Request, db: Session = Depends(get_db)):
         GameStageHistory.game_type == "what_you_see_mode"
         ).all()
     weakness = weakness_list(user_data)
-    print(weakness)
     weak_pairings = [
         w for w in weakness
         if w["game_type"] == "what_you_see_mode" and w["incorrect_rate"] > 0.5
@@ -494,6 +490,7 @@ async def play_what_you_see(request: Request, stage: int, db: Session = Depends(
     }
     for question in what_you_see_raw
 ]
+    random.shuffle(what_you_see)
     stg, category = db.query(SeeQuestion.stage, Category.category_name).outerjoin(Category, Category.category_id==SeeQuestion.category_id).filter(SeeQuestion.stage==stage).first()
     return templates.TemplateResponse("game_guess2.html", {"request": request, "what_you_see": what_you_see, "stage":stage, "category":category})
 
@@ -508,14 +505,12 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
     history_stage = history_stage_raw.stage if history_stage_raw else 0
     stage_max_point_raw  = db.query(func.max(GameStageHistory.correct_count)).filter(GameStageHistory.user_id == user_id, GameStageHistory.game_type == "order_mode", GameStageHistory.stage != 0).group_by(GameStageHistory.stage).order_by(GameStageHistory.stage).all()
     stage_max_point = [ point[0] for point in stage_max_point_raw]
-    print(stage_max_point)
     max_stage_row = db.query(func.max(OrderQuestion.stage)).first()
     if max_stage_row:
         max_stage = max_stage_row[0]
     else:
         max_stage = 0
     all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
-    print(all_point)
     return templates.TemplateResponse("main_guess3.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
 @router.get("/game_sound/order_mode/special")
@@ -528,7 +523,6 @@ async def order_special(request: Request, db: Session = Depends(get_db)):
         GameStageHistory.game_type == "order_mode"
         ).all()
     weakness = weakness_list(user_data)
-    print(weakness)
     weak_pairings = [
         w for w in weakness
         if w["game_type"] == "order_mode" and w["incorrect_rate"] > 0.5
@@ -566,6 +560,7 @@ async def play_order(request: Request, stage: int, db: Session = Depends(get_db)
         }
         for question in order_questions_raw
     ]
+    random.shuffle(order_questions)
     all_map_choices = []
     for q in order_questions:
         choices = list(q['map_choice_4'])
@@ -609,7 +604,6 @@ async def get_submit(request: Request, game: str, mode: str, stage: str, db: Ses
         )
         db.add(history)
         db.commit()
-        print(stage_value)
         return templates.TemplateResponse("sum.html", {"request": request, "game": game, "mode": mode, "stage":stage_value, "corrected":corrected, "time":time})
     return RedirectResponse(url=f"/home/{game}/{mode}", status_code=302)
 

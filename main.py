@@ -78,12 +78,14 @@ async def register(request: Request,
                   gender: str = Form(...),
                   username: str = Form(...), 
                   password: str = Form(...), 
-                  confirmPassword: str = Form(...), 
                   email: str = Form(...),
                   db: Session = Depends(get_db)):
-    check_user = db.query(User).filter(User.username == username).first()
-    if (check_user):
-        return {"message": "ชื่อผู้ใช้นี้มีผู้อื่นใช้แล้ว"}
+    check_user = db.query(User).filter(User.username == username or User.email == email).first()
+    if check_user:
+        if username == check_user.username:
+            return {"message": "ชื่อผู้ใช้นี้มีผู้อื่นใช้แล้ว"}
+        elif email == check_user.email:
+            return {"message": "อีเมลนี้มีผู้อื่นใช้แล้ว"}
     else:
         hashed_pw = hash_password(password)
         user = User(
