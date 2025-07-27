@@ -9,6 +9,8 @@
     <link href="/static/css/app.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/crown&star.css">
     <script src="/static/javascript/crown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         :lang(en){
           font-family: 'Huninn', 'Kanit';
@@ -283,6 +285,16 @@
                 openTutorial(true);
             }
         });
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get("msg");
+    console.log(msg);
+    if (msg) {
+        Swal.fire({
+            icon: "info",
+            title: msg,
+            confirmButtonText: "ตกลง",
+        });
+    }
     </script>
 </body>
 </html>

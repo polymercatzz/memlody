@@ -445,10 +445,10 @@
         function sendData() {
             Add_Data();
             const category = document.getElementById("category").value
-            if(input_data.size < 5 && !category){
+            if(input_data.size < 5 || !category){
                 Swal.fire({
                     icon: 'warning',
-                    title: 'กรอกให้ครบ',
+                    title: 'กรอกให้ครบทั้ง 5 ข้อ',
                     confirmButtonText: 'ตกลง'
                     });
                 return;

@@ -9,6 +9,8 @@
     <link href="/static/css/app.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/crown&star.css">
     <script src="/static/javascript/crown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         :lang(en){
           font-family: 'Huninn', 'Kanit';
@@ -187,7 +189,7 @@
                         {% endif %}
                     {% endfor %}
                     {% if all_point == 100 %}
-                    <a href="/home/game_sound/order_mode/special" class="flex flex-col justify-center items-center px-6 py-6 border-4 border-yellow-400 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-yellow-50">
+                    <a href="/home/game_pic/order_mode/special" class="flex flex-col justify-center items-center px-6 py-6 border-4 border-yellow-400 rounded-3xl cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transform transition duration-300 hover:bg-yellow-50">
                         <p class="text-3xl font-extrabold text-yellow-800 mb-2 mt-2">ด่านพิเศษ</p>
                         <p class="text-xl mb-2 text-yellow-700">โหมดท้าทาย</p>
                     </a>
@@ -207,5 +209,76 @@
           <button onclick="closeTutorial()" class="absolute top-2 right-4 text-gray-500 text-2xl leading-none hover:text-red-500">X</button>
         </div>
     </div>
+    <script>
+        const images = [
+            "/static/img/tutorial-main1.png",
+            "/static/img/tutorial-main2.png",
+            "/static/img/tutorial-main3.png",
+            "/static/img/tutorial-main4.png",
+            "/static/img/tutorial-main5.png",
+            "/static/img/tutorial-main6.png",
+            "/static/img/tutorial-main7.png",
+            "/static/img/tutorial-main8.png",
+            "/static/img/tutorial-main9.png"
+        ];
+        let currentSlide = 0;
+        let tutorialModal, imageEl, dotsEl;
+        function renderDots(){
+            dotsEl.innerHTML = "";
+            for (let i = 0; i < images.length; i++){
+                const dot = document.createElement("span");
+                dot.className = "w-3 h-3 rounded-full mx-1 cursor-pointer transition-all duration-200 " + (i === currentSlide ? "bg-blue-600 scale-110" : "bg-gray-300");
+                dot.addEventListener("click", () => {
+                currentSlide = i;
+                showSlide(currentSlide);
+                });
+                dotsEl.appendChild(dot);
+            }
+        }
+        function showSlide(index) {
+            if (index >= images.length){
+                localStorage.setItem("tutorialSeen", "true");
+                closeTutorial();
+                return;
+            }
+            imageEl.src = images[index];
+            renderDots();
+        }
+        function nextSlide(){
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+        function closeTutorial(){
+            tutorialModal.style.display = "none";
+        }
+        function openTutorial(force = false){
+            const seen = localStorage.getItem("tutorialSeen");
+            if (seen === "true" && !force) return;
+        
+            currentSlide = 0;
+            showSlide(currentSlide);
+            tutorialModal.style.display = "flex";
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            tutorialModal = document.getElementById("tutorialModal");
+            imageEl = document.getElementById("tutorialImage");
+            dotsEl = document.getElementById("dots");
+        
+            const seen = localStorage.getItem("tutorialSeen");
+            if (!seen){
+                openTutorial(true);
+            }
+        });
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get("msg");
+    console.log(msg);
+    if (msg) {
+        Swal.fire({
+            icon: "info",
+            title: msg,
+            confirmButtonText: "ตกลง",
+        });
+    }
+    </script>
 </body>
 </html>

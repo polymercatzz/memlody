@@ -56,7 +56,9 @@ async def login(request: Request,
                   password: str = Form(...),
                   db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == username).first()
-    if user.user_id == ADMIN_ID:
+    if user is None:
+        return {"message": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง"}
+    elif user.user_id == ADMIN_ID:
         request.session["admin_id"] = user.user_id
         return {"message": "admin"}
     elif user and verify_password(password, user.password):

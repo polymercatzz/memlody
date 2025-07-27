@@ -364,7 +364,11 @@
 
         async function CheckVoice() {
             if (!list_audio || list_audio.length === 0) {
-                alert("กรุณาพูดก่อน");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'กรุณาเลือกพูดก่อนตรวจ',
+                    confirmButtonText: 'ตกลง',
+                    });
                 return;
             }
             const compliments = [

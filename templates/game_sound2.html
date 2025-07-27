@@ -108,7 +108,7 @@
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">4</p>
         <p class="w-[4vh] h-[4vh] flex items-center justify-center text-[2vh] text-[#0E0E5D] rounded-full bg-[#FFFFFF] outline outline-2 outline-[#4A67BA]">5</p>
     </div>
-    <label class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.5vh] text-[#0E0E5D] mt-4 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดออกเสียงให้ตรงกับเสียงที่ได้ยิน ?</label>
+    <label class=" flex justify-center w-fit mx-auto p-[2.5vh] bg-white text-[2.5vh] text-[#0E0E5D] mt-4 rounded-[16px] border-[#4A67BA] border-2 shadow-lg">โปรดบอกชื่อของเสียงที่ได้ยิน ?</label>
     <div class=" flex flex-col justify-center px-5 py-15 mx-auto mt-15 w-[80%] md:w-[60%] border-none rounded-4xl outline outline-2 outline-gray-200 shadow-xl">
         <div class="flex justify-center items-center bg-gray-300 px-10 py-3 my-6 w-fit mx-auto border-none rounded-full cursor-pointer gap-3 hover:bg-sky-200 hover:-translate-y-1 transform transition duration-300" onclick="sound()">
             <img src="/static/img/volume-up-black.png" class="w-10 h-10 sm:w-12 sm:h-12">
@@ -342,7 +342,7 @@
             if (!list_audio || list_audio.length === 0) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'กรุณาเลือกคำตอบก่อนตรวจ',
+                    title: 'กรุณาเลือกพูดก่อนตรวจ',
                     confirmButtonText: 'ตกลง',
                     });
                 return;

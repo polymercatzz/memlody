@@ -38,7 +38,7 @@ async def pairing_mode_create(request: Request, stage:int, db: Session = Depends
     admin_id = request.session.get("admin_id")
     if not admin_id:
         return RedirectResponse(url="/?msg=กรุณาเข้าสู่ระบบ")
-    categories = db.query(Category).filter(Category.category_namea != 6).all()
+    categories = db.query(Category).filter(Category.category_id != 6).all()
     return templates.TemplateResponse("voicepic_addmin.html", {"request": request, "stage": stage, "categories":categories})
 
 @router.post("/pairing_mode/create/{stage}")
@@ -50,14 +50,14 @@ async def pairing_create(request: Request, stage:int, answer: int = Form(...), c
     os.makedirs(upload_at_s, exist_ok=True)
     os.makedirs(upload_at_i, exist_ok=True)
     for file in file_img:
-        file_path = os.path.join(upload_at_s, file.filename)
+        file_path = os.path.join(upload_at_i, file.filename)
         with open(file_path, "wb") as f:
             content = await file.read()
             f.write(content)
         file_url = file_path.replace("\\", "/")[1:]
         path_img.append(file_url)
     for file in file_sound:
-        file_path = os.path.join(upload_at_i, file.filename)
+        file_path = os.path.join(upload_at_s, file.filename)
         with open(file_path, "wb") as f:
             content = await file.read()
             f.write(content)

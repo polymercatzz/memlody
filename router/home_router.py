@@ -146,7 +146,7 @@ async def pairing_special(request: Request, db: Session = Depends(get_db)):
         if w["game_type"] == "pairing_mode" and w["incorrect_rate"] > 0.5
     ]
     if not weak_pairings:
-        return {"msg": "ไม่มีด่าน pairing_mode ที่ผิดเกิน 70%"}
+        return RedirectResponse(url="/home/game_sound/pairing_mode?msg=ไม่มีด่าน pairing_mode ที่ผิดเกิน 50%")
     weak_stages = [w["stage"] for w in weak_pairings]
     all_questions = db.query(PairingQuestion).filter(
         PairingQuestion.stage.in_(weak_stages)).all()
@@ -220,7 +220,7 @@ async def speaking_special(request: Request, db: Session = Depends(get_db)):
         if w["game_type"] == "speaking_mode" and w["incorrect_rate"] > 0.5
     ]
     if not weak_pairings:
-        return {"msg": "ไม่มีด่าน speaking_mode ที่ผิดเกิน 70%"}
+        return RedirectResponse(url="/home/game_sound/speaking_mode?msg=ไม่มีด่าน speaking_mode ที่ผิดเกิน 50%")
     weak_stages = [w["stage"] for w in weak_pairings]
     all_questions = db.query(SpeakingQuestion).filter(
         SpeakingQuestion.stage.in_(weak_stages)).all()
@@ -368,7 +368,7 @@ async def todo_mode(request: Request, db: Session = Depends(get_db)):
     all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
     return templates.TemplateResponse("main_guess1.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
-@router.get("/game_sound/todo_mode/special")
+@router.get("/game_pic/todo_mode/special")
 async def todo_special(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
@@ -383,7 +383,7 @@ async def todo_special(request: Request, db: Session = Depends(get_db)):
         if w["game_type"] == "todo_mode" and w["incorrect_rate"] > 0.5
     ]
     if not weak_pairings:
-        return {"msg": "ไม่มีด่าน todo_mode ที่ผิดเกิน 70%"}
+        return RedirectResponse(url="/home/game_sound/todo_mode?msg=ไม่มีด่าน todo_mode ที่ผิดเกิน 50%")
     weak_stages = [w["stage"] for w in weak_pairings]
     all_questions = db.query(TodoQuestion).filter(
         TodoQuestion.stage.in_(weak_stages)).all()
@@ -443,7 +443,7 @@ async def what_you_see_mode(request: Request, db: Session = Depends(get_db)):
     all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
     return templates.TemplateResponse("main_guess2.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
-@router.get("/game_sound/what_you_see_mode/special")
+@router.get("/game_pic/what_you_see_mode/special")
 async def what_you_see_special(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
@@ -458,7 +458,7 @@ async def what_you_see_special(request: Request, db: Session = Depends(get_db)):
         if w["game_type"] == "what_you_see_mode" and w["incorrect_rate"] > 0.5
     ]
     if not weak_pairings:
-        return {"msg": "ไม่มีด่าน what_you_see_mode ที่ผิดเกิน 70%"}
+        return RedirectResponse(url="/home/game_pic/what_you_see_mode?msg=ไม่มีด่าน what_you_see_mode ที่ผิดเกิน 50%")
     weak_stages = [w["stage"] for w in weak_pairings]
     all_questions = db.query(SeeQuestion).filter(
         SeeQuestion.stage.in_(weak_stages)).all()
@@ -513,7 +513,7 @@ async def order_mode(request: Request, db: Session = Depends(get_db)):
     all_point = round(sum(stage_max_point)/(max_stage*5), 2)*100
     return templates.TemplateResponse("main_guess3.html", {"request": request, "all_stage":all_stage, "history_stage":history_stage, "stage_max_point":stage_max_point, "all_point":all_point})
 
-@router.get("/game_sound/order_mode/special")
+@router.get("/game_pic/order_mode/special")
 async def order_special(request: Request, db: Session = Depends(get_db)):
     user_id = request.session.get("user_id")
     if not user_id:
@@ -528,7 +528,7 @@ async def order_special(request: Request, db: Session = Depends(get_db)):
         if w["game_type"] == "order_mode" and w["incorrect_rate"] > 0.5
     ]
     if not weak_pairings:
-        return {"msg": "ไม่มีด่าน order_mode ที่ผิดเกิน 70%"}
+        return RedirectResponse(url="/home/game_pic/order_mode?msg=ไม่มีด่าน order_mode ที่ผิดเกิน 50%")
     weak_stages = [w["stage"] for w in weak_pairings]
     all_questions = db.query(OrderQuestion).filter(
         OrderQuestion.stage.in_(weak_stages)).all()

@@ -552,12 +552,12 @@
         }
         function sendData() {
             Add_Data();
-            console.log(data_all);
+            console.log(input_data.size);
             const category = document.getElementById("category").value
-            if (input_data.size < 5 && !category) {
+            if (input_data.size < 5 || !category) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'กรอกให้ครบ',
+                    title: 'กรอกให้ครบทั้ง 5 ข้อ',
                     confirmButtonText: 'ตกลง'
                     });
                 return;
@@ -589,7 +589,6 @@
                     window.location.href = "/admin/pairing_mode/";
                 });
         }
-
     </script>
 </body>
 
