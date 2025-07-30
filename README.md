@@ -70,6 +70,7 @@ cd memlody
 python -m venv env
 
 ```bash
+python -m venv env
 source env/bin/activate       # สำหรับ Mac/Linux
 env\Scripts\activate          # สำหรับ Windows
 pip install -r requirements.txt
