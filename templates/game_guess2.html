@@ -396,11 +396,11 @@
             .then(res => res.json())
             .then(data => {
                 Swal.close();
-                if (data === "ถูกต้อง"){
+                if (data.corrected){
                     Swal.fire({
                         icon: "success",
                         title: "ถูกต้อง!",
-                        text: `${randomCompliment}`,
+                        text: `${randomCompliment} ${data.msg}`,
                         confirmButtonText: "เยี่ยม!",
                         confirmButtonColor: "#4CAF50",
                         customClass: {
@@ -414,7 +414,7 @@
                     Swal.fire({
                         icon: "error",
                         title: "ไม่ถูกต้อง",
-                        text: `คำตอบที่ถูกต้องคือ: ข้อที่ ${questions[currentQuestion-1].answer}`,
+                        text: `${data.msg}`,
                         confirmButtonText: "เข้าใจแล้ว",
                         confirmButtonColor: "#EF4444",
                         customClass: {

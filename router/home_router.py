@@ -267,7 +267,7 @@ async def check_voice(request: Request, label: str = Form(...), file: UploadFile
     segments, _ = model.transcribe(temp_path, language="th")
     full_text = "".join([segment.text for segment in segments])
     os.remove(temp_path)
-    EXCLUDED_WORDS = {"เสียง", "รูป"}
+    EXCLUDED_WORDS = {"เสียง", "รูป", "ร้อง", "พูด", "คำ", "คำตอบ", "คำถาม", "คำพูด", "เสียงพูด", "เสียงร้อง"}
     # 1. Normalize คำ (ลบวรรณยุกต์/สะกดให้เป็นมาตรฐาน)
     full_text_norm = normalize(full_text.strip())
     answer_norm = normalize(answer.strip())
@@ -285,9 +285,9 @@ async def check_voice(request: Request, label: str = Form(...), file: UploadFile
     for ans_word in filtered_answer:
         for spoken_word in filtered_text:
             if ans_word in spoken_word or is_similar(ans_word, spoken_word):
-                return "ถูกต้อง"
+                return {"corrected": True, "msg": f"คุณพูดว่า{full_text} คำว่า: {ans_word} ตรงกับคำใน: {answer}"}
 
-    return "ไม่ถูกต้อง"
+    return {"corrected": False, "msg": f"คุณพูดว่า{full_text} ไม่ตรงกับคำใน: {answer}"}
 
 @router.get("/game_sound/my_voice_mode")
 async def my_voice_mode(request: Request, db: Session = Depends(get_db)):

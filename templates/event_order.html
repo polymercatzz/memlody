@@ -372,7 +372,7 @@
             // รีเซตปุ่มลำดับ
             document.querySelectorAll('.order-btn').forEach(btn => {
                 btn.classList.remove('ring-4', 'ring-blue-400', 'bg-[#DFE9FF]', 'bg-green-300', 'bg-red-300', 'ring-green-500', 'ring-red-500', 'bg-[#D7FFE6]', 'bg-[#FFDFDF]');
-                btn.classList.add('bg-[#DFE9FF]');
+                btn.classList.add('bg-[#DFE9FF]', 'hover:bg-sky-100');
                 btn.disabled = false;
                 btn.textContent = btn.dataset.position + ". ";
             });
@@ -414,7 +414,7 @@
                 const correctValue = correctAnswers[index]; // ค่าที่ควรอยู่ในลำดับนี้
 
                 // ล้างสีเดิม
-                btn.classList.remove('ring-4', 'ring-green-500', 'ring-red-500', 'bg-[#D7FFE6]', 'bg-[#FFDFDF]');
+                btn.classList.remove('ring-4', 'ring-green-500', 'ring-red-500', 'bg-[#D7FFE6]', 'bg-[#FFDFDF]', 'bg-[#DFE9FF]', 'hover:bg-sky-100');
 
                 if (userValue === correctValue) {
                     btn.classList.add('ring-4', 'ring-green-500', 'bg-[#D7FFE6]');
@@ -478,7 +478,7 @@
                 });
                 document.querySelectorAll("#current_choice p").forEach((p, index) => {
                     const isActive = index === currentQuestion;
-                    p.classList.toggle("bg-[#DFE9FF]", isActive);
+                    p.classList.toggle("bg-[#D7FFE6]", isActive);
                     p.classList.toggle("bg-[#FFFFFF]", !isActive);
                 });
         }
